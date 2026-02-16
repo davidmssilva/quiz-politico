@@ -5,7 +5,7 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: "/political-compass-pt/",
+  base: "/quiz-politico/",
   server: {
     host: "::",
     port: 8080,
@@ -13,10 +13,19 @@ export default defineConfig(({ mode }) => ({
       overlay: false,
     },
   },
-  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+
+  plugins: [react(), mode === "development" && componentTagger()].filter(
+    Boolean,
+  ),
+
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
+  },
+
+  build: {
+    outDir: "dist", // default, but explicit is safer
+    sourcemap: false,
   },
 }));
