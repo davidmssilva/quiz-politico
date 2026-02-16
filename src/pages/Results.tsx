@@ -239,8 +239,6 @@ export default function Results() {
         </div>
       </main>
 
-      <AdSlot className="container max-w-4xl mx-auto px-4" />
-
       <footer className="border-t border-border py-6 text-center text-xs text-muted-foreground">
         Baseado nos programas oficiais dos partidos portugueses. Apenas para
         fins informativos.
