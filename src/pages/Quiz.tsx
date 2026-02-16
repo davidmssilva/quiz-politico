@@ -35,7 +35,9 @@ export default function Quiz() {
   const isMobile = useIsMobile();
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState<Record<number, Answer>>({});
-  const [importanceWeights, setImportanceWeights] = useState<Record<number, number>>({});
+  const [importanceWeights, setImportanceWeights] = useState<
+    Record<number, number>
+  >({});
   const [direction, setDirection] = useState(1);
   const [showTestMenu, setShowTestMenu] = useState(false);
   const [showEarlyFinish, setShowEarlyFinish] = useState(false);
@@ -81,13 +83,19 @@ export default function Quiz() {
     });
   }, [answers]);
 
-  const selectAnswer = useCallback((value: Answer) => {
-    setAnswers((prev) => ({ ...prev, [q.id]: value }));
-  }, [q.id]);
+  const selectAnswer = useCallback(
+    (value: Answer) => {
+      setAnswers((prev) => ({ ...prev, [q.id]: value }));
+    },
+    [q.id],
+  );
 
-  const selectImportance = useCallback((value: number) => {
-    setImportanceWeights((prev) => ({ ...prev, [q.id]: value }));
-  }, [q.id]);
+  const selectImportance = useCallback(
+    (value: number) => {
+      setImportanceWeights((prev) => ({ ...prev, [q.id]: value }));
+    },
+    [q.id],
+  );
 
   const next = useCallback(() => {
     if (current < questions.length - 1) {
@@ -119,13 +127,18 @@ export default function Quiz() {
     navigate("/resultados", { state: { answers, importanceWeights } });
   }, [answers, importanceWeights, navigate]);
 
-  const handleTestProfile = useCallback((profileName: string) => {
-    const profile = testProfiles.find((p) => p.name === profileName);
-    if (!profile) return;
-    const testAnswers = profile.generateAnswers();
-    clearSession();
-    navigate("/resultados", { state: { answers: testAnswers, importanceWeights: {} } });
-  }, [navigate]);
+  const handleTestProfile = useCallback(
+    (profileName: string) => {
+      const profile = testProfiles.find((p) => p.name === profileName);
+      if (!profile) return;
+      const testAnswers = profile.generateAnswers();
+      clearSession();
+      navigate("/resultados", {
+        state: { answers: testAnswers, importanceWeights: {} },
+      });
+    },
+    [navigate],
+  );
 
   const selected = answers[q.id];
   const currentImportance = importanceWeights[q.id] ?? 0;
@@ -142,9 +155,10 @@ export default function Quiz() {
             key={value}
             onClick={() => selectAnswer(value)}
             className={`w-full text-left px-5 py-3.5 rounded-xl border text-sm font-medium transition-colors
-              ${selected === value
-                ? "bg-primary text-primary-foreground border-primary"
-                : "bg-card text-card-foreground border-border hover:border-primary/40"
+              ${
+                selected === value
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "bg-card text-card-foreground border-border hover:border-primary/40"
               }`}
           >
             {label}
@@ -162,9 +176,10 @@ export default function Quiz() {
               key={value}
               onClick={() => selectImportance(value)}
               className={`flex-1 text-center px-1 py-2 rounded-lg border text-xs font-medium transition-colors
-                ${currentImportance === value
-                  ? "bg-accent text-accent-foreground border-accent"
-                  : "bg-card text-muted-foreground border-border hover:border-accent/40"
+                ${
+                  currentImportance === value
+                    ? "bg-accent text-accent-foreground border-accent"
+                    : "bg-card text-muted-foreground border-border hover:border-accent/40"
                 }`}
             >
               {label}
@@ -179,7 +194,9 @@ export default function Quiz() {
     <div className="min-h-screen bg-background flex flex-col">
       <header className="border-b border-border bg-card/50">
         <div className="container max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-          <span className="font-serif text-lg text-primary">Bússola Política</span>
+          <span className="font-serif text-lg text-primary">
+            Bússola Política
+          </span>
           <div className="flex gap-2 flex-wrap">
             {IS_DEV && (
               <div className="relative">
@@ -197,45 +214,48 @@ export default function Quiz() {
                         onClick={() => handleTestProfile(profile.name)}
                         className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-secondary transition-colors"
                       >
-                        <div className="font-medium text-card-foreground">{profile.label}</div>
-                        <div className="text-xs text-muted-foreground">{profile.description}</div>
+                        <div className="font-medium text-card-foreground">
+                          {profile.label}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {profile.description}
+                        </div>
                       </button>
                     ))}
                   </div>
                 )}
               </div>
             )}
-            <button
+            <Button
+              variant="outline"
+              size="sm"
               onClick={() => setShowEarlyFinish(true)}
-              className="text-sm text-primary font-medium hover:text-primary/80 transition-colors px-2 py-1 rounded border border-primary/30"
             >
               Terminar Agora
-            </button>
-            <button
-              onClick={handleReset}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Recomeçar
-            </button>
-            <button
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
               onClick={() => navigate("/bussola")}
-              className="text-sm text-primary font-medium hover:text-primary/80 transition-colors"
             >
               Bússola
-            </button>
-            <button
-              onClick={() => navigate("/")}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
+            </Button>
+
+            <Button variant="outline" size="sm" onClick={() => navigate("/")}>
               Sair
-            </button>
+            </Button>
           </div>
         </div>
       </header>
 
       <main className="flex-1 flex flex-col items-center justify-center px-4 py-8">
         <div className="w-full max-w-xl space-y-8">
-          <QuizProgress current={current} total={questions.length} category={q.category} />
+          <QuizProgress
+            current={current}
+            total={questions.length}
+            category={q.category}
+          />
 
           {isMobile ? (
             <div key={q.id}>{questionContent}</div>
