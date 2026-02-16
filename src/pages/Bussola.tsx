@@ -11,7 +11,10 @@ import { parties } from "@/data/parties";
 import PoliticalCompass from "@/components/PoliticalCompass";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
+import { useGesture } from "@use-gesture/react";
+import { ZoomIn, ZoomOut, RotateCcw, Smartphone } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 function getConfidenceLabel(pct: number): { label: string; color: string } {
   if (pct >= 80) return { label: "Confiança alta", color: "text-accent" };
@@ -21,10 +24,49 @@ function getConfidenceLabel(pct: number): { label: string; color: string } {
 
 export default function Bussola() {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [history, setHistory] = useState<StoredResult[]>(() => loadHistory());
   const [selected, setSelected] = useState<StoredResult | null>(null);
 
-  // Live position from current session
+  // Estados para Transformação (Pan & Zoom)
+  const [style, setStyle] = useState({ x: 0, y: 0, scale: 1 });
+  const targetRef = useRef<HTMLDivElement>(null);
+
+  // Auto-reset: Quando o utilizador faz zoom-out até ao mínimo (1), recentra o gráfico
+  useEffect(() => {
+    if (style.scale <= 1 && (style.x !== 0 || style.y !== 0)) {
+      setStyle((s) => ({ ...s, x: 0, y: 0, scale: 1 }));
+    }
+  }, [style.scale]);
+
+  // Configuração de Gestos Unificada
+  useGesture(
+    {
+      onDrag: ({ offset: [x, y] }) => {
+        // Permite arrastar apenas se houver zoom
+        if (style.scale > 1) {
+          setStyle((s) => ({ ...s, x, y }));
+        }
+      },
+      onPinch: ({ first, movement: [ms], memo }) => {
+        if (!isMobile) return;
+        if (first) return style.scale;
+        const nextScale = Math.max(1, Math.min(memo * ms, 4));
+        setStyle((s) => ({ ...s, scale: nextScale }));
+        return memo;
+      },
+    },
+    {
+      target: targetRef,
+      drag: { from: () => [style.x, style.y] },
+      pinch: { enabled: isMobile },
+      eventOptions: { passive: false },
+    },
+  );
+
+  const resetTransform = () => setStyle({ x: 0, y: 0, scale: 1 });
+
+  // Lógica de Resultados
   const liveResult = useMemo(() => {
     const session = loadSession();
     if (!session || Object.keys(session.answers).length === 0) return null;
@@ -42,7 +84,6 @@ export default function Bussola() {
     ? Math.round((liveResult.answeredCount / questions.length) * 100)
     : 0;
 
-  // Determine what to show on compass
   const displayResult = selected
     ? {
         economicScore: selected.economicScore,
@@ -62,17 +103,18 @@ export default function Bussola() {
     : history;
 
   const handleClear = () => {
-    clearHistory();
-    setHistory([]);
-    setSelected(null);
+    if (confirm("Apagar todo o histórico?")) {
+      clearHistory();
+      setHistory([]);
+      setSelected(null);
+    }
   };
 
   const confidence = liveResult ? getConfidenceLabel(answeredPct) : null;
-  const hasNoData = !liveResult && history.length === 0;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm">
+      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
           <span className="font-serif text-lg text-primary">
             Bússola Política
@@ -92,46 +134,100 @@ export default function Bussola() {
         </div>
       </header>
 
-      <main className="flex-1 container max-w-4xl mx-auto px-5 py-8 space-y-4">
+      <main className="flex-1 container max-w-4xl mx-auto px-5 py-8 space-y-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <h1 className="font-serif text-3xl text-foreground">
-            Bússola: 4 Eixos
+          <h1 className="font-serif text-3xl text-foreground text-center sm:text-left">
+            A Tua Bússola
           </h1>
           <p className="text-muted-foreground mt-1">
             A tua posição ideológica nos 4 quadrantes do espectro político.
           </p>
         </motion.div>
 
-        {/* Live confidence indicator */}
         {liveResult && !selected && (
-          <div className="flex items-center gap-3 text-sm">
-            <span className={`font-medium ${confidence!.color}`}>
+          <div className="flex items-center justify-center sm:justify-start gap-3 text-sm bg-secondary/30 p-3 rounded-lg">
+            <span className={`font-bold ${confidence!.color}`}>
               {confidence!.label}
             </span>
             <span className="text-muted-foreground">
-              ({liveResult.answeredCount}/{questions.length} perguntas
-              respondidas — {answeredPct}%)
+              ({answeredPct}% concluído)
             </span>
           </div>
         )}
 
-        {hasNoData && (
-          <div className="text-center py-4 text-muted-foreground text-sm">
-            A tua bússola ideológica aparecerá aqui à medida que responderes às
-            perguntas.
+        {/* CONTENTOR DA BÚSSOLA INTERATIVO */}
+        <div
+          className={`relative border border-border rounded-2xl bg-card overflow-hidden shadow-sm ${isMobile ? "touch-none" : ""}`}
+        >
+          {/* CONTROLOS FLUTUANTES */}
+          <div className="absolute right-4 top-4 z-20 flex flex-col gap-2">
+            <Button
+              variant="secondary"
+              size="icon"
+              className="h-9 w-9 rounded-full shadow-md border border-border/50 bg-background/90 backdrop-blur"
+              onClick={() =>
+                setStyle((s) => ({ ...s, scale: Math.min(s.scale + 0.5, 4) }))
+              }
+            >
+              <ZoomIn className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="secondary"
+              size="icon"
+              className="h-9 w-9 rounded-full shadow-md border border-border/50 bg-background/90 backdrop-blur"
+              onClick={() =>
+                setStyle((s) => ({ ...s, scale: Math.max(s.scale - 0.5, 1) }))
+              }
+            >
+              <ZoomOut className="h-5 w-5" />
+            </Button>
+            {(style.scale > 1 || style.x !== 0 || style.y !== 0) && (
+              <Button
+                variant="secondary"
+                size="icon"
+                className="h-9 w-9 rounded-full shadow-md border border-border/50 bg-background/90 backdrop-blur"
+                onClick={resetTransform}
+              >
+                <RotateCcw className="h-5 w-5" />
+              </Button>
+            )}
           </div>
-        )}
 
-        <PoliticalCompass
-          parties={parties}
-          userResult={displayResult}
-          pastResults={pastForCompass}
-        />
+          {/* DICA MOBILE */}
+          {isMobile && style.scale === 1 && (
+            <div className="absolute left-1/2 -translate-x-1/2 bottom-6 z-20 pointer-events-none bg-background/90 backdrop-blur px-4 py-1.5 rounded-full border border-border shadow-sm flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest text-muted-foreground animate-pulse">
+              <Smartphone className="h-3.5 w-3.5" />
+              <span>Pinch para Zoom</span>
+            </div>
+          )}
 
-        {/* History timeline */}
+          {/* ÁREA DO GRÁFICO (ASPECT RATIO 1:1) */}
+          <div
+            className={`w-full aspect-square max-h-[75vh] flex items-center justify-center p-2 sm:p-4 overflow-hidden select-none
+              ${style.scale > 1 ? "cursor-grab active:cursor-grabbing" : "cursor-default"}`}
+          >
+            <motion.div
+              ref={targetRef}
+              animate={{ x: style.x, y: style.y, scale: style.scale }}
+              transition={{ type: "spring", damping: 30, stiffness: 250 }}
+              className="w-full h-full"
+              style={{ touchAction: "none" }}
+            >
+              <div className="w-full h-full flex items-center justify-center pointer-events-auto">
+                <PoliticalCompass
+                  parties={parties}
+                  userResult={displayResult}
+                  pastResults={pastForCompass}
+                />
+              </div>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* SECÇÃO DE HISTÓRICO */}
         {history.length > 0 && (
           <div className="space-y-2">
             <div className="flex items-center justify-between">
@@ -182,15 +278,6 @@ export default function Bussola() {
                 </motion.button>
               );
             })}
-          </div>
-        )}
-
-        {/* CTA if no answers yet */}
-        {hasNoData && (
-          <div className="text-center">
-            <Button onClick={() => navigate("/quiz")}>
-              Começar Questionário
-            </Button>
           </div>
         )}
       </main>

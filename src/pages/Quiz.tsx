@@ -241,14 +241,16 @@ export default function Quiz() {
                 )}
               </div>
             )}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowEarlyFinish(true)}
-            >
-              Terminar Agora
-            </Button>
 
+            {current > 49 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowEarlyFinish(true)}
+              >
+                Terminar Agora
+              </Button>
+            )}
             <Button
               variant="outline"
               size="sm"
@@ -258,7 +260,7 @@ export default function Quiz() {
             </Button>
 
             <Button variant="outline" size="sm" onClick={() => navigate("/")}>
-              Sair
+              Início
             </Button>
           </div>
         </div>
