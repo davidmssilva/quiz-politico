@@ -92,13 +92,13 @@ export default function Bussola() {
         </div>
       </header>
 
-      <main className="flex-1 container max-w-4xl mx-auto px-4 py-8 space-y-8">
+      <main className="flex-1 container max-w-4xl mx-auto px-5 py-8 space-y-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
           <h1 className="font-serif text-3xl text-foreground">
-            Bússola — 4 Eixos
+            Bússola: 4 Eixos
           </h1>
           <p className="text-muted-foreground mt-1">
             A tua posição ideológica nos 4 quadrantes do espectro político.

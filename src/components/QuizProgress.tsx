@@ -7,13 +7,15 @@ interface Props {
 }
 
 function QuizProgress({ current, total, category }: Props) {
-  const pct = ((current) / total) * 100;
+  const pct = (current / total) * 100;
 
   return (
     <div className="w-full space-y-2">
       <div className="flex items-center justify-between text-sm">
         <span className="text-muted-foreground font-medium">{category}</span>
-        <span className="text-muted-foreground">{current + 1} / {total}</span>
+        <span className="text-muted-foreground">
+          {current + 1} / {total}
+        </span>
       </div>
       <div className="w-full h-2 bg-secondary rounded-full overflow-hidden">
         <div

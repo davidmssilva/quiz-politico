@@ -4,7 +4,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
 
 interface Props {
@@ -16,35 +15,58 @@ interface Props {
 export default function IdeologyModal({ ideology, open, onClose }: Props) {
   if (!ideology) return null;
 
-  const econLabel = ideology.x < -3 ? "Esquerda" : ideology.x > 3 ? "Direita" : "Centro";
-  const authLabel = ideology.y < -3 ? "Autoritário" : ideology.y > 3 ? "Libertário" : "Moderado";
+  // Lógica de labels baseada nos eixos clássicos (X: Econ, Y: Auth)
+  const getLabels = (x: number, y: number) => {
+    const econ = x < 0 ? "Esquerda" : x > 0 ? "Direita" : "Centrismo";
+    const auth =
+      y < 0 ? "Autoritário" : y > 0 ? "Libertário" : "Eixo Social Neutro";
+    return { econ, auth };
+  };
+
+  const labels = getLabels(ideology.x, ideology.y);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle className="font-serif text-xl">
-            {ideology.name.replace(/\n/g, " ")}
-          </DialogTitle>
-          <DialogDescription className="pt-2 space-y-3">
-            <p className="text-sm text-foreground leading-relaxed">
-              {ideology.description}
-            </p>
-            <div className="flex gap-4 pt-1">
-              <div className="bg-secondary rounded-lg px-3 py-2 text-center flex-1">
-                <div className="text-xs text-muted-foreground">Económico</div>
-                <div className="text-sm font-semibold text-foreground">
-                  {ideology.x > 0 ? "+" : ""}{ideology.x} ({econLabel})
-                </div>
-              </div>
-              <div className="bg-secondary rounded-lg px-3 py-2 text-center flex-1">
-                <div className="text-xs text-muted-foreground">Autoridade</div>
-                <div className="text-sm font-semibold text-foreground">
-                  {ideology.y > 0 ? "+" : ""}{ideology.y} ({authLabel})
-                </div>
-              </div>
+      <DialogContent className="max-w-[400px] border-none bg-background/95 backdrop-blur-md shadow-2xl">
+        <DialogHeader className="space-y-4">
+          <div className="space-y-1">
+            <DialogTitle className="text-2xl font-light tracking-tight">
+              {ideology.name.replace(/\n/g, " ")}
+            </DialogTitle>
+            <div className="flex gap-2">
+              <span className="text-[10px] uppercase tracking-widest font-bold px-2 py-0.5 rounded bg-primary/10 text-primary">
+                {labels.econ}
+              </span>
+              <span className="text-[10px] uppercase tracking-widest font-bold px-2 py-0.5 rounded bg-primary/10 text-primary">
+                {labels.auth}
+              </span>
             </div>
-          </DialogDescription>
+          </div>
+
+          <p className="text-sm text-muted-foreground leading-relaxed italic">
+            "{ideology.description}"
+          </p>
+
+          <div className="grid grid-cols-2 gap-px bg-border/50 rounded-lg overflow-hidden border border-border/50 mt-4">
+            <div className="bg-background p-3 text-center">
+              <p className="text-[10px] uppercase text-muted-foreground mb-1">
+                Económico
+              </p>
+              <p className="text-lg font-mono tracking-tighter">
+                {ideology.x > 0 ? "+" : ""}
+                {ideology.x.toFixed(1)}
+              </p>
+            </div>
+            <div className="bg-background p-3 text-center">
+              <p className="text-[10px] uppercase text-muted-foreground mb-1">
+                Social
+              </p>
+              <p className="text-lg font-mono tracking-tighter">
+                {ideology.y > 0 ? "+" : ""}
+                {ideology.y.toFixed(1)}
+              </p>
+            </div>
+          </div>
         </DialogHeader>
       </DialogContent>
     </Dialog>

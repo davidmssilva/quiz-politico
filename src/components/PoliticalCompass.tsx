@@ -1,7 +1,7 @@
 import { Party } from "@/data/parties";
 import { QuizResult, StoredResult } from "@/lib/scoring";
 import { Ideology, ideologies } from "@/data/ideologies";
-import { memo, useMemo, useState, useCallback, useRef } from "react";
+import { memo, useMemo, useState, useCallback } from "react";
 import IdeologyModal from "@/components/IdeologyModal";
 import IdeologyTooltip from "@/components/IdeologyTooltip";
 
@@ -11,15 +11,15 @@ interface Props {
   pastResults?: StoredResult[];
 }
 
-const COMPASS_SIZE = 500;
-const PADDING = 50;
+// Aumentado para 800 para dar "respiro" às ideologias e evitar sobreposição
+const COMPASS_SIZE = 750;
+const PADDING = 40;
 const INNER = COMPASS_SIZE - PADDING * 2;
 
 function toPixel(value: number): number {
   return PADDING + ((value + 10) / 20) * INNER;
 }
 
-// Static ideology background with hover + click
 const IdeologyLayer = memo(function IdeologyLayer({
   onHoverIdeology,
   onLeaveIdeology,
@@ -30,45 +30,45 @@ const IdeologyLayer = memo(function IdeologyLayer({
   onClickIdeology: (ideo: Ideology) => void;
 }) {
   return (
-    <>
+    <g id="ideology-layer">
       {ideologies.map((ideo) => {
         const ix = toPixel(ideo.x);
         const iy = toPixel(ideo.y);
         const lines = ideo.name.split("\n");
+
         return (
           <g
             key={ideo.name}
-            className="cursor-pointer"
+            className="cursor-pointer group"
             onMouseEnter={(e) => onHoverIdeology(ideo, e)}
             onMouseMove={(e) => onHoverIdeology(ideo, e)}
             onMouseLeave={onLeaveIdeology}
             onClick={() => onClickIdeology(ideo)}
           >
-            <circle cx={ix} cy={iy} r={24} fill={ideo.color} opacity={ideo.opacity} />
-            {/* Semi-transparent background for readability */}
-            <rect
-              x={ix - 28}
-              y={iy - (lines.length * 10) / 2 - 2}
-              width={56}
-              height={lines.length * 10 + 4}
-              rx={3}
-              fill="hsl(var(--background))"
-              opacity={0.4}
-              className="pointer-events-none"
+            {/* Círculo de cor extremamente sutil para marcar a zona */}
+            <circle
+              cx={ix}
+              cy={iy}
+              r={40}
+              fill={ideo.color}
+              className="opacity-[0.05] group-hover:opacity-[0.15] transition-opacity duration-300"
             />
+
+            {/* Nome da ideologia: aparece como marca d'água, ganha foco no hover */}
             {lines.map((line, li) => (
               <text
                 key={li}
                 x={ix}
-                y={iy + (li - (lines.length - 1) / 2) * 10}
+                y={iy + (li - (lines.length - 1) / 2) * 11}
                 textAnchor="middle"
                 dominantBaseline="central"
-                fontSize={7.5}
-                fontWeight={600}
+                fontSize={10}
+                fontWeight={500}
                 fill={ideo.color}
-                opacity={0.65}
-                className="select-none pointer-events-none"
-                style={{ textShadow: "0 0 3px hsl(var(--background)), 0 0 6px hsl(var(--background))" }}
+                className="select-none pointer-events-none opacity-30 group-hover:opacity-100 transition-all duration-200 uppercase tracking-tighter"
+                style={{
+                  filter: "drop-shadow(0px 0px 2px white)",
+                }}
               >
                 {line}
               </text>
@@ -76,182 +76,235 @@ const IdeologyLayer = memo(function IdeologyLayer({
           </g>
         );
       })}
-    </>
+    </g>
   );
 });
 
-// Static grid
 const GridLayer = memo(function GridLayer() {
   return (
-    <>
+    <g id="grid-layer" className="pointer-events-none">
       {Array.from({ length: 21 }, (_, i) => {
         const pos = PADDING + (i / 20) * INNER;
         const isCenter = i === 10;
         return (
           <g key={i}>
-            <line x1={pos} y1={PADDING} x2={pos} y2={PADDING + INNER}
-              stroke={isCenter ? "hsl(var(--foreground) / 0.3)" : "hsl(var(--compass-grid))"}
-              strokeWidth={isCenter ? 1.5 : 0.5} />
-            <line y1={pos} x1={PADDING} y2={pos} x2={PADDING + INNER}
-              stroke={isCenter ? "hsl(var(--foreground) / 0.3)" : "hsl(var(--compass-grid))"}
-              strokeWidth={isCenter ? 1.5 : 0.5} />
+            <line
+              x1={pos}
+              y1={PADDING}
+              x2={pos}
+              y2={PADDING + INNER}
+              stroke="currentColor"
+              className={
+                isCenter ? "text-foreground/20" : "text-foreground/[0.04]"
+              }
+              strokeWidth={isCenter ? 1.5 : 0.5}
+            />
+            <line
+              y1={pos}
+              x1={PADDING}
+              y2={pos}
+              x2={PADDING + INNER}
+              stroke="currentColor"
+              className={
+                isCenter ? "text-foreground/20" : "text-foreground/[0.04]"
+              }
+              strokeWidth={isCenter ? 1.5 : 0.5}
+            />
           </g>
         );
       })}
-    </>
+    </g>
   );
 });
 
 function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
-  const [hovered, setHovered] = useState<Party | null>(null);
-  const [selectedIdeology, setSelectedIdeology] = useState<Ideology | null>(null);
+  const [hoveredParty, setHoveredParty] = useState<Party | null>(null);
+  const [selectedIdeology, setSelectedIdeology] = useState<Ideology | null>(
+    null,
+  );
   const [hoveredIdeology, setHoveredIdeology] = useState<Ideology | null>(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
 
-  const handleMouseEnter = useCallback((party: Party) => setHovered(party), []);
-  const handleMouseLeave = useCallback(() => setHovered(null), []);
-  const handleIdeologyClick = useCallback((ideo: Ideology) => setSelectedIdeology(ideo), []);
-  const handleIdeologyHover = useCallback((ideo: Ideology, e: React.MouseEvent) => {
-    setHoveredIdeology(ideo);
-    setTooltipPos({ x: e.clientX, y: e.clientY });
-  }, []);
-  const handleIdeologyLeave = useCallback(() => setHoveredIdeology(null), []);
+  const handleIdeologyHover = useCallback(
+    (ideo: Ideology, e: React.MouseEvent) => {
+      setHoveredIdeology(ideo);
+      setTooltipPos({ x: e.clientX, y: e.clientY });
+    },
+    [],
+  );
 
   const userX = toPixel(userResult.economicScore);
   const userY = toPixel(userResult.authorityScore);
-
-  const limitedPast = useMemo(
-    () => pastResults.slice(-10),
-    [pastResults]
-  );
+  const limitedPast = useMemo(() => pastResults.slice(-10), [pastResults]);
 
   return (
-    <div className="relative w-full max-w-[540px] mx-auto">
+    <div className="relative w-full max-w-[800px] mx-auto p-6 bg-background rounded-3xl border shadow-xl transition-all">
       <svg
         viewBox={`0 0 ${COMPASS_SIZE} ${COMPASS_SIZE}`}
-        className="w-full h-auto"
+        className="w-full h-auto overflow-visible"
       >
-        {/* Layer 1: Background quadrants with labels */}
-        <rect x={PADDING} y={PADDING} width={INNER / 2} height={INNER / 2} fill="hsl(0 72% 51% / 0.06)" />
-        <rect x={PADDING + INNER / 2} y={PADDING} width={INNER / 2} height={INNER / 2} fill="hsl(30 80% 50% / 0.06)" />
-        <rect x={PADDING} y={PADDING + INNER / 2} width={INNER / 2} height={INNER / 2} fill="hsl(153 50% 40% / 0.06)" />
-        <rect x={PADDING + INNER / 2} y={PADDING + INNER / 2} width={INNER / 2} height={INNER / 2} fill="hsl(210 80% 55% / 0.06)" />
+        {/* Quadrantes suaves no fundo */}
+        <g id="quadrants" opacity={0.03}>
+          <rect
+            x={PADDING}
+            y={PADDING}
+            width={INNER / 2}
+            height={INNER / 2}
+            fill="#ff4b4b"
+          />
+          <rect
+            x={PADDING + INNER / 2}
+            y={PADDING}
+            width={INNER / 2}
+            height={INNER / 2}
+            fill="#f59e0b"
+          />
+          <rect
+            x={PADDING}
+            y={PADDING + INNER / 2}
+            width={INNER / 2}
+            height={INNER / 2}
+            fill="#10b981"
+          />
+          <rect
+            x={PADDING + INNER / 2}
+            y={PADDING + INNER / 2}
+            width={INNER / 2}
+            height={INNER / 2}
+            fill="#3b82f6"
+          />
+        </g>
 
-        {/* Quadrant labels (4 Eixos) */}
-        <text x={PADDING + INNER / 4} y={PADDING + 18} textAnchor="middle" fontSize={8} fontWeight={600}
-          fill="hsl(0 72% 51%)" opacity={0.25} className="select-none pointer-events-none">
-          Esquerda Autoritária
-        </text>
-        <text x={PADDING + (INNER * 3) / 4} y={PADDING + 18} textAnchor="middle" fontSize={8} fontWeight={600}
-          fill="hsl(30 80% 50%)" opacity={0.25} className="select-none pointer-events-none">
-          Direita Autoritária
-        </text>
-        <text x={PADDING + INNER / 4} y={PADDING + INNER - 10} textAnchor="middle" fontSize={8} fontWeight={600}
-          fill="hsl(153 50% 40%)" opacity={0.25} className="select-none pointer-events-none">
-          Esquerda Libertária
-        </text>
-        <text x={PADDING + (INNER * 3) / 4} y={PADDING + INNER - 10} textAnchor="middle" fontSize={8} fontWeight={600}
-          fill="hsl(210 80% 55%)" opacity={0.25} className="select-none pointer-events-none">
-          Direita Libertária
-        </text>
-
-        {/* Layer 2: Ideology labels (static, hoverable, clickable) */}
+        {/* Camada 1: Ideologias (Background) */}
         <IdeologyLayer
           onHoverIdeology={handleIdeologyHover}
-          onLeaveIdeology={handleIdeologyLeave}
-          onClickIdeology={handleIdeologyClick}
+          onLeaveIdeology={() => setHoveredIdeology(null)}
+          onClickIdeology={(ideo) => setSelectedIdeology(ideo)}
         />
 
-        {/* Layer 3: Grid lines */}
+        {/* Camada 2: Grelha */}
         <GridLayer />
 
-        {/* Border */}
-        <rect x={PADDING} y={PADDING} width={INNER} height={INNER} fill="none" stroke="hsl(var(--border))" strokeWidth={1.5} rx={4} />
+        {/* Camada 3: Resultados Antigos */}
+        {limitedPast.map((r, i) => (
+          <circle
+            key={r.id || i}
+            cx={toPixel(r.economicScore)}
+            cy={toPixel(r.authorityScore)}
+            r={5}
+            className="fill-primary/10 stroke-background stroke-1"
+          />
+        ))}
 
-        {/* Layer 4: Party dots */}
+        {/* Camada 4: Partidos (Z-index superior às ideologias) */}
         {parties.map((party) => {
           const px = toPixel(party.x);
           const py = toPixel(party.y);
-          const isHovered = hovered?.shortName === party.shortName;
+          const isHovered = hoveredParty?.shortName === party.shortName;
+
           return (
-            <g key={party.shortName}
-              onMouseEnter={() => handleMouseEnter(party)}
-              onMouseLeave={handleMouseLeave}
-              className="cursor-pointer"
+            <g
+              key={party.shortName}
+              onMouseEnter={() => setHoveredParty(party)}
+              onMouseLeave={() => setHoveredParty(null)}
+              className="cursor-help transition-all"
             >
-              <circle cx={px} cy={py} r={isHovered ? 10 : 7} fill={party.color} opacity={0.85}
-                stroke="white" strokeWidth={1.5}
-                style={{ transition: "r 0.15s" }} />
-              <text x={px} y={py - 12} textAnchor="middle" fontSize={10} fontWeight={600}
-                fill="hsl(var(--foreground))" className="pointer-events-none select-none">
+              <circle
+                cx={px}
+                cy={py}
+                r={isHovered ? 12 : 8}
+                fill={party.color}
+                className="stroke-background stroke-[3px] shadow-sm transition-all duration-300"
+              />
+              <text
+                x={px}
+                y={py - 18}
+                textAnchor="middle"
+                fontSize={13}
+                fontWeight={800}
+                className="fill-foreground select-none pointer-events-none tracking-tight"
+              >
                 {party.shortName}
               </text>
             </g>
           );
         })}
 
-        {/* Layer 5: Past result dots */}
-        {limitedPast.map((r, i) => {
-          const rx = toPixel(r.economicScore);
-          const ry = toPixel(r.authorityScore);
-          return (
-            <circle key={r.id || i} cx={rx} cy={ry} r={5}
-              fill="hsl(var(--compass-user))" opacity={0.25}
-              stroke="white" strokeWidth={1} />
-          );
-        })}
+        {/* Camada 5: Marcador do Utilizador (Destaque máximo) */}
+        <g className="drop-shadow-lg">
+          <circle
+            cx={userX}
+            cy={userY}
+            r={14}
+            className="fill-primary stroke-background stroke-[4px]"
+          />
+          <text
+            x={userX}
+            y={userY - 24}
+            textAnchor="middle"
+            fontSize={16}
+            fontWeight={950}
+            className="fill-primary uppercase tracking-tighter"
+          >
+            TU
+          </text>
+        </g>
 
-        {/* Layer 6: User dot */}
-        <circle cx={userX} cy={userY} r={10}
-          fill="hsl(var(--compass-user))" stroke="white" strokeWidth={2.5} />
-        <text x={userX} y={userY - 16} textAnchor="middle" fontSize={11} fontWeight={700}
-          fill="hsl(var(--compass-user))">
-          TU
-        </text>
-
-        {/* Axis labels */}
-        <text x={PADDING - 5} y={COMPASS_SIZE / 2} textAnchor="end" fontSize={9} fill="hsl(var(--muted-foreground))"
-          transform={`rotate(-90, ${PADDING - 5}, ${COMPASS_SIZE / 2})`}>
-          Autoritário
-        </text>
-        <text x={COMPASS_SIZE - PADDING + 5} y={COMPASS_SIZE / 2} textAnchor="start" fontSize={9} fill="hsl(var(--muted-foreground))"
-          transform={`rotate(90, ${COMPASS_SIZE - PADDING + 5}, ${COMPASS_SIZE / 2})`}>
-          Libertário
-        </text>
-        <text x={COMPASS_SIZE / 2} y={PADDING - 10} textAnchor="middle" fontSize={9} fill="hsl(var(--muted-foreground))">
-          Autoritário
-        </text>
-        <text x={COMPASS_SIZE / 2} y={COMPASS_SIZE - PADDING + 18} textAnchor="middle" fontSize={9} fill="hsl(var(--muted-foreground))">
-          Libertário
-        </text>
-        <text x={PADDING - 4} y={COMPASS_SIZE - PADDING + 18} textAnchor="middle" fontSize={9} fill="hsl(var(--muted-foreground))">
-          Esquerda
-        </text>
-        <text x={COMPASS_SIZE - PADDING + 4} y={COMPASS_SIZE - PADDING + 18} textAnchor="middle" fontSize={9} fill="hsl(var(--muted-foreground))">
-          Direita
-        </text>
+        {/* Eixos com Tipografia Clean */}
+        <g className="fill-muted-foreground/40 text-[11px] font-black uppercase tracking-[0.2em]">
+          <text x={COMPASS_SIZE / 2} y={PADDING - 30} textAnchor="middle">
+            Autoritário
+          </text>
+          <text
+            x={COMPASS_SIZE / 2}
+            y={COMPASS_SIZE - PADDING + 45}
+            textAnchor="middle"
+          >
+            Libertário
+          </text>
+          <text
+            x={PADDING - 35}
+            y={COMPASS_SIZE / 2}
+            textAnchor="middle"
+            transform={`rotate(-90, ${PADDING - 35}, ${COMPASS_SIZE / 2})`}
+          >
+            Esquerda
+          </text>
+          <text
+            x={COMPASS_SIZE - PADDING + 35}
+            y={COMPASS_SIZE / 2}
+            textAnchor="middle"
+            transform={`rotate(90, ${COMPASS_SIZE - PADDING + 35}, ${COMPASS_SIZE / 2})`}
+          >
+            Direita
+          </text>
+        </g>
       </svg>
 
-      {/* Party tooltip */}
-      {hovered && (
-        <div className="absolute top-4 right-4 bg-card border border-border rounded-lg p-3 max-w-[200px] z-10">
-          <div className="flex items-center gap-2 mb-1">
-            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: hovered.color }} />
-            <span className="font-semibold text-sm text-card-foreground">{hovered.shortName}</span>
+      {/* Tooltip Lateral Elevado */}
+      {hoveredParty && (
+        <div className="absolute top-10 right-10 bg-card/95 backdrop-blur border-2 rounded-2xl p-4 shadow-2xl max-w-[200px] animate-in fade-in slide-in-from-top-2">
+          <div className="flex items-center gap-2 mb-2">
+            <div
+              className="w-3 h-3 rounded-full"
+              style={{ backgroundColor: hoveredParty.color }}
+            />
+            <span className="font-black text-sm tracking-tight">
+              {hoveredParty.shortName}
+            </span>
           </div>
-          <p className="text-xs text-muted-foreground">{hovered.description}</p>
+          <p className="text-[11px] leading-relaxed text-muted-foreground font-medium">
+            {hoveredParty.description}
+          </p>
         </div>
       )}
 
-      {/* Ideology cursor tooltip */}
       <IdeologyTooltip
         ideology={hoveredIdeology}
         x={tooltipPos.x}
         y={tooltipPos.y}
         visible={!!hoveredIdeology}
       />
-
-      {/* Ideology detail modal (on click) */}
       <IdeologyModal
         ideology={selectedIdeology}
         open={!!selectedIdeology}

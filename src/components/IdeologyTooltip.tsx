@@ -9,24 +9,28 @@ interface Props {
 }
 
 function IdeologyTooltip({ ideology, x, y, visible }: Props) {
-  if (!ideology || !visible) return null;
+  if (!ideology) return null;
 
   return (
     <div
-      className="fixed z-50 pointer-events-none transition-opacity duration-150"
+      className="fixed z-50 pointer-events-none transition-all duration-200 ease-out"
       style={{
-        left: x + 14,
-        top: y + 14,
+        left: x + 18,
+        top: y + 18,
         opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(4px)",
       }}
     >
-      <div className="bg-card border border-border rounded-lg p-3 max-w-[220px] shadow-md">
-        <div className="font-semibold text-sm text-card-foreground mb-1">
-          {ideology.name.replace(/\n/g, " ")}
+      <div className="bg-black/80 backdrop-blur-sm border border-white/10 rounded-md px-3 py-2 shadow-xl">
+        <div className="flex items-center gap-3">
+          <span className="font-medium text-xs text-white tracking-wide uppercase">
+            {ideology.name.replace(/\n/g, " ")}
+          </span>
+          <div className="h-3 w-[1px] bg-white/20" />
+          <span className="font-mono text-[10px] text-white/60">
+            {ideology.x.toFixed(1)}, {ideology.y.toFixed(1)}
+          </span>
         </div>
-        <p className="text-xs text-muted-foreground leading-relaxed">
-          {ideology.description}
-        </p>
       </div>
     </div>
   );
