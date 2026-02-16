@@ -11,7 +11,6 @@ interface Props {
   pastResults?: StoredResult[];
 }
 
-// Aumentado para 800 para dar "respiro" às ideologias e evitar sobreposição
 const COMPASS_SIZE = 750;
 const PADDING = 40;
 const INNER = COMPASS_SIZE - PADDING * 2;
@@ -45,7 +44,6 @@ const IdeologyLayer = memo(function IdeologyLayer({
             onMouseLeave={onLeaveIdeology}
             onClick={() => onClickIdeology(ideo)}
           >
-            {/* Círculo de cor extremamente sutil para marcar a zona */}
             <circle
               cx={ix}
               cy={iy}
@@ -54,7 +52,6 @@ const IdeologyLayer = memo(function IdeologyLayer({
               className="opacity-[0.05] group-hover:opacity-[0.15] transition-opacity duration-300"
             />
 
-            {/* Nome da ideologia: aparece como marca d'água, ganha foco no hover */}
             {lines.map((line, li) => (
               <text
                 key={li}
@@ -125,13 +122,20 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
   const [hoveredIdeology, setHoveredIdeology] = useState<Ideology | null>(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
 
-  const handleIdeologyHover = useCallback(
-    (ideo: Ideology, e: React.MouseEvent) => {
-      setHoveredIdeology(ideo);
+  // Handler unificado para movimento do rato sobre elementos com tooltip
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent, type: "party" | "ideology", data: any) => {
       setTooltipPos({ x: e.clientX, y: e.clientY });
+      if (type === "party") setHoveredParty(data);
+      if (type === "ideology") setHoveredIdeology(data);
     },
     [],
   );
+
+  const handleMouseLeave = useCallback((type: "party" | "ideology") => {
+    if (type === "party") setHoveredParty(null);
+    if (type === "ideology") setHoveredIdeology(null);
+  }, []);
 
   const userX = toPixel(userResult.economicScore);
   const userY = toPixel(userResult.authorityScore);
@@ -175,10 +179,10 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
           />
         </g>
 
-        {/* Camada 1: Ideologias (Background) */}
+        {/* Camada 1: Ideologias */}
         <IdeologyLayer
-          onHoverIdeology={handleIdeologyHover}
-          onLeaveIdeology={() => setHoveredIdeology(null)}
+          onHoverIdeology={(ideo, e) => handleMouseMove(e, "ideology", ideo)}
+          onLeaveIdeology={() => handleMouseLeave("ideology")}
           onClickIdeology={(ideo) => setSelectedIdeology(ideo)}
         />
 
@@ -196,7 +200,7 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
           />
         ))}
 
-        {/* Camada 4: Partidos (Z-index superior às ideologias) */}
+        {/* Camada 4: Partidos */}
         {parties.map((party) => {
           const px = toPixel(party.x);
           const py = toPixel(party.y);
@@ -205,8 +209,9 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
           return (
             <g
               key={party.shortName}
-              onMouseEnter={() => setHoveredParty(party)}
-              onMouseLeave={() => setHoveredParty(null)}
+              onMouseEnter={(e) => handleMouseMove(e, "party", party)}
+              onMouseMove={(e) => handleMouseMove(e, "party", party)}
+              onMouseLeave={() => handleMouseLeave("party")}
               className="cursor-help transition-all"
             >
               <circle
@@ -230,8 +235,8 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
           );
         })}
 
-        {/* Camada 5: Marcador do Utilizador (Destaque máximo) */}
-        <g className="drop-shadow-lg">
+        {/* Camada 5: Marcador do Utilizador */}
+        <g className="drop-shadow-lg pointer-events-none">
           <circle
             cx={userX}
             cy={userY}
@@ -250,8 +255,8 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
           </text>
         </g>
 
-        {/* Eixos com Tipografia Clean */}
-        <g className="fill-muted-foreground/40 text-[11px] font-black uppercase tracking-[0.2em]">
+        {/* Eixos */}
+        <g className="fill-muted-foreground/40 text-[11px] font-black uppercase tracking-[0.2em] pointer-events-none">
           <text x={COMPASS_SIZE / 2} y={PADDING - 30} textAnchor="middle">
             Autoritário
           </text>
@@ -281,9 +286,15 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
         </g>
       </svg>
 
-      {/* Tooltip Lateral Elevado */}
+      {/* TOOLTIP DOS PARTIDOS CORRIGIDO */}
       {hoveredParty && (
-        <div className="absolute top-10 right-10 bg-card/95 backdrop-blur border-2 rounded-2xl p-4 shadow-2xl max-w-[200px] animate-in fade-in slide-in-from-top-2">
+        <div
+          className="fixed z-50 pointer-events-none bg-card/95 backdrop-blur-md border-2 rounded-2xl p-4 shadow-2xl max-w-[220px] animate-in fade-in zoom-in-95"
+          style={{
+            left: tooltipPos.x + 20,
+            top: tooltipPos.y - 20,
+          }}
+        >
           <div className="flex items-center gap-2 mb-2">
             <div
               className="w-3 h-3 rounded-full"

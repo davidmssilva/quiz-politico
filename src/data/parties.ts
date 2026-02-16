@@ -1,115 +1,167 @@
 export interface Party {
   name: string;
   shortName: string;
-  x: number;
-  y: number;
+  x: number; // -10 (Extrema Esquerda) a 10 (Extrema Direita)
+  y: number; // -10 (Libertário) a 10 (Autoritário)
   color: string;
   description: string;
 }
-
 export const parties: Party[] = [
+  // --- Quadrante Superior Esquerdo (Autoritário-Esquerda) ---
   {
     name: "Partido Comunista Português",
     shortName: "PCP",
-    x: -9.0,
-    y: -2.0,
-    color: "#cc0000",
-    description: "Partido marxista-leninista que defende a propriedade estatal e o controlo pelos trabalhadores.",
-  },
-  {
-    name: "Bloco de Esquerda",
-    shortName: "BE",
     x: -8.0,
-    y: 4.0,
+    y: -5.0,
     color: "#cc0000",
-    description: "Partido socialista democrático de esquerda que defende a justiça social e as liberdades civis.",
+    description:
+      "Marxismo-leninismo, economia planificada e estrutura centralizada.",
   },
   {
-    name: "Livre",
-    shortName: "L",
-    x: -6.5,
-    y: 6.0,
-    color: "#00a86b",
-    description: "Partido eco-socialista e pró-europeu progressista.",
+    name: "PCTP/MRPP",
+    shortName: "MRPP",
+    x: -9.0,
+    y: -7.0,
+    color: "#ff0000",
+    description: "Maoismo ortodoxo e rotura revolucionária com o sistema.",
   },
   {
-    name: "Pessoas-Animais-Natureza",
-    shortName: "PAN",
-    x: -5.5,
-    y: 7.0,
-    color: "#00cc66",
-    description: "Partido progressista focado no ambiente e nos direitos dos animais.",
+    name: "Partido Ecologista Os Verdes",
+    shortName: "PEV",
+    x: -7.0,
+    y: -4.0,
+    color: "#008000",
+    description: "Ecossocialismo ligado ao coletivismo estatal.",
   },
+
+  // --- Quadrante Superior Direito (Autoritário-Direita) ---
   {
-    name: "Partido Socialista",
-    shortName: "PS",
-    x: -4.0,
-    y: 2.0,
-    color: "#ff6666",
-    description: "Partido social-democrata de centro-esquerda que defende o estado social e a economia mista.",
-  },
-  {
-    name: "Volt Portugal",
-    shortName: "Volt",
-    x: -2.0,
-    y: 7.5,
-    color: "#7c4dff",
-    description: "Partido liberal progressista e pró-europeu.",
-  },
-  {
-    name: "Partido Social Democrata",
-    shortName: "PSD",
-    x: 3.0,
-    y: -1.0,
-    color: "#ff8c00",
-    description: "Partido liberal-conservador de centro-direita que defende a economia de mercado.",
-  },
-  {
-    name: "CDS – Partido Popular",
-    shortName: "CDS-PP",
-    x: 6.5,
-    y: -3.0,
-    color: "#0000cc",
-    description: "Partido conservador que defende o mercado livre e os valores tradicionais.",
-  },
-  {
-    name: "Iniciativa Liberal",
-    shortName: "IL",
-    x: 9.0,
-    y: 5.0,
-    color: "#00aaff",
-    description: "Partido liberal clássico que defende mercados livres e liberdade individual.",
-  },
-  {
-    name: "Chega",
+    name: "CHEGA",
     shortName: "CH",
-    x: 7.5,
+    x: 6.0,
     y: -8.0,
-    color: "#000080",
-    description: "Partido populista de direita que defende uma aplicação rigorosa da lei e a soberania nacional.",
-  },
-  {
-    name: "Ergue-te",
-    shortName: "Ergue-te",
-    x: 8.5,
-    y: -9.0,
-    color: "#444444",
-    description: "Partido conservador nacionalista que defende forte autoridade estatal.",
+    color: "#202056",
+    description:
+      "Populismo nacional-conservador e reforço da autoridade do Estado.",
   },
   {
     name: "ADN",
     shortName: "ADN",
     x: 5.5,
-    y: -6.5,
-    color: "#0066cc",
-    description: "Partido conservador nacional que enfatiza a soberania e o conservadorismo social.",
+    y: -7.5,
+    color: "#1e4d2b",
+    description: "Conservadorismo tradicionalista e soberanismo radical.",
   },
   {
-    name: "RIR",
-    shortName: "RIR",
-    x: 0.5,
+    name: "CDS – Partido Popular",
+    shortName: "CDS-PP",
+    x: 5.0,
+    y: -4.5,
+    color: "#00008b",
+    description: "Democracia cristã e conservadorismo social.",
+  },
+  {
+    name: "NOVA DIREITA",
+    shortName: "ND",
+    x: 6.5,
+    y: -3.5,
+    color: "#1a1a1a",
+    description: "Direita identitária e valores tradicionais europeus.",
+  },
+  {
+    name: "Partido Popular Monárquico",
+    shortName: "PPM",
+    x: 4.0,
+    y: -3.5,
+    color: "#0055a5",
+    description: "Monarquismo e defesa das instituições tradicionais.",
+  },
+
+  // --- Centro e Centro-Direita (Estatismo Moderado) ---
+  {
+    name: "Partido Socialista",
+    shortName: "PS",
+    x: -2.0,
+    y: -1.0,
+    color: "#ff007f",
+    description: "Social-democracia com foco na regulação estatal.",
+  },
+  {
+    name: "Partido Social Democrata",
+    shortName: "PSD",
+    x: 3.0,
+    y: -2.0,
+    color: "#ff9900",
+    description: "Reformismo de centro-direita e economia social de mercado.",
+  },
+
+  // --- Quadrante Inferior Esquerdo (Libertário-Esquerda) ---
+  {
+    name: "LIVRE",
+    shortName: "L",
+    x: -5.5,
+    y: 6.0,
+    color: "#a4d65e",
+    description:
+      "Ecologia política, europeísmo e liberdade individual progressista.",
+  },
+  {
+    name: "Bloco de Esquerda",
+    shortName: "BE",
+    x: -7.0,
+    y: 4.0,
+    color: "#bf0000",
+    description: "Socialismo democrático e causas sociais libertárias.",
+  },
+  {
+    name: "Volt Portugal",
+    shortName: "Volt",
+    x: -1.0,
+    y: 5.0,
+    color: "#502379",
+    description: "Progressismo social e federalismo europeu.",
+  },
+  {
+    name: "PAN",
+    shortName: "PAN",
+    x: -3.0,
     y: 1.0,
-    color: "#ffaa00",
-    description: "Partido populista anti-corrupção com posições económicas mistas.",
+    color: "#008080",
+    description: "Direitos dos animais e ambientalismo descentralizado.",
+  },
+
+  // --- Quadrante Inferior Direito (Libertário-Direita) ---
+  {
+    name: "Iniciativa Liberal",
+    shortName: "IL",
+    x: 7.5,
+    y: 7.0,
+    color: "#00aeff",
+    description:
+      "Liberalismo clássico: máxima liberdade económica e individual.",
+  },
+  {
+    name: "Partido Liberal Social",
+    shortName: "PLS",
+    x: 4.0,
+    y: 3.5,
+    color: "#e2cc09",
+    description: "Liberalismo moderado com foco na autonomia do indivíduo.",
+  },
+  {
+    name: "Nós, Cidadãos!",
+    shortName: "NC",
+    x: 2.0,
+    y: 2.0,
+    color: "#e6b400",
+    description: "Liberalismo social e democracia participativa.",
+  },
+  {
+    name: "Juntos pelo Povo",
+    shortName: "JPP",
+    x: 0.0,
+    y: 2.0,
+    color: "#009e49",
+    description: "Regionalismo e transparência contra o centralismo.",
   },
 ];
