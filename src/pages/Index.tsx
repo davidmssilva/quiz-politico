@@ -13,8 +13,14 @@ const Index = () => {
     <div className="min-h-screen bg-background flex flex-col">
       <header className="border-b border-border bg-card/50 backdrop-blur-sm">
         <div className="container max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-          <span className="font-serif text-lg text-primary">Bússola Política</span>
-          <Button variant="outline" size="sm" onClick={() => navigate("/bussola")}>
+          <span className="font-serif text-lg text-primary">
+            Bússola Política
+          </span>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigate("/bussola")}
+          >
             Bússola
           </Button>
         </div>
@@ -28,11 +34,12 @@ const Index = () => {
           transition={{ duration: 0.6 }}
         >
           <div className="space-y-4">
-            <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-foreground leading-tight">
+            <h1 className="font-serif text-4xl sm:text-5xl lg:text-5xl text-foreground leading-tight">
               Bússola Política de Portugal
             </h1>
             <p className="text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
-              Descubra a sua posição no espectro político português com 100 perguntas sobre economia, saúde, educação, ambiente e muito mais.
+              Descubra a sua posição no espectro político português com 100
+              perguntas sobre economia, saúde, educação, ambiente e muito mais.
             </p>
           </div>
 
@@ -65,9 +72,14 @@ const Index = () => {
               { n: "4", label: "Eixos" },
               { n: "10", label: "Categorias" },
             ].map((s) => (
-              <div key={s.label} className="bg-card border border-border rounded-lg p-4">
+              <div
+                key={s.label}
+                className="bg-card border border-border rounded-lg p-4"
+              >
                 <div className="font-serif text-2xl text-primary">{s.n}</div>
-                <div className="text-xs text-muted-foreground mt-1">{s.label}</div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  {s.label}
+                </div>
               </div>
             ))}
           </div>
@@ -75,7 +87,8 @@ const Index = () => {
       </main>
 
       <footer className="border-t border-border py-6 text-center text-xs text-muted-foreground">
-        Baseado nos programas oficiais dos partidos portugueses. Apenas para fins informativos.
+        Baseado nos programas oficiais dos partidos portugueses. Apenas para
+        fins informativos.
       </footer>
     </div>
   );
