@@ -83,12 +83,19 @@ const Index = () => {
               </div>
             ))}
           </div>
+          <p className="text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
+            Nenhuma informação será recolhida.
+            <br></br>
+            Os dados serão guardados apenas no seu dispositivo.
+          </p>
         </motion.div>
       </main>
 
       <footer className="border-t border-border py-6 text-center text-xs text-muted-foreground">
-        Baseado nos programas oficiais dos partidos portugueses. Apenas para
-        fins informativos.
+        <p>
+          Baseado nos programas oficiais dos partidos portugueses. Apenas para
+          fins informativos.
+        </p>
       </footer>
     </div>
   );
