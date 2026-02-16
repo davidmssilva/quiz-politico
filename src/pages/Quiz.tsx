@@ -190,7 +190,7 @@ export default function Quiz() {
             <button
               key={value}
               onClick={() => selectImportance(value)}
-              className={`flex-1 text-center px-1 py-2.5 rounded-lg border text-[10.5px] font-bold transition-colors
+              className={`flex-1 text-center px-1 py-2.5 rounded-lg border text-[10px] font-bold transition-colors
                 ${
                   (importanceWeights[q.id] ?? 0) === value
                     ? "bg-accent text-accent-foreground border-accent"
