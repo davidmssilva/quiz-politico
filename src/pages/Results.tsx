@@ -12,7 +12,6 @@ import {
 } from "@/lib/scoring";
 import PoliticalCompass from "@/components/PoliticalCompass";
 import PartyResults from "@/components/PartyResults";
-import AdSlot from "@/components/AdQuestionCard";
 import { Button } from "@/components/ui/button";
 
 export default function Results() {
@@ -239,6 +238,8 @@ export default function Results() {
           </div>
         </div>
       </main>
+
+      <AdSlot className="container max-w-4xl mx-auto px-4" />
 
       <footer className="border-t border-border py-6 text-center text-xs text-muted-foreground">
         Baseado nos programas oficiais dos partidos portugueses. Apenas para
