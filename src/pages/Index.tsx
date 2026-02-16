@@ -70,7 +70,7 @@ const Index = () => {
               { n: "100", label: "Perguntas" },
               { n: "13", label: "Partidos" },
               { n: "4", label: "Eixos" },
-              { n: "10", label: "Categorias" },
+              { n: "8", label: "Pilares de Identidade" },
             ].map((s) => (
               <div
                 key={s.label}
