@@ -144,7 +144,10 @@ export default function Results() {
               </span>
             </div>
             <PartyResults rankedParties={ranked} />
+          </div>
 
+          {/* Coluna Direita: Profundidade Ideológica e Partilha */}
+          <div className="space-y-10 order-1 lg:order-2">
             <div className="p-6 rounded-2xl bg-secondary/30 border border-border/50">
               <h4 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
                 Nota Metodológica
@@ -157,10 +160,6 @@ export default function Results() {
                 importância que deste a cada tema.
               </p>
             </div>
-          </div>
-
-          {/* Coluna Direita: Profundidade Ideológica e Partilha */}
-          <div className="space-y-10 order-1 lg:order-2">
             <div>
               <div className="flex items-center justify-between border-b border-border pb-4 mb-6">
                 <h2 className="font-serif text-2xl font-bold">

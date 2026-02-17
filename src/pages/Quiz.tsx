@@ -249,12 +249,12 @@ export default function Quiz() {
                       ))}
                     </div>
 
-                    <div className="pt-4 sm:pt-6 border-t border-border/60 flex flex-col items-center">
-                      <p className="text-[10px] font-black uppercase tracking-[0.1em] text-muted-foreground mb-2 text-center">
-                        Relevância:
-                      </p>
-                      <div className="flex bg-secondary/40 p-1 rounded-xl gap-1 w-full max-w-md mx-auto">
-                        {IMPORTANCE_OPTIONS.map((opt) => (
+                    <div className="flex bg-secondary/40 p-1.5 rounded-xl gap-2 w-full max-w-md mx-auto">
+                      {IMPORTANCE_OPTIONS.map((opt) => {
+                        const isSelected =
+                          (importanceWeights[q.id] ?? 0) === opt.value;
+
+                        return (
                           <button
                             key={opt.value}
                             onClick={() =>
@@ -263,22 +263,22 @@ export default function Quiz() {
                                 [q.id]: opt.value,
                               }))
                             }
-                            className={`flex-1 flex flex-col items-center justify-center py-1.5 sm:py-2 rounded-lg transition-all
+                            className={`flex-1 flex flex-col items-center justify-center py-1.5 sm:py-2 rounded-lg transition-all duration-200 border-2
           ${
-            (importanceWeights[q.id] ?? 0) === opt.value
-              ? "bg-background shadow-sm text-primary"
-              : "text-muted-foreground hover:bg-background/40"
+            isSelected
+              ? "bg-background border-primary shadow-md text-primary scale-[1.02] z-10"
+              : "bg-transparent border-transparent text-muted-foreground hover:bg-background/40 hover:border-border"
           }`}
                           >
                             <span className="text-sm sm:text-base font-bold leading-none">
                               {opt.short}
                             </span>
-                            <span className="text-[8px] font-bold uppercase mt-0.5">
+                            <span className="text-[8px] font-black uppercase mt-0.5 tracking-wider">
                               {opt.label}
                             </span>
                           </button>
-                        ))}
-                      </div>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
