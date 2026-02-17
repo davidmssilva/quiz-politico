@@ -1,248 +1,205 @@
-import { useEffect, useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { motion } from "framer-motion";
+
+// Scoping & Data
 import { questions } from "@/data/questions";
 import { parties } from "@/data/parties";
 import {
-  Answer,
   calculateResult,
   rankParties,
   saveResult,
   loadHistory,
-  StoredResult,
 } from "@/lib/scoring";
+
+// Components
 import PoliticalCompass from "@/components/PoliticalCompass";
 import PartyResults from "@/components/PartyResults";
+import { AppHeader } from "@/components/AppHeader";
+import { AppFooter } from "@/components/AppFooter";
+import { IdeologicalDimensions } from "@/components/IdeologicalDimensions";
+import { ShareResults } from "@/components/ShareResults";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function Results() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const [params] = useSearchParams();
 
-  const sharedEcon = searchParams.get("econ");
-  const sharedAuth = searchParams.get("auth");
-
-  const state = location.state as {
-    answers?: Record<number, Answer>;
-    importanceWeights?: Record<number, number>;
-  } | null;
+  // Recuperar dados do estado (vindo do Quiz) ou URL (partilha)
+  const state = location.state as any;
   const answers = state?.answers;
-  const importanceWeights = state?.importanceWeights ?? {};
+  const importance = state?.importanceWeights ?? {};
 
-  const result = useMemo(() => {
-    if (sharedEcon && sharedAuth) {
+  const scores = useMemo(() => {
+    // Se vier de um link de partilha (URL params)
+    if (params.get("econ")) {
       return {
-        economicScore: parseFloat(sharedEcon),
-        authorityScore: parseFloat(sharedAuth),
+        economicScore: parseFloat(params.get("econ") || "0"),
+        authorityScore: parseFloat(params.get("auth") || "0"),
+        socialScore: parseFloat(params.get("soc") || "0"),
+        sovereigntyScore: parseFloat(params.get("sov") || "0"),
       };
     }
+    // Se vier do Quiz atual
     if (answers) {
-      return calculateResult(answers, questions, importanceWeights);
+      return calculateResult(answers, questions, importance);
     }
     return null;
-  }, [answers, importanceWeights, sharedEcon, sharedAuth]);
+  }, [answers, importance, params]);
 
-  const ranked = useMemo(() => {
-    if (!result) return [];
-    return rankParties(result, parties);
-  }, [result]);
+  // Ranking de partidos baseado no cálculo vetorial
+  const ranked = useMemo(
+    () => (scores ? rankParties(scores, parties) : []),
+    [scores],
+  );
 
-  const pastResults = useMemo(() => loadHistory(), []);
+  // Histórico para mostrar pontos passados na bússola
+  const history = useMemo(() => loadHistory(), []);
 
+  // Guardar no LocalStorage apenas se o resultado for "fresco" (vindo de respostas)
   useEffect(() => {
-    if (result && answers) {
-      const stored: StoredResult = {
+    if (scores && answers) {
+      saveResult({
         id: crypto.randomUUID(),
         date: new Date().toISOString(),
-        economicScore: result.economicScore,
-        authorityScore: result.authorityScore,
+        ...scores,
         answers,
-        importanceWeights,
+        importanceWeights: importance,
         closestParties: ranked.slice(0, 3).map((p) => p.shortName),
-      };
-      saveResult(stored);
+      });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [scores, answers, importance, ranked]);
 
-  if (!result) {
+  if (!scores) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <p className="text-muted-foreground">Nenhum resultado encontrado.</p>
-          <Button onClick={() => navigate("/")}>Voltar ao início</Button>
-        </div>
+      <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center space-y-4">
+        <h2 className="text-xl font-serif font-bold">
+          Sem dados de resultados
+        </h2>
+        <p className="text-muted-foreground">
+          Não encontramos respostas para processar.
+        </p>
+        <Button onClick={() => navigate("/")} className="rounded-xl px-8">
+          Voltar ao Início
+        </Button>
       </div>
     );
   }
 
-  const getQuadrant = () => {
-    const econ = result.economicScore > 0 ? "liberal" : "socialista";
-    // Positive authorityScore = libertarian, negative = authoritarian
-    const auth = result.authorityScore > 0 ? "libertário" : "autoritário";
-    return `${econ} e ${auth}`;
-  };
-
-  const shareUrl = `${window.location.origin}/resultados?econ=${result.economicScore.toFixed(1)}&auth=${result.authorityScore.toFixed(1)}`;
-  const shareText = `Bússola Política de Portugal\nEconómico: ${result.economicScore.toFixed(1)} | Autoridade: ${result.authorityScore.toFixed(1)}\nPartido mais próximo: ${ranked[0]?.shortName}`;
+  // Configuração de partilha
+  const shareUrl = `${window.location.origin}/resultados?econ=${scores.economicScore.toFixed(1)}&auth=${scores.authorityScore.toFixed(1)}&soc=${scores.socialScore.toFixed(1)}&sov=${scores.sovereigntyScore.toFixed(1)}`;
+  const shareText = `O meu perfil político para 2026! Partido mais próximo: ${ranked[0]?.shortName}. Vê o teu aqui:`;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <header className="border-b border-border bg-card/50">
-        <div className="container max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-          <span className="font-serif text-lg text-primary">
-            Bússola Política
-          </span>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => navigate("/bussola")}
-            >
-              Bússola
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => navigate("/")}>
-              Novo Quiz
-            </Button>
-          </div>
-        </div>
-      </header>
+      <AppHeader />
 
-      <main className="flex-1 container max-w-4xl mx-auto px-4 py-8 space-y-10">
-        <div className="text-center space-y-3">
-          <h1 className="font-serif text-3xl sm:text-4xl text-foreground">
-            Os Teus Resultados
-          </h1>
-          <p className="text-muted-foreground">
-            A tua posição política é tendencialmente{" "}
-            <strong className="text-foreground">{getQuadrant()}</strong>.
-          </p>
-          <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground pt-2">
-            <span>
-              Económico:{" "}
-              <strong className="text-foreground">
-                {result.economicScore.toFixed(1)}
-              </strong>
-            </span>
-            <span>
-              Autoridade:{" "}
-              <strong className="text-foreground">
-                {result.authorityScore.toFixed(1)}
-              </strong>
-            </span>
-          </div>
-        </div>
+      <main className="flex-1 container max-w-5xl mx-auto px-4 py-8 sm:py-12 md:py-16 space-y-12 sm:space-y-20">
+        {/* Introdução / Título */}
+        <section className="text-center space-y-4 max-w-3xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight">
+              A Tua <span className="text-primary italic">Identidade</span>{" "}
+              Política
+            </h1>
+            <p className="text-muted-foreground text-sm sm:text-lg mt-4 leading-relaxed">
+              Análise baseada nos programas eleitorais de 2026. A bússola mostra
+              a tua posição clássica, enquanto os eixos abaixo detalham a tua
+              visão sobre sociedade e soberania.
+            </p>
+          </motion.div>
+        </section>
 
-        <PoliticalCompass
-          parties={parties}
-          userResult={result}
-          pastResults={pastResults}
-        />
+        {/* 1. Bússola Política Clássica (2 Eixos) */}
+        <section className="space-y-8">
+          {/* Passamos apenas economicScore e authorityScore para manter o gráfico original */}
+          <PoliticalCompass
+            parties={parties}
+            userResult={{
+              economicScore: scores.economicScore,
+              authorityScore: scores.authorityScore,
+              socialScore: scores.socialScore,
+              sovereigntyScore: scores.sovereigntyScore,
+            }}
+            pastResults={history}
+          />
+        </section>
 
-        <div className="grid lg:grid-cols-2 gap-8">
-          <PartyResults rankedParties={ranked} />
+        {/* 2. Grid de Detalhes: Afinidade e Dimensões 4-Eixos */}
+        <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-start">
+          {/* Coluna Esquerda: Afinidade Partidária */}
+          <div className="space-y-8 order-2 lg:order-1">
+            <div className="flex items-center justify-between border-b border-border pb-4">
+              <h2 className="font-serif text-2xl font-bold">
+                Afinidade Partidária
+              </h2>
+              <span className="text-xs font-black uppercase tracking-widest text-primary bg-primary/10 px-3 py-1 rounded-full">
+                Proximidade %
+              </span>
+            </div>
+            <PartyResults rankedParties={ranked} />
 
-          <div className="space-y-4">
-            <h3 className="font-serif text-xl text-foreground">
-              Como funciona
-            </h3>
-            <div className="bg-card border border-border rounded-lg p-5 space-y-3 text-sm text-muted-foreground">
-              <p>
-                <strong className="text-card-foreground">
-                  Eixo Económico (horizontal):
-                </strong>{" "}
-                Esquerda indica preferência por intervenção estatal e
-                redistribuição. Direita indica preferência por mercado livre e
-                privatização.
-              </p>
-              <p>
-                <strong className="text-card-foreground">
-                  Eixo de Autoridade (vertical):
-                </strong>{" "}
-                Topo indica autoritarismo e controlo estatal. Base indica
-                liberdades civis e descentralização.
-              </p>
-              <p>
-                A posição dos partidos é baseada nos seus programas eleitorais e
-                posições públicas. Podes ajustar a importância de cada pergunta
-                para personalizar o resultado.
+            <div className="p-6 rounded-2xl bg-secondary/30 border border-border/50">
+              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
+                Nota Metodológica
+              </h4>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                A proximidade é calculada através da distância euclidiana num
+                espaço multidimensional. Este inclui os 4 eixos adicionais.
+                Mesmo que um partido esteja no teu quadrante, a distância final
+                considera todos os pesos atribuídos às tuas respostas e a
+                importância que deste a cada tema.
               </p>
             </div>
+          </div>
 
-            <h3 className="font-serif text-xl text-foreground pt-2">
-              Partilhar
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                  window.open(
-                    `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`,
-                    "_blank",
-                  )
-                }
-              >
-                Twitter / X
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                  window.open(
-                    `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
-                    "_blank",
-                  )
-                }
-              >
-                Facebook
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                  window.open(
-                    `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + "\n" + shareUrl)}`,
-                    "_blank",
-                  )
-                }
-              >
-                WhatsApp
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                  window.open(
-                    `https://reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent("O meu resultado na Bússola Política de Portugal")}`,
-                    "_blank",
-                  )
-                }
-              >
-                Reddit
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => navigator.clipboard.writeText(shareUrl)}
-              >
-                Copiar Link
-              </Button>
+          {/* Coluna Direita: Profundidade Ideológica e Partilha */}
+          <div className="space-y-10 order-1 lg:order-2">
+            <div>
+              <div className="flex items-center justify-between border-b border-border pb-4 mb-6">
+                <h2 className="font-serif text-2xl font-bold">
+                  Dimensões Detalhadas
+                </h2>
+                <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+                  Análise de 4 Eixos
+                </span>
+              </div>
+              <IdeologicalDimensions result={scores} />
             </div>
 
-            <div className="flex gap-3 pt-2">
-              <Button className="flex-1" onClick={() => navigate("/quiz")}>
-                Repetir Quiz
+            <Card className="border-primary/20 bg-primary/5 rounded-3xl overflow-hidden">
+              <CardContent className="p-6 sm:p-8">
+                <ShareResults url={shareUrl} text={shareText} />
+              </CardContent>
+            </Card>
+
+            <div className="flex flex-col gap-4">
+              <Button
+                onClick={() => navigate("/quiz")}
+                size="lg"
+                className="w-full h-16 rounded-2xl text-lg font-bold shadow-xl shadow-primary/20 transition-transform hover:scale-[1.02]"
+              >
+                Repetir Questionário
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={() => navigate("/")}
+                className="w-full h-12 text-muted-foreground font-bold"
+              >
+                Voltar ao Início
               </Button>
             </div>
           </div>
         </div>
       </main>
 
-      <footer className="border-t border-border py-6 text-center text-xs text-muted-foreground">
-        Baseado nos programas oficiais dos partidos portugueses. Apenas para
-        fins informativos.
-      </footer>
+      <AppFooter />
     </div>
   );
 }

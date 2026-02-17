@@ -4,6 +4,8 @@ export interface Question {
   category: string;
   economicWeight: number; // -1: Esquerda | 1: Direita
   authorityWeight: number; // -1: Liberdade | 1: Ordem
+  socialWeight: number; // -1: Progressista | 1: Conservador
+  sovereigntyWeight: number; // -1: Globalista/UE | 1: Nacionalista
 }
 
 export const questions: Question[] = [
@@ -14,6 +16,8 @@ export const questions: Question[] = [
     category: "Economia e Fiscalidade",
     economicWeight: -1.0,
     authorityWeight: 0.2,
+    socialWeight: -0.2,
+    sovereigntyWeight: 0.1,
   },
   {
     id: 2,
@@ -21,6 +25,8 @@ export const questions: Question[] = [
     category: "Economia e Fiscalidade",
     economicWeight: 1.0,
     authorityWeight: -0.2,
+    socialWeight: 0.1,
+    sovereigntyWeight: -0.1,
   },
   {
     id: 3,
@@ -28,6 +34,8 @@ export const questions: Question[] = [
     category: "Economia e Fiscalidade",
     economicWeight: -1.0,
     authorityWeight: 0.4,
+    socialWeight: 0.0,
+    sovereigntyWeight: 0.6,
   },
   {
     id: 4,
@@ -35,6 +43,8 @@ export const questions: Question[] = [
     category: "Economia e Fiscalidade",
     economicWeight: 1.0,
     authorityWeight: -0.1,
+    socialWeight: 0.0,
+    sovereigntyWeight: -0.2,
   },
   {
     id: 5,
@@ -42,6 +52,8 @@ export const questions: Question[] = [
     category: "Economia e Fiscalidade",
     economicWeight: 1.0,
     authorityWeight: -0.2,
+    socialWeight: 0.2,
+    sovereigntyWeight: 0.0,
   },
   {
     id: 6,
@@ -49,6 +61,8 @@ export const questions: Question[] = [
     category: "Economia e Fiscalidade",
     economicWeight: -0.8,
     authorityWeight: 0.6,
+    socialWeight: 0.0,
+    sovereigntyWeight: 0.3,
   },
   {
     id: 7,
@@ -56,6 +70,8 @@ export const questions: Question[] = [
     category: "Economia e Fiscalidade",
     economicWeight: 0.8,
     authorityWeight: 0.1,
+    socialWeight: 0.1,
+    sovereigntyWeight: 0.0,
   },
   {
     id: 8,
@@ -63,6 +79,8 @@ export const questions: Question[] = [
     category: "Economia e Fiscalidade",
     economicWeight: 1.0,
     authorityWeight: -0.5,
+    socialWeight: 0.3,
+    sovereigntyWeight: 0.0,
   },
   {
     id: 9,
@@ -70,6 +88,8 @@ export const questions: Question[] = [
     category: "Economia e Fiscalidade",
     economicWeight: 0.8,
     authorityWeight: 0.0,
+    socialWeight: 0.4,
+    sovereigntyWeight: 0.0,
   },
   {
     id: 10,
@@ -77,6 +97,8 @@ export const questions: Question[] = [
     category: "Economia e Fiscalidade",
     economicWeight: 1.0,
     authorityWeight: -0.3,
+    socialWeight: 0.0,
+    sovereigntyWeight: -0.2,
   },
   {
     id: 11,
@@ -84,6 +106,8 @@ export const questions: Question[] = [
     category: "Economia e Fiscalidade",
     economicWeight: 0.9,
     authorityWeight: 0.4,
+    socialWeight: 0.2,
+    sovereigntyWeight: 0.4,
   },
   {
     id: 12,
@@ -91,6 +115,8 @@ export const questions: Question[] = [
     category: "Economia e Fiscalidade",
     economicWeight: 0.7,
     authorityWeight: -0.3,
+    socialWeight: 0.0,
+    sovereigntyWeight: -0.1,
   },
   {
     id: 13,
@@ -98,6 +124,8 @@ export const questions: Question[] = [
     category: "Economia e Fiscalidade",
     economicWeight: -1.0,
     authorityWeight: -0.2,
+    socialWeight: -0.4,
+    sovereigntyWeight: -0.2,
   },
   {
     id: 14,
@@ -105,6 +133,8 @@ export const questions: Question[] = [
     category: "Economia e Fiscalidade",
     economicWeight: -0.9,
     authorityWeight: 0.5,
+    socialWeight: -0.3,
+    sovereigntyWeight: 0.0,
   },
   {
     id: 15,
@@ -112,6 +142,8 @@ export const questions: Question[] = [
     category: "Economia e Fiscalidade",
     economicWeight: -0.6,
     authorityWeight: 0.4,
+    socialWeight: 0.0,
+    sovereigntyWeight: 0.7,
   },
 
   // ─── 2. ESTADO SOCIAL E SERVIÇOS PÚBLICOS (16-30) ───
@@ -121,6 +153,8 @@ export const questions: Question[] = [
     category: "Estado Social e Serviços Públicos",
     economicWeight: -1.0,
     authorityWeight: 0.3,
+    socialWeight: -0.2,
+    sovereigntyWeight: 0.2,
   },
   {
     id: 17,
@@ -128,6 +162,8 @@ export const questions: Question[] = [
     category: "Estado Social e Serviços Públicos",
     economicWeight: 0.9,
     authorityWeight: -0.3,
+    socialWeight: 0.1,
+    sovereigntyWeight: -0.2,
   },
   {
     id: 18,
@@ -135,6 +171,8 @@ export const questions: Question[] = [
     category: "Estado Social e Serviços Públicos",
     economicWeight: 0.8,
     authorityWeight: -0.1,
+    socialWeight: 0.0,
+    sovereigntyWeight: -0.1,
   },
   {
     id: 19,
@@ -142,6 +180,8 @@ export const questions: Question[] = [
     category: "Estado Social e Serviços Públicos",
     economicWeight: -0.9,
     authorityWeight: 0.4,
+    socialWeight: -0.1,
+    sovereigntyWeight: 0.3,
   },
   {
     id: 20,
@@ -149,6 +189,8 @@ export const questions: Question[] = [
     category: "Estado Social e Serviços Públicos",
     economicWeight: -0.8,
     authorityWeight: 0.1,
+    socialWeight: -0.3,
+    sovereigntyWeight: 0.0,
   },
   {
     id: 21,
@@ -156,6 +198,8 @@ export const questions: Question[] = [
     category: "Estado Social e Serviços Públicos",
     economicWeight: 0.0,
     authorityWeight: -1.0,
+    socialWeight: -1.0,
+    sovereigntyWeight: -0.2,
   },
   {
     id: 22,
@@ -163,6 +207,8 @@ export const questions: Question[] = [
     category: "Estado Social e Serviços Públicos",
     economicWeight: 0.9,
     authorityWeight: -0.4,
+    socialWeight: 0.3,
+    sovereigntyWeight: -0.1,
   },
   {
     id: 23,
@@ -170,6 +216,8 @@ export const questions: Question[] = [
     category: "Estado Social e Serviços Públicos",
     economicWeight: -0.8,
     authorityWeight: 0.7,
+    socialWeight: -0.2,
+    sovereigntyWeight: 0.2,
   },
   {
     id: 24,
@@ -177,6 +225,8 @@ export const questions: Question[] = [
     category: "Estado Social e Serviços Públicos",
     economicWeight: -0.9,
     authorityWeight: 0.8,
+    socialWeight: -0.1,
+    sovereigntyWeight: 0.2,
   },
   {
     id: 25,
@@ -184,6 +234,8 @@ export const questions: Question[] = [
     category: "Estado Social e Serviços Públicos",
     economicWeight: 0.8,
     authorityWeight: -0.2,
+    socialWeight: 0.2,
+    sovereigntyWeight: -0.1,
   },
   {
     id: 26,
@@ -191,6 +243,8 @@ export const questions: Question[] = [
     category: "Estado Social e Serviços Públicos",
     economicWeight: 0.0,
     authorityWeight: 0.2,
+    socialWeight: 0.9,
+    sovereigntyWeight: 0.4,
   },
   {
     id: 27,
@@ -198,6 +252,8 @@ export const questions: Question[] = [
     category: "Estado Social e Serviços Públicos",
     economicWeight: 0.6,
     authorityWeight: -0.2,
+    socialWeight: 0.1,
+    sovereigntyWeight: -0.1,
   },
   {
     id: 28,
@@ -205,6 +261,8 @@ export const questions: Question[] = [
     category: "Estado Social e Serviços Públicos",
     economicWeight: 0.5,
     authorityWeight: -0.7,
+    socialWeight: -0.2,
+    sovereigntyWeight: -0.3,
   },
   {
     id: 29,
@@ -212,6 +270,8 @@ export const questions: Question[] = [
     category: "Estado Social e Serviços Públicos",
     economicWeight: -0.4,
     authorityWeight: 0.3,
+    socialWeight: -0.4,
+    sovereigntyWeight: -0.2,
   },
   {
     id: 30,
@@ -219,6 +279,8 @@ export const questions: Question[] = [
     category: "Estado Social e Serviços Públicos",
     economicWeight: -0.9,
     authorityWeight: 0.7,
+    socialWeight: -0.2,
+    sovereigntyWeight: 0.1,
   },
 
   // ─── 3. TRABALHO E DIREITOS LABORAIS (31-45) ───
@@ -228,6 +290,8 @@ export const questions: Question[] = [
     category: "Trabalho e Direitos Laborais",
     economicWeight: 1.0,
     authorityWeight: -0.4,
+    socialWeight: 0.1,
+    sovereigntyWeight: -0.3,
   },
   {
     id: 32,
@@ -235,6 +299,8 @@ export const questions: Question[] = [
     category: "Trabalho e Direitos Laborais",
     economicWeight: -1.0,
     authorityWeight: -0.2,
+    socialWeight: -0.3,
+    sovereigntyWeight: -0.1,
   },
   {
     id: 33,
@@ -242,6 +308,8 @@ export const questions: Question[] = [
     category: "Trabalho e Direitos Laborais",
     economicWeight: -0.4,
     authorityWeight: -0.6,
+    socialWeight: -0.5,
+    sovereigntyWeight: -0.2,
   },
   {
     id: 34,
@@ -249,6 +317,8 @@ export const questions: Question[] = [
     category: "Trabalho e Direitos Laborais",
     economicWeight: 1.0,
     authorityWeight: -0.2,
+    socialWeight: 0.2,
+    sovereigntyWeight: -0.1,
   },
   {
     id: 35,
@@ -256,13 +326,17 @@ export const questions: Question[] = [
     category: "Trabalho e Direitos Laborais",
     economicWeight: -0.9,
     authorityWeight: 0.6,
+    socialWeight: -0.4,
+    sovereigntyWeight: 0.2,
   },
   {
     id: 36,
     text: "O direito à greve deve ser limitado em setores de serviços essenciais.",
-    category: "Trabalho e Direitos Laborais",
+    category: "Trabalio e Direitos Laborais",
     economicWeight: 0.5,
     authorityWeight: 0.8,
+    socialWeight: 0.3,
+    sovereigntyWeight: 0.3,
   },
   {
     id: 37,
@@ -270,6 +344,8 @@ export const questions: Question[] = [
     category: "Trabalho e Direitos Laborais",
     economicWeight: -0.8,
     authorityWeight: 0.4,
+    socialWeight: -0.2,
+    sovereigntyWeight: 0.1,
   },
   {
     id: 38,
@@ -277,6 +353,8 @@ export const questions: Question[] = [
     category: "Trabalho e Direitos Laborais",
     economicWeight: -0.5,
     authorityWeight: 0.6,
+    socialWeight: -0.9,
+    sovereigntyWeight: -0.3,
   },
   {
     id: 39,
@@ -284,6 +362,8 @@ export const questions: Question[] = [
     category: "Trabalho e Direitos Laborais",
     economicWeight: -0.9,
     authorityWeight: -0.3,
+    socialWeight: -0.5,
+    sovereigntyWeight: 0.2,
   },
   {
     id: 40,
@@ -291,6 +371,8 @@ export const questions: Question[] = [
     category: "Trabalho e Direitos Laborais",
     economicWeight: 0.7,
     authorityWeight: 0.5,
+    socialWeight: 0.3,
+    sovereigntyWeight: -0.1,
   },
   {
     id: 41,
@@ -298,6 +380,8 @@ export const questions: Question[] = [
     category: "Trabalho e Direitos Laborais",
     economicWeight: -0.6,
     authorityWeight: 0.4,
+    socialWeight: 0.7,
+    sovereigntyWeight: 0.4,
   },
   {
     id: 42,
@@ -305,6 +389,8 @@ export const questions: Question[] = [
     category: "Trabalho e Direitos Laborais",
     economicWeight: 0.8,
     authorityWeight: -0.2,
+    socialWeight: 0.2,
+    sovereigntyWeight: 0.1,
   },
   {
     id: 43,
@@ -312,6 +398,8 @@ export const questions: Question[] = [
     category: "Trabalho e Direitos Laborais",
     economicWeight: -0.8,
     authorityWeight: 0.5,
+    socialWeight: -0.3,
+    sovereigntyWeight: -0.1,
   },
   {
     id: 44,
@@ -319,6 +407,8 @@ export const questions: Question[] = [
     category: "Trabalho e Direitos Laborais",
     economicWeight: -0.6,
     authorityWeight: -0.1,
+    socialWeight: -0.4,
+    sovereigntyWeight: -0.2,
   },
   {
     id: 45,
@@ -326,6 +416,8 @@ export const questions: Question[] = [
     category: "Trabalho e Direitos Laborais",
     economicWeight: 0.7,
     authorityWeight: 0.2,
+    socialWeight: 0.1,
+    sovereigntyWeight: 0.0,
   },
 
   // ─── 4. JUSTIÇA E SEGURANÇA (46-55) ───
@@ -335,6 +427,8 @@ export const questions: Question[] = [
     category: "Justiça e Segurança",
     economicWeight: 0.0,
     authorityWeight: 1.0,
+    socialWeight: 0.7,
+    sovereigntyWeight: 0.5,
   },
   {
     id: 47,
@@ -342,6 +436,8 @@ export const questions: Question[] = [
     category: "Justiça e Segurança",
     economicWeight: 0.0,
     authorityWeight: 0.9,
+    socialWeight: 0.4,
+    sovereigntyWeight: 0.3,
   },
   {
     id: 48,
@@ -349,6 +445,8 @@ export const questions: Question[] = [
     category: "Justiça e Segurança",
     economicWeight: 0.0,
     authorityWeight: 1.0,
+    socialWeight: 0.6,
+    sovereigntyWeight: 0.4,
   },
   {
     id: 49,
@@ -356,6 +454,8 @@ export const questions: Question[] = [
     category: "Justiça e Segurança",
     economicWeight: -0.2,
     authorityWeight: -0.8,
+    socialWeight: -0.5,
+    sovereigntyWeight: -0.2,
   },
   {
     id: 50,
@@ -363,6 +463,8 @@ export const questions: Question[] = [
     category: "Justiça e Segurança",
     economicWeight: 0.2,
     authorityWeight: -0.4,
+    socialWeight: 0.5,
+    sovereigntyWeight: 0.2,
   },
   {
     id: 51,
@@ -370,6 +472,8 @@ export const questions: Question[] = [
     category: "Justiça e Segurança",
     economicWeight: -0.3,
     authorityWeight: 0.8,
+    socialWeight: -0.2,
+    sovereigntyWeight: 0.3,
   },
   {
     id: 52,
@@ -377,6 +481,8 @@ export const questions: Question[] = [
     category: "Justiça e Segurança",
     economicWeight: 0.0,
     authorityWeight: 1.0,
+    socialWeight: 0.5,
+    sovereigntyWeight: 0.6,
   },
   {
     id: 53,
@@ -384,6 +490,8 @@ export const questions: Question[] = [
     category: "Justiça e Segurança",
     economicWeight: 0.0,
     authorityWeight: 0.9,
+    socialWeight: 0.2,
+    sovereigntyWeight: 0.1,
   },
   {
     id: 54,
@@ -391,6 +499,8 @@ export const questions: Question[] = [
     category: "Justiça e Segurança",
     economicWeight: 0.0,
     authorityWeight: 0.6,
+    socialWeight: 0.1,
+    sovereigntyWeight: 0.2,
   },
   {
     id: 55,
@@ -398,6 +508,8 @@ export const questions: Question[] = [
     category: "Justiça e Segurança",
     economicWeight: 0.0,
     authorityWeight: -0.8,
+    socialWeight: -0.4,
+    sovereigntyWeight: -0.1,
   },
 
   // ─── 5. SISTEMA POLÍTICO (56-65) ───
@@ -407,6 +519,8 @@ export const questions: Question[] = [
     category: "Sistema Político",
     economicWeight: 0.0,
     authorityWeight: 1.0,
+    socialWeight: 0.4,
+    sovereigntyWeight: 0.6,
   },
   {
     id: 57,
@@ -414,6 +528,8 @@ export const questions: Question[] = [
     category: "Sistema Político",
     economicWeight: 0.0,
     authorityWeight: -0.4,
+    socialWeight: -0.3,
+    sovereigntyWeight: -0.2,
   },
   {
     id: 58,
@@ -421,6 +537,8 @@ export const questions: Question[] = [
     category: "Sistema Político",
     economicWeight: 0.1,
     authorityWeight: 0.3,
+    socialWeight: 0.2,
+    sovereigntyWeight: 0.1,
   },
   {
     id: 59,
@@ -428,6 +546,8 @@ export const questions: Question[] = [
     category: "Sistema Político",
     economicWeight: -0.2,
     authorityWeight: -0.5,
+    socialWeight: -0.2,
+    sovereigntyWeight: -0.4,
   },
   {
     id: 60,
@@ -435,6 +555,8 @@ export const questions: Question[] = [
     category: "Sistema Político",
     economicWeight: 0.8,
     authorityWeight: -0.2,
+    socialWeight: 0.2,
+    sovereigntyWeight: 0.1,
   },
   {
     id: 61,
@@ -442,6 +564,8 @@ export const questions: Question[] = [
     category: "Sistema Político",
     economicWeight: 0.0,
     authorityWeight: 0.8,
+    socialWeight: 0.1,
+    sovereigntyWeight: 0.2,
   },
   {
     id: 62,
@@ -449,6 +573,8 @@ export const questions: Question[] = [
     category: "Sistema Político",
     economicWeight: 0.0,
     authorityWeight: 0.7,
+    socialWeight: 0.2,
+    sovereigntyWeight: 0.3,
   },
   {
     id: 63,
@@ -456,6 +582,8 @@ export const questions: Question[] = [
     category: "Sistema Político",
     economicWeight: 0.0,
     authorityWeight: -0.6,
+    socialWeight: -0.8,
+    sovereigntyWeight: -0.4,
   },
   {
     id: 64,
@@ -463,6 +591,8 @@ export const questions: Question[] = [
     category: "Sistema Político",
     economicWeight: 0.0,
     authorityWeight: -0.4,
+    socialWeight: 0.1,
+    sovereigntyWeight: 0.8,
   },
   {
     id: 65,
@@ -470,6 +600,8 @@ export const questions: Question[] = [
     category: "Sistema Político",
     economicWeight: 0.0,
     authorityWeight: -0.2,
+    socialWeight: -0.1,
+    sovereigntyWeight: 0.0,
   },
 
   // ─── 6. IDENTIDADE E SOCIEDADE (66-80) ───
@@ -479,6 +611,8 @@ export const questions: Question[] = [
     category: "Identidade e Sociedade",
     economicWeight: 0.5,
     authorityWeight: 0.8,
+    socialWeight: 0.5,
+    sovereigntyWeight: 0.9,
   },
   {
     id: 67,
@@ -486,6 +620,8 @@ export const questions: Question[] = [
     category: "Identidade e Sociedade",
     economicWeight: -0.4,
     authorityWeight: -0.6,
+    socialWeight: -0.7,
+    sovereigntyWeight: -0.9,
   },
   {
     id: 68,
@@ -493,6 +629,8 @@ export const questions: Question[] = [
     category: "Identidade e Sociedade",
     economicWeight: 0.0,
     authorityWeight: -0.8,
+    socialWeight: -1.0,
+    sovereigntyWeight: -0.3,
   },
   {
     id: 69,
@@ -500,6 +638,8 @@ export const questions: Question[] = [
     category: "Identidade e Sociedade",
     economicWeight: -0.1,
     authorityWeight: 0.2,
+    socialWeight: -0.8,
+    sovereigntyWeight: -0.2,
   },
   {
     id: 70,
@@ -507,6 +647,8 @@ export const questions: Question[] = [
     category: "Identidade e Sociedade",
     economicWeight: 0.0,
     authorityWeight: -0.7,
+    socialWeight: -1.0,
+    sovereigntyWeight: -0.4,
   },
   {
     id: 71,
@@ -514,6 +656,8 @@ export const questions: Question[] = [
     category: "Identidade e Sociedade",
     economicWeight: 0.0,
     authorityWeight: -0.2,
+    socialWeight: 0.9,
+    sovereigntyWeight: 0.5,
   },
   {
     id: 72,
@@ -521,6 +665,8 @@ export const questions: Question[] = [
     category: "Identidade e Sociedade",
     economicWeight: 0.0,
     authorityWeight: 0.7,
+    socialWeight: 0.6,
+    sovereigntyWeight: 1.0,
   },
   {
     id: 73,
@@ -528,6 +674,8 @@ export const questions: Question[] = [
     category: "Identidade e Sociedade",
     economicWeight: 0.4,
     authorityWeight: -0.9,
+    socialWeight: -0.8,
+    sovereigntyWeight: -0.3,
   },
   {
     id: 74,
@@ -535,6 +683,8 @@ export const questions: Question[] = [
     category: "Identidade e Sociedade",
     economicWeight: 0.5,
     authorityWeight: -0.6,
+    socialWeight: -0.5,
+    sovereigntyWeight: -0.2,
   },
   {
     id: 75,
@@ -542,6 +692,8 @@ export const questions: Question[] = [
     category: "Identidade e Sociedade",
     economicWeight: 0.0,
     authorityWeight: 0.5,
+    socialWeight: 0.9,
+    sovereigntyWeight: 0.4,
   },
   {
     id: 76,
@@ -549,6 +701,8 @@ export const questions: Question[] = [
     category: "Identidade e Sociedade",
     economicWeight: 0.0,
     authorityWeight: 0.4,
+    socialWeight: -0.7,
+    sovereigntyWeight: -0.5,
   },
   {
     id: 77,
@@ -556,6 +710,8 @@ export const questions: Question[] = [
     category: "Identidade e Sociedade",
     economicWeight: -0.2,
     authorityWeight: -0.4,
+    socialWeight: -0.6,
+    sovereigntyWeight: -0.5,
   },
   {
     id: 78,
@@ -563,6 +719,8 @@ export const questions: Question[] = [
     category: "Identidade e Sociedade",
     economicWeight: 0.1,
     authorityWeight: 0.2,
+    socialWeight: 0.7,
+    sovereigntyWeight: 0.3,
   },
   {
     id: 79,
@@ -570,6 +728,8 @@ export const questions: Question[] = [
     category: "Identidade e Sociedade",
     economicWeight: -0.2,
     authorityWeight: 0.9,
+    socialWeight: -0.8,
+    sovereigntyWeight: -0.4,
   },
   {
     id: 80,
@@ -577,6 +737,8 @@ export const questions: Question[] = [
     category: "Identidade e Sociedade",
     economicWeight: -0.3,
     authorityWeight: -0.6,
+    socialWeight: -0.7,
+    sovereigntyWeight: -0.8,
   },
 
   // ─── 7. AMBIENTE E ENERGIA (81-90) ───
@@ -586,6 +748,8 @@ export const questions: Question[] = [
     category: "Ambiente e Energia",
     economicWeight: -0.5,
     authorityWeight: 0.6,
+    socialWeight: -0.4,
+    sovereigntyWeight: -0.6,
   },
   {
     id: 82,
@@ -593,6 +757,8 @@ export const questions: Question[] = [
     category: "Ambiente e Energia",
     economicWeight: 0.7,
     authorityWeight: 0.4,
+    socialWeight: 0.2,
+    sovereigntyWeight: 0.3,
   },
   {
     id: 83,
@@ -600,6 +766,8 @@ export const questions: Question[] = [
     category: "Ambiente e Energia",
     economicWeight: -0.9,
     authorityWeight: 0.2,
+    socialWeight: -0.3,
+    sovereigntyWeight: -0.1,
   },
   {
     id: 84,
@@ -607,6 +775,8 @@ export const questions: Question[] = [
     category: "Ambiente e Energia",
     economicWeight: -0.7,
     authorityWeight: 0.8,
+    socialWeight: -0.6,
+    sovereigntyWeight: -0.5,
   },
   {
     id: 85,
@@ -614,6 +784,8 @@ export const questions: Question[] = [
     category: "Ambiente e Energia",
     economicWeight: 0.4,
     authorityWeight: -0.3,
+    socialWeight: 0.1,
+    sovereigntyWeight: 0.5,
   },
   {
     id: 86,
@@ -621,6 +793,8 @@ export const questions: Question[] = [
     category: "Ambiente e Energia",
     economicWeight: -0.2,
     authorityWeight: 0.6,
+    socialWeight: -0.7,
+    sovereigntyWeight: -0.2,
   },
   {
     id: 87,
@@ -628,6 +802,8 @@ export const questions: Question[] = [
     category: "Ambiente e Energia",
     economicWeight: 0.6,
     authorityWeight: 0.4,
+    socialWeight: 0.2,
+    sovereigntyWeight: 0.6,
   },
   {
     id: 88,
@@ -635,6 +811,8 @@ export const questions: Question[] = [
     category: "Ambiente e Energia",
     economicWeight: -0.4,
     authorityWeight: 0.9,
+    socialWeight: -0.4,
+    sovereigntyWeight: -0.3,
   },
   {
     id: 89,
@@ -642,6 +820,8 @@ export const questions: Question[] = [
     category: "Ambiente e Energia",
     economicWeight: -0.8,
     authorityWeight: 0.9,
+    socialWeight: -0.2,
+    sovereigntyWeight: 0.4,
   },
   {
     id: 90,
@@ -649,6 +829,8 @@ export const questions: Question[] = [
     category: "Ambiente e Energia",
     economicWeight: 0.3,
     authorityWeight: 0.5,
+    socialWeight: -0.2,
+    sovereigntyWeight: -0.2,
   },
 
   // ─── 8. PORTUGAL NO MUNDO (91-100) ───
@@ -658,6 +840,8 @@ export const questions: Question[] = [
     category: "Portugal no Mundo",
     economicWeight: 0.2,
     authorityWeight: 0.3,
+    socialWeight: -0.4,
+    sovereigntyWeight: -1.0,
   },
   {
     id: 92,
@@ -665,6 +849,8 @@ export const questions: Question[] = [
     category: "Portugal no Mundo",
     economicWeight: 0.0,
     authorityWeight: 0.8,
+    socialWeight: 0.5,
+    sovereigntyWeight: 1.0,
   },
   {
     id: 93,
@@ -672,6 +858,8 @@ export const questions: Question[] = [
     category: "Portugal no Mundo",
     economicWeight: -0.5,
     authorityWeight: -0.4,
+    socialWeight: -0.9,
+    sovereigntyWeight: -0.7,
   },
   {
     id: 94,
@@ -679,6 +867,8 @@ export const questions: Question[] = [
     category: "Portugal no Mundo",
     economicWeight: 0.1,
     authorityWeight: 0.2,
+    socialWeight: -0.5,
+    sovereigntyWeight: -1.0,
   },
   {
     id: 95,
@@ -686,6 +876,8 @@ export const questions: Question[] = [
     category: "Portugal no Mundo",
     economicWeight: 0.4,
     authorityWeight: 0.6,
+    socialWeight: 0.2,
+    sovereigntyWeight: -0.6,
   },
   {
     id: 96,
@@ -693,6 +885,8 @@ export const questions: Question[] = [
     category: "Portugal no Mundo",
     economicWeight: 0.3,
     authorityWeight: 0.2,
+    socialWeight: 0.4,
+    sovereigntyWeight: 0.9,
   },
   {
     id: 97,
@@ -700,6 +894,8 @@ export const questions: Question[] = [
     category: "Portugal no Mundo",
     economicWeight: -0.5,
     authorityWeight: 0.4,
+    socialWeight: 0.3,
+    sovereigntyWeight: 0.8,
   },
   {
     id: 98,
@@ -707,6 +903,8 @@ export const questions: Question[] = [
     category: "Portugal no Mundo",
     economicWeight: -0.2,
     authorityWeight: 0.1,
+    socialWeight: 0.1,
+    sovereigntyWeight: 0.9,
   },
   {
     id: 99,
@@ -714,6 +912,8 @@ export const questions: Question[] = [
     category: "Portugal no Mundo",
     economicWeight: 0.0,
     authorityWeight: 0.0,
+    socialWeight: 0.2,
+    sovereigntyWeight: 0.7,
   },
   {
     id: 100,
@@ -721,5 +921,7 @@ export const questions: Question[] = [
     category: "Portugal no Mundo",
     economicWeight: -0.4,
     authorityWeight: 0.7,
+    socialWeight: 0.2,
+    sovereigntyWeight: 0.8,
   },
 ];

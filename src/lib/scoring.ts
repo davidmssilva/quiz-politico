@@ -6,65 +6,89 @@ export type Answer = -2 | -1 | 0 | 1 | 2;
 export interface QuizResult {
   economicScore: number;
   authorityScore: number;
+  socialScore: number;
+  sovereigntyScore: number;
 }
 
-export interface StoredResult {
+export interface StoredResult extends QuizResult {
   id: string;
   date: string;
-  economicScore: number;
-  authorityScore: number;
   answers: Record<number, Answer>;
   importanceWeights?: Record<number, number>;
   closestParties: string[];
 }
 
 /**
- * Calculate result with user-controlled importance weights.
- * Formula: score += answerValue × axisWeight × (1 + importanceWeight)
- * importanceWeight range: -2 to +2 (default 0 = normal)
+ * Calcula o resultado final normalizado de -10 a 10 para os 4 eixos.
  */
 export function calculateResult(
   answers: Record<number, Answer>,
   questions: Question[],
-  importanceWeights: Record<number, number> = {}
+  importanceWeights: Record<number, number> = {},
 ): QuizResult {
-  let rawEconomic = 0;
-  let rawAuthority = 0;
-  let maxEconomic = 0;
-  let maxAuthority = 0;
+  let raw = { econ: 0, auth: 0, soc: 0, sov: 0 };
+  let max = { econ: 0, auth: 0, soc: 0, sov: 0 };
 
   for (const q of questions) {
     const a = answers[q.id] ?? 0;
     const iw = importanceWeights[q.id] ?? 0;
-    const effectiveMultiplier = Math.max(0, 1 + iw); // clamp to non-negative
-    rawEconomic += a * q.economicWeight * effectiveMultiplier;
-    rawAuthority += a * q.authorityWeight * effectiveMultiplier;
-    maxEconomic += 2 * Math.abs(q.economicWeight) * effectiveMultiplier;
-    maxAuthority += 2 * Math.abs(q.authorityWeight) * effectiveMultiplier;
+    const effectiveMultiplier = Math.max(0, 1 + iw);
+
+    raw.econ += a * (q.economicWeight || 0) * effectiveMultiplier;
+    raw.auth += a * (q.authorityWeight || 0) * effectiveMultiplier;
+    raw.soc += a * (q.socialWeight || 0) * effectiveMultiplier;
+    raw.sov += a * (q.sovereigntyWeight || 0) * effectiveMultiplier;
+
+    max.econ += 2 * Math.abs(q.economicWeight || 0) * effectiveMultiplier;
+    max.auth += 2 * Math.abs(q.authorityWeight || 0) * effectiveMultiplier;
+    max.soc += 2 * Math.abs(q.socialWeight || 0) * effectiveMultiplier;
+    max.sov += 2 * Math.abs(q.sovereigntyWeight || 0) * effectiveMultiplier;
   }
 
-  const economicScore = maxEconomic > 0 ? (rawEconomic / maxEconomic) * 10 : 0;
-  const authorityScore = maxAuthority > 0 ? (rawAuthority / maxAuthority) * 10 : 0;
-
-  return { economicScore, authorityScore };
+  return {
+    economicScore: max.econ > 0 ? (raw.econ / max.econ) * 10 : 0,
+    authorityScore: max.auth > 0 ? (raw.auth / max.auth) * 10 : 0,
+    socialScore: max.soc > 0 ? (raw.soc / max.soc) * 10 : 0,
+    sovereigntyScore: max.sov > 0 ? (raw.sov / max.sov) * 10 : 0,
+  };
 }
 
+/**
+ * Calcula a distância euclidiana multidimensional (4D).
+ * Agora usa x, y, z e s do objeto Party.
+ */
 export function partyDistance(result: QuizResult, party: Party): number {
   return Math.sqrt(
     Math.pow(result.economicScore - party.x, 2) +
-    Math.pow(result.authorityScore - party.y, 2)
+      Math.pow(result.authorityScore - party.y, 2) +
+      Math.pow(result.socialScore - party.z, 2) +
+      Math.pow(result.sovereigntyScore - party.s, 2),
   );
 }
 
-export function rankParties(result: QuizResult, parties: Party[]): (Party & { distance: number })[] {
+/**
+ * Rank de partidos baseado na afinidade real em todos os eixos.
+ */
+export function rankParties(
+  result: QuizResult,
+  parties: Party[],
+): (Party & { distance: number; affinity: number })[] {
   return parties
-    .map((p) => ({ ...p, distance: partyDistance(result, p) }))
-    .sort((a, b) => a.distance - b.distance);
+    .map((p) => {
+      const dist = partyDistance(result, p);
+      // Cálculo de afinidade: 0 a 100%
+      // A distância máxima teórica em 4 eixos de -10 a 10 é 40.
+      // Usamos um divisor de 0.4 para espalhar melhor a percentagem.
+      const affinity = Math.max(0, Math.min(100, 100 - dist * 2.5));
+      return { ...p, distance: dist, affinity };
+    })
+    .sort((a, b) => b.affinity - a.affinity);
 }
 
-// --- Session persistence ---
+// --- Persistência (Mantém-se igual, apenas garantindo tipos) ---
 
 const SESSION_KEY = "compassQuizSession";
+const RESULTS_KEY = "compassQuizResults";
 
 export interface QuizSession {
   currentQuestionIndex: number;
@@ -81,34 +105,23 @@ export function loadSession(): QuizSession | null {
   const raw = sessionStorage.getItem(SESSION_KEY);
   if (!raw) return null;
   try {
-    return JSON.parse(raw) as QuizSession;
+    return JSON.parse(raw);
   } catch {
     return null;
   }
 }
 
-export function clearSession() {
-  sessionStorage.removeItem(SESSION_KEY);
-}
-
-// --- Result history ---
-
-const RESULTS_KEY = "compassQuizResults";
-
 export function saveResult(result: StoredResult) {
   const history = loadHistory();
   history.push(result);
-  // Keep only last 10
-  const trimmed = history.slice(-10);
-  localStorage.setItem(RESULTS_KEY, JSON.stringify(trimmed));
+  localStorage.setItem(RESULTS_KEY, JSON.stringify(history.slice(-10)));
 }
 
 export function loadHistory(): StoredResult[] {
   const raw = localStorage.getItem(RESULTS_KEY);
   if (!raw) return [];
   try {
-    const parsed = JSON.parse(raw) as StoredResult[];
-    return parsed.slice(-10);
+    return JSON.parse(raw);
   } catch {
     return [];
   }
@@ -116,4 +129,8 @@ export function loadHistory(): StoredResult[] {
 
 export function clearHistory() {
   localStorage.removeItem(RESULTS_KEY);
+}
+
+export function clearSession() {
+  sessionStorage.removeItem(SESSION_KEY);
 }

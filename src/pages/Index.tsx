@@ -1,104 +1,107 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { loadSession, loadHistory } from "@/lib/scoring";
+import { loadSession, clearSession } from "@/lib/scoring";
 import { useMemo } from "react";
+import { AppHeader } from "@/components/AppHeader";
+import { AppFooter } from "@/components/AppFooter";
 
-const Index = () => {
+export default function Index() {
   const navigate = useNavigate();
   const session = useMemo(() => loadSession(), []);
-  const history = useMemo(() => loadHistory(), []);
+
+  const stats = [
+    { n: "100", label: "Perguntas" },
+    { n: "13", label: "Partidos" },
+    { n: "4", label: "Eixos" },
+    { n: "8", label: "Temas" },
+  ];
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm">
-        <div className="container max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-          <span className="font-serif text-lg text-primary">
-            Bússola Política
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => navigate("/bussola")}
+    <div className="min-h-screen bg-background flex flex-col selection:bg-primary/10">
+      <AppHeader showBussola={true} showNewQuiz={false} />
+
+      <main className="flex-1 flex items-center justify-center px-4 py-12">
+        <div className="max-w-3xl w-full text-center space-y-10 sm:space-y-14">
+          <motion.div
+            className="space-y-6"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            Bússola
-          </Button>
-        </div>
-      </header>
-
-      <main className="flex-1 flex items-center justify-center px-4">
-        <motion.div
-          className="max-w-2xl text-center space-y-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className="space-y-4">
-            <h1 className="font-serif text-4xl sm:text-5xl lg:text-5xl text-foreground leading-tight">
-              Bússola Política de Portugal
+            <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl font-black tracking-tighter text-foreground leading-[1.1]">
+              Bússola Política{" "}
+              <span className="text-primary italic">Portugal</span>
             </h1>
-            <p className="text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
-              Descubra a sua posição no espectro político português com 100
-              perguntas sobre economia, saúde, educação, ambiente e muito mais.
+            <p className="text-base sm:text-xl text-muted-foreground max-w-2xl mx-auto font-medium leading-relaxed">
+              Descubra onde se situa no espectro político português de 2026
+              através de uma análise profunda de vários indicadores
+              programáticos, recolhidos dos programas políticos de cada partido.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <motion.div
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+          >
             <Button
               size="lg"
-              className="text-base px-8 py-6 rounded-xl"
+              className="w-full sm:w-auto h-16 px-10 rounded-2xl text-lg font-bold shadow-2xl shadow-primary/25 transition-all hover:scale-105 active:scale-95"
               onClick={() => navigate("/quiz")}
             >
-              {session ? "Continuar Questionário" : "Começar Questionário"}
+              {session ? "Continuar Questionário" : "Começar Agora"}
             </Button>
             {session && (
               <Button
                 variant="outline"
                 size="lg"
-                className="text-base px-8 py-6 rounded-xl"
+                className="w-full sm:w-auto h-16 px-10 rounded-2xl text-lg font-bold border-2 hover:bg-secondary"
                 onClick={() => {
+                  clearSession();
                   navigate("/quiz");
                 }}
               >
-                Recomeçar
+                Novo Início
               </Button>
             )}
-          </div>
+          </motion.div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-8">
-            {[
-              { n: "100", label: "Perguntas" },
-              { n: "13", label: "Partidos" },
-              { n: "4", label: "Eixos" },
-              { n: "8", label: "Pilares de Identidade" },
-            ].map((s) => (
+          <motion.div
+            className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+          >
+            {stats.map((s) => (
               <div
                 key={s.label}
-                className="bg-card border border-border rounded-lg p-4"
+                className="bg-card border border-border/60 rounded-2xl p-4 sm:p-6 transition-colors hover:border-primary/30 group"
               >
-                <div className="font-serif text-2xl text-primary">{s.n}</div>
-                <div className="text-xs text-muted-foreground mt-1">
+                <div className="font-serif text-2xl sm:text-2xl font-black text-primary group-hover:scale-110 transition-transform">
+                  {s.n}
+                </div>
+                <div className="text-[10px] sm:text-xs font-black tracking-widest text-muted-foreground mt-1">
                   {s.label}
                 </div>
               </div>
             ))}
-          </div>
-          <p className="text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
-            Nenhuma informação será recolhida.
-            <br></br>
-            Os dados serão guardados apenas no seu dispositivo.
-          </p>
-        </motion.div>
+          </motion.div>
+
+          <motion.p
+            className="text-xs sm:text-sm text-muted-foreground/60 font-medium"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+          >
+            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+            Privacidade Total: Os seus dados não saem do seu navegador.
+          </motion.p>
+        </div>
       </main>
 
-      <footer className="border-t border-border py-6 text-center text-xs text-muted-foreground">
-        <p>
-          Baseado nos programas oficiais dos partidos portugueses. Apenas para
-          fins informativos.
-        </p>
-      </footer>
+      <AppFooter />
     </div>
   );
-};
-
-export default Index;
+}
