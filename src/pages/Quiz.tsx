@@ -9,43 +9,8 @@ import EarlyFinishModal from "@/components/EarlyFinishModal";
 import { AppHeader } from "@/components/AppHeader";
 import { AppFooter } from "@/components/AppFooter";
 import { Button } from "@/components/ui/button";
-
-const LIKERT: { label: string; value: Answer; color: string }[] = [
-  {
-    label: "Concordo totalmente",
-    value: 2,
-    color: "hover:border-emerald-500 hover:bg-emerald-50 active:bg-emerald-100",
-  },
-  {
-    label: "Concordo",
-    value: 1,
-    color:
-      "hover:border-emerald-200 hover:bg-emerald-50/50 active:bg-emerald-50/80",
-  },
-  {
-    label: "Neutro",
-    value: 0,
-    color: "hover:border-slate-300 hover:bg-slate-50 active:bg-slate-100",
-  },
-  {
-    label: "Discordo",
-    value: -1,
-    color: "hover:border-red-200 hover:bg-red-50/50 active:bg-red-50/80",
-  },
-  {
-    label: "Discordo totalmente",
-    value: -2,
-    color: "hover:border-red-500 hover:bg-red-50 active:bg-red-100",
-  },
-];
-
-const IMPORTANCE_OPTIONS = [
-  { label: "Mínima", value: -2, short: "—" },
-  { label: "Baixa", value: -1, short: "-" },
-  { label: "Normal", value: 0, short: "•" },
-  { label: "Alta", value: 1, short: "+" },
-  { label: "Máxima", value: 2, short: "++" },
-];
+import { getCompletedCategories, getTotalCategories, getLikertActiveColor } from "@/lib/utils";
+import { LIKERT_SCALE, IMPORTANCE_OPTIONS, EARLY_FINISH_THRESHOLD } from "@/lib/constants";
 
 const IS_DEV = import.meta.env.DEV;
 
@@ -100,7 +65,7 @@ export default function Quiz() {
         importanceWeights,
         timestamp: Date.now(),
       });
-    }, 1000); // Aumentado para 1s para diminuir escrita no disco em mobile
+    }, 1000);
     return () => clearTimeout(saveTimer.current);
   }, [current, answers, importanceWeights]);
 
@@ -112,7 +77,6 @@ export default function Quiz() {
     if (current < totalSteps - 1) {
       setDirection(1);
       setCurrent((c) => c + 1);
-      // "instant" é vital para mobile não engasgar durante a transição
       scrollContainerRef.current?.scrollTo({ top: 0, behavior: "instant" });
     } else {
       clearSession();
@@ -127,6 +91,11 @@ export default function Quiz() {
       scrollContainerRef.current?.scrollTo({ top: 0, behavior: "instant" });
     }
   }, [current]);
+
+  const handleEarlyFinish = useCallback(() => {
+    clearSession();
+    navigate("/resultados", { state: { answers, importanceWeights } });
+  }, [answers, importanceWeights, navigate]);
 
   const renderAd = (title: string, desc: string, btn: string) => (
     <div className="w-full max-w-xl mx-auto space-y-4 sm:space-y-6">
@@ -204,7 +173,6 @@ export default function Quiz() {
           )}
 
           <div className="relative flex-1 sm:flex-initial">
-            {/* initial={false} evita animação na primeira carga, poupando CPU */}
             <AnimatePresence mode="wait" custom={direction} initial={false}>
               <motion.div
                 key={current}
@@ -212,7 +180,6 @@ export default function Quiz() {
                 initial={{ opacity: 0, x: direction * 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -direction * 20 }}
-                /* Transição simplificada para performance mobile */
                 transition={{ duration: 0.2, ease: "easeInOut" }}
                 className="w-full"
               >
@@ -236,18 +203,9 @@ export default function Quiz() {
                     </h2>
 
                     <div className="grid gap-1.5 sm:gap-2">
-                      {LIKERT.map((opt) => {
+                      {LIKERT_SCALE.map((opt) => {
                         const isSelected = answers[q.id] === opt.value;
-                        const activeColor =
-                          opt.value === 2
-                            ? "bg-emerald-600 border-emerald-600 text-white"
-                            : opt.value === 1
-                              ? "bg-emerald-100 border-emerald-200 text-emerald-800"
-                              : opt.value === 0
-                                ? "bg-slate-200 border-slate-300 text-slate-800"
-                                : opt.value === -1
-                                  ? "bg-red-100 border-red-200 text-red-800"
-                                  : "bg-red-600 border-red-600 text-white";
+                        const activeColor = getLikertActiveColor(opt.value);
 
                         return (
                           <button
@@ -318,8 +276,19 @@ export default function Quiz() {
               >
                 Anterior
               </Button>
-              <div className="text-[10px] font-bold text-muted-foreground/40 hidden sm:block uppercase tracking-widest">
-                {current} / {questions.length}
+              <div className="flex items-center gap-2">
+                {questionIndex >= EARLY_FINISH_THRESHOLD && (
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowEarlyFinish(true)}
+                    className="px-4 h-10 text-xs sm:text-sm font-bold"
+                  >
+                    Terminar Agora
+                  </Button>
+                )}
+                <div className="text-[10px] font-bold text-muted-foreground/40 hidden sm:block uppercase tracking-widest">
+                  {current} / {questions.length}
+                </div>
               </div>
               <Button
                 onClick={next}
@@ -336,11 +305,9 @@ export default function Quiz() {
       <EarlyFinishModal
         open={showEarlyFinish}
         onClose={() => setShowEarlyFinish(false)}
-        onFinish={() =>
-          navigate("/resultados", { state: { answers, importanceWeights } })
-        }
-        completedCategories={[]}
-        totalCategories={10}
+        onFinish={handleEarlyFinish}
+        completedCategories={getCompletedCategories(answers, questions)}
+        totalCategories={getTotalCategories(questions)}
       />
     </div>
   );

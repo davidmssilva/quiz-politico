@@ -5,6 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { getIdeologyLabels } from "@/lib/utils";
 
 interface Props {
   ideology: Ideology | null;
@@ -15,15 +16,7 @@ interface Props {
 export default function IdeologyModal({ ideology, open, onClose }: Props) {
   if (!ideology) return null;
 
-  // Lógica de labels baseada nos eixos clássicos (X: Econ, Y: Auth)
-  const getLabels = (x: number, y: number) => {
-    const econ = x < 0 ? "Esquerda" : x > 0 ? "Direita" : "Centrismo";
-    const auth =
-      y < 0 ? "Autoritário" : y > 0 ? "Libertário" : "Eixo Social Neutro";
-    return { econ, auth };
-  };
-
-  const labels = getLabels(ideology.x, ideology.y);
+  const labels = getIdeologyLabels(ideology.x, ideology.y);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>

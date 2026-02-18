@@ -50,9 +50,8 @@ export default function EarlyFinishModal({
               )}
 
               <p className="text-xs text-muted-foreground bg-secondary/50 rounded-lg p-3">
-                Podes terminar agora e receber um resultado estimado. No entanto,
-                recomendamos vivamente completar todas as categorias para máxima
-                precisão.
+                <strong>Atenção:</strong> Ao terminar agora, receberás um resultado estimado baseado nas respostas fornecidas. 
+                Não poderás continuar este questionário depois de confirmar.
               </p>
             </div>
           </DialogDescription>

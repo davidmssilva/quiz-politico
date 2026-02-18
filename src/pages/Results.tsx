@@ -11,6 +11,7 @@ import {
   saveResult,
   loadHistory,
 } from "@/lib/scoring";
+import { generateShareUrl } from "@/lib/utils";
 
 import PoliticalCompass from "@/components/PoliticalCompass";
 import PartyResults from "@/components/PartyResults";
@@ -105,7 +106,12 @@ export default function Results() {
     );
   }
 
-  const shareUrl = `${window.location.origin}/quiz-politico/#/resultados?econ=${scores.economicScore.toFixed(1)}&auth=${scores.authorityScore.toFixed(1)}&soc=${scores.socialScore.toFixed(1)}&sov=${scores.sovereigntyScore.toFixed(1)}`;
+  const shareUrl = generateShareUrl(
+    scores.economicScore,
+    scores.authorityScore,
+    scores.socialScore,
+    scores.sovereigntyScore
+  );
   const shareText = `O meu perfil político para 2026! Partido mais próximo: ${ranked[0]?.shortName}.`;
 
   return (
