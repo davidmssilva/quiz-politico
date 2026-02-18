@@ -11,9 +11,7 @@ import { questions } from "@/data/questions";
 import { parties } from "@/data/parties";
 import { ideologies } from "@/data/ideologies";
 import PoliticalCompass from "@/components/PoliticalCompass";
-import { IdeologicalDimensions } from "@/components/IdeologicalDimensions";
-import PartyResults from "@/components/PartyResults";
-import IdeologyResults from "@/components/IdeologyResults";
+import ResultsGrid from "@/components/ResultsGrid";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useState, useMemo } from "react";
@@ -188,62 +186,41 @@ export default function Bussola() {
           </div>
         ) : (
           <div className="space-y-12">
-            {/* 2. Visualização da Bússola e Dimensões */}
-            <div className="space-y-8">
-              <div className="rounded-3xl overflow-hidden">
-                <PoliticalCompass
-                  parties={parties}
-                  userResult={displayResult}
-                  pastResults={
-                    selected
-                      ? history.filter((h) => h.id !== selected.id)
-                      : history
-                  }
-                />
-              </div>
-
-              <div className="max-w-4xl mx-auto space-y-4">
-                <h2 className={`${TYPOGRAPHY.heading.h2} border-b pb-4`}>
-                  Profundidade Ideológica
-                </h2>
-                <IdeologicalDimensions result={displayResult} />
-              </div>
+            {/* 2. Visualização da Bússola */}
+            <div className="w-full overflow-hidden">
+              <PoliticalCompass
+                parties={parties}
+                userResult={displayResult}
+                pastResults={
+                  selected
+                    ? history.filter((h) => h.id !== selected.id)
+                    : history
+                }
+              />
             </div>
 
-            {/* 3. Grid de Afinidades (Igual ao Results) */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-              {/* Coluna 1: Afinidade Partidária */}
-              <div className="space-y-8 w-full overflow-hidden">
-                <h2 className={`${TYPOGRAPHY.heading.h2} border-b pb-4`}>
-                  Afinidade Partidária
-                </h2>
-                <PartyResults rankedParties={rankedParties} />
-              </div>
-
-              {/* Coluna 2: Espectro Ideológico */}
-              <div className="space-y-8 w-full overflow-hidden">
-                <h2 className={`${TYPOGRAPHY.heading.h2} border-b pb-4`}>
-                  Espectro Ideológico
-                </h2>
-                <IdeologyResults
-                  userCoords={userCoords}
-                  ideologies={ideologies}
-                />
-
-                {/* Nota Metodológica integrada na coluna */}
-                <div className="p-6 rounded-2xl bg-secondary/20 border border-border/50 mt-8">
-                  <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
-                    Nota Metodológica
-                  </h4>
-                  <p className="text-xs text-muted-foreground leading-relaxed italic">
-                    A proximidade é calculada através da distância euclidiana 4D
-                    (Economia, Autoridade, Sociedade e Soberania). O valor
-                    reflete a compatibilidade com as posições oficiais para
-                    2026.
-                  </p>
-                </div>
-              </div>
+            {/* 3. Nota Metodológica */}
+            <div className="w-full mx-auto p-6 rounded-2xl bg-secondary/20 border border-border/50">
+              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
+                Nota Metodológica
+              </h4>
+              <p className="text-xs text-muted-foreground leading-relaxed italic">
+                A proximidade é calculada através da distância euclidiana num espaço
+                multidimensional que inclui os 4 eixos (Economia, Autoridade,
+                Sociedade e Soberania).
+              </p>
+              <p className="text-xs text-muted-foreground leading-relaxed italic">
+                O valor reflete a compatibilidade entre a tua posição e o programa
+                oficial dos partidos para 2026.
+              </p>
             </div>
+
+            {/* 4. Grid de Resultados */}
+            <ResultsGrid
+              result={displayResult}
+              rankedParties={rankedParties}
+              ideologies={ideologies}
+            />
           </div>
         )}
       </main>

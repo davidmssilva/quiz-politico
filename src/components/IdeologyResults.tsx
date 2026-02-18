@@ -27,7 +27,7 @@ interface Props {
   ideologies: Ideology[];
 }
 
-export default function IdeologyResults({ userCoords, ideologies }: Props) {
+function IdeologyResults({ userCoords, ideologies }: Props) {
   const ranked = useMemo(() => {
     return ideologies
       .map((ideology) => {
@@ -108,3 +108,5 @@ export default function IdeologyResults({ userCoords, ideologies }: Props) {
     </div>
   );
 }
+
+export default React.memo(IdeologyResults);

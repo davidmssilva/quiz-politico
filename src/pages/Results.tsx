@@ -15,14 +15,12 @@ import { generateShareUrl } from "@/lib/utils";
 import { TYPOGRAPHY } from "@/lib/typography";
 
 import PoliticalCompass from "@/components/PoliticalCompass";
-import PartyResults from "@/components/PartyResults";
 import { AppHeader } from "@/components/AppHeader";
 import { AppFooter } from "@/components/AppFooter";
-import { IdeologicalDimensions } from "@/components/IdeologicalDimensions";
 import { ShareResults } from "@/components/ShareResults";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import IdeologyResults from "@/components/IdeologyResults";
+import ResultsGrid from "@/components/ResultsGrid";
 
 export default function Results() {
   const location = useLocation();
@@ -161,35 +159,11 @@ export default function Results() {
         </div>
 
         {/* Grid de Resultados: Stack vertical em mobile, 2 colunas em LG */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          {/* Coluna 1: Afinidade Partidária */}
-          <div className="space-y-8 w-full overflow-hidden">
-            <h2 className="font-sans text-2xl font-bold border-b pb-4">
-              Afinidade Partidária
-            </h2>
-            <PartyResults rankedParties={ranked} />
-          </div>
-
-          {/* Coluna 2: Dimensões e Ideologias */}
-          <div className="space-y-12 w-full overflow-hidden">
-            <section className="space-y-8">
-              <h2 className="font-sans text-2xl font-bold border-b pb-4">
-                Profundidade Ideológica
-              </h2>
-              <IdeologicalDimensions result={scores} />
-            </section>
-
-            <section className="space-y-8">
-              <h2 className="font-sans text-2xl font-bold border-b pb-4">
-                Espectro Ideológico
-              </h2>
-              <IdeologyResults
-                userCoords={userCoords}
-                ideologies={ideologies}
-              />
-            </section>
-          </div>
-        </div>
+        <ResultsGrid
+          result={scores}
+          rankedParties={ranked}
+          ideologies={ideologies}
+        />
 
         {/* Secção de Rodapé: Share e Ações em largura total */}
         <footer className="pt-8 border-t space-y-6 w-full">

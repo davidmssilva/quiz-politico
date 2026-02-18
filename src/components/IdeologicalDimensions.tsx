@@ -1,4 +1,7 @@
-export function IdeologicalDimensions({ result }: { result: any }) {
+import { useMemo } from "react";
+import { QuizResult } from "@/lib/scoring";
+
+export function IdeologicalDimensions({ result }: { result: QuizResult }) {
   // Utilitário de mapeamento qualitativo
   const getQualitativeLabel = (val: number, left: string, right: string) => {
     const abs = Math.abs(val);
@@ -12,36 +15,39 @@ export function IdeologicalDimensions({ result }: { result: any }) {
     return `${prefix}${val < 0 ? left : right}`;
   };
 
-  const axes = [
-    {
-      label: "Economia",
-      left: "Intervencionista",
-      right: "Mercado Livre",
-      val: result.economicScore,
-      color: "bg-blue-500",
-    },
-    {
-      label: "Autoridade",
-      left: "Libertário",
-      right: "Autoritário",
-      val: result.authorityScore,
-      color: "bg-red-500",
-    },
-    {
-      label: "Sociedade",
-      left: "Progressista",
-      right: "Conservador",
-      val: result.socialScore,
-      color: "bg-purple-500",
-    },
-    {
-      label: "Soberania",
-      left: "Globalista",
-      right: "Nacionalista",
-      val: result.sovereigntyScore,
-      color: "bg-amber-600",
-    },
-  ];
+  const axes = useMemo(
+    () => [
+      {
+        label: "Economia",
+        left: "Intervencionista",
+        right: "Mercado Livre",
+        val: result.economicScore,
+        color: "bg-blue-500",
+      },
+      {
+        label: "Autoridade",
+        left: "Libertário",
+        right: "Autoritário",
+        val: result.authorityScore,
+        color: "bg-red-500",
+      },
+      {
+        label: "Sociedade",
+        left: "Progressista",
+        right: "Conservador",
+        val: result.socialScore,
+        color: "bg-purple-500",
+      },
+      {
+        label: "Soberania",
+        left: "Globalista",
+        right: "Nacionalista",
+        val: result.sovereigntyScore,
+        color: "bg-amber-600",
+      },
+    ],
+    [result],
+  );
 
   return (
     <div className="space-y-6 bg-card p-6 rounded-2xl border border-border">

@@ -50,7 +50,8 @@ export default function Quiz() {
 
   useEffect(() => {
     const session = loadSession();
-    if (session) {
+    // Only restore session if it's recent (within 24 hours)
+    if (session && Date.now() - session.timestamp < 24 * 60 * 60 * 1000) {
       setCurrent(session.currentQuestionIndex);
       setAnswers(session.answers);
       setImportanceWeights(session.importanceWeights || {});
@@ -59,14 +60,17 @@ export default function Quiz() {
 
   useEffect(() => {
     if (saveTimer.current) clearTimeout(saveTimer.current);
-    saveTimer.current = setTimeout(() => {
-      saveSession({
-        currentQuestionIndex: current,
-        answers,
-        importanceWeights,
-        timestamp: Date.now(),
-      });
-    }, 1000);
+    // Only save if there are actual changes
+    if (Object.keys(answers).length > 0 || current > 0) {
+      saveTimer.current = setTimeout(() => {
+        saveSession({
+          currentQuestionIndex: current,
+          answers,
+          importanceWeights,
+          timestamp: Date.now(),
+        });
+      }, 1500);
+    }
     return () => clearTimeout(saveTimer.current);
   }, [current, answers, importanceWeights]);
 
