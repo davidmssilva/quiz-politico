@@ -18,9 +18,6 @@ export interface StoredResult extends QuizResult {
   closestParties: string[];
 }
 
-/**
- * Calcula o resultado final normalizado de -10 a 10 para os 4 eixos.
- */
 export function calculateResult(
   answers: Record<number, Answer>,
   questions: Question[],
@@ -53,10 +50,6 @@ export function calculateResult(
   };
 }
 
-/**
- * Calcula a distância euclidiana multidimensional (4D).
- * Agora usa x, y, z e s do objeto Party.
- */
 export function partyDistance(result: QuizResult, party: Party): number {
   return Math.sqrt(
     Math.pow(result.economicScore - party.x, 2) +
@@ -66,9 +59,6 @@ export function partyDistance(result: QuizResult, party: Party): number {
   );
 }
 
-/**
- * Rank de partidos baseado na afinidade real em todos os eixos.
- */
 export function rankParties(
   result: QuizResult,
   parties: Party[],
@@ -76,16 +66,11 @@ export function rankParties(
   return parties
     .map((p) => {
       const dist = partyDistance(result, p);
-      // Cálculo de afinidade: 0 a 100%
-      // A distância máxima teórica em 4 eixos de -10 a 10 é 40.
-      // Usamos um divisor de 0.4 para espalhar melhor a percentagem.
       const affinity = Math.max(0, Math.min(100, 100 - dist * 2.5));
       return { ...p, distance: dist, affinity };
     })
     .sort((a, b) => b.affinity - a.affinity);
 }
-
-// --- Persistência (Mantém-se igual, apenas garantindo tipos) ---
 
 const SESSION_KEY = "compassQuizSession";
 const RESULTS_KEY = "compassQuizResults";

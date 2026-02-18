@@ -105,7 +105,48 @@
     font-family: 'Inter', sans-serif;
   }
 
-  h1, h2, h3 {
+  h1, h2, h3, h4, h5, h6 {
     font-family: 'DM Serif Display', serif;
+  }
+
+  em, i {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+  }
+}
+
+@layer components {
+  /* Optimize animations for mobile */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Optimize specific transitions */
+  .transition-opacity {
+    transition: opacity 0.3s ease-out;
+  }
+
+  .transition-colors {
+    transition: color 0.2s ease-out, background-color 0.2s ease-out, border-color 0.2s ease-out;
+  }
+
+  /* Add will-change hints for animated elements */
+  [class*="animate-"] {
+    will-change: transform, opacity;
+  }
+
+  /* Optimize SVG rendering */
+  svg {
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Touch optimization */
+  button, [role="button"], a {
+    touch-action: manipulation;
   }
 }

@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Twitter, Facebook, Send, Link, MessageSquare } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { TYPOGRAPHY } from "@/lib/typography";
 
 interface ShareProps {
   url: string;
@@ -45,7 +46,7 @@ export function ShareResults({ url, text }: ShareProps) {
 
   return (
     <div className="space-y-4">
-      <h3 className="font-serif text-lg sm:text-xl font-bold">
+      <h3 className={TYPOGRAPHY.heading.h3}>
         Partilhar Resultados
       </h3>
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">

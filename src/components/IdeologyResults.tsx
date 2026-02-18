@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { motion } from "framer-motion";
+import { TYPOGRAPHY } from "@/lib/typography";
 
 export interface Ideology {
   name: string;
@@ -9,11 +10,6 @@ export interface Ideology {
   sovereignty?: number; // Globalismo vs Nacionalismo
   color: string;
   description: string;
-}
-
-interface RankedIdeology extends Ideology {
-  distance: number;
-  match: number;
 }
 
 interface Props {
@@ -26,7 +22,7 @@ interface Props {
   ideologies: Ideology[];
 }
 
-export default function IdeologyResults({ userCoords, ideologies }: Props) {
+function IdeologyResults({ userCoords, ideologies }: Props) {
   const ranked = useMemo(() => {
     return ideologies
       .map((ideology) => {
@@ -73,10 +69,10 @@ export default function IdeologyResults({ userCoords, ideologies }: Props) {
 
           <div className="flex items-start justify-between mb-4">
             <div className="space-y-1">
-              <span className="text-[10px] font-black text-muted-foreground/40 uppercase tracking-widest">
+              <span className="text-[10px] font-bold text-muted-foreground/40 uppercase tracking-[0.2em]">
                 Afinidade #0{i + 1}
               </span>
-              <h4 className="font-bold text-base text-card-foreground leading-tight">
+              <h4 className={TYPOGRAPHY.heading.h4}>
                 {ideology.name.replace("\n", " ")}
               </h4>
             </div>
@@ -99,7 +95,7 @@ export default function IdeologyResults({ userCoords, ideologies }: Props) {
             />
           </div>
 
-          <p className="text-xs text-muted-foreground leading-relaxed italic">
+          <p className="text-xs font-medium text-muted-foreground leading-relaxed italic">
             {ideology.description}
           </p>
         </motion.div>
@@ -107,3 +103,5 @@ export default function IdeologyResults({ userCoords, ideologies }: Props) {
     </div>
   );
 }
+
+export default React.memo(IdeologyResults);

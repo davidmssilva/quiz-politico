@@ -1,5 +1,6 @@
 import { Party } from "@/data/parties";
 import { motion } from "framer-motion";
+import { memo } from "react";
 
 interface RankedParty extends Party {
   distance: number;
@@ -9,7 +10,7 @@ interface Props {
   rankedParties: RankedParty[];
 }
 
-export default function PartyResults({ rankedParties }: Props) {
+function PartyResults({ rankedParties }: Props) {
   const maxDist = Math.max(...rankedParties.map((p) => p.distance), 1);
 
   return (
@@ -38,7 +39,7 @@ export default function PartyResults({ rankedParties }: Props) {
                 <span className="font-semibold text-sm text-card-foreground truncate">
                   {party.name}
                 </span>
-                <span className="text-xs text-muted-foreground whitespace-nowrap">
+                <span className="text-xs font-medium text-muted-foreground whitespace-nowrap">
                   {match}% afinidade
                 </span>
               </div>
@@ -58,3 +59,4 @@ export default function PartyResults({ rankedParties }: Props) {
     </div>
   );
 }
+export default memo(PartyResults);

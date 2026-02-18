@@ -5,6 +5,7 @@ import { loadSession, clearSession } from "@/lib/scoring";
 import { useMemo } from "react";
 import { AppHeader } from "@/components/AppHeader";
 import { AppFooter } from "@/components/AppFooter";
+import { TYPOGRAPHY } from "@/lib/typography";
 
 export default function Index() {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ export default function Index() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl font-black tracking-tighter text-foreground leading-[1.1]">
+            <h1 className={TYPOGRAPHY.heading.h1}>
               Bússola Política{" "}
               <span className="text-primary italic">Portugal</span>
             </h1>
@@ -57,7 +58,7 @@ export default function Index() {
               <Button
                 variant="outline"
                 size="lg"
-                className="w-full sm:w-auto h-16 px-10 rounded-2xl text-lg font-bold border-2 hover:bg-secondary"
+                className="w-full sm:w-auto h-16 px-10 rounded-2xl text-lg font-bold border-2 hover:bg-primary/10 hover:border-primary/50 hover:text-foreground/80 transition-all hover:scale-105 active:scale-95"
                 onClick={() => {
                   clearSession();
                   navigate("/quiz");
@@ -79,7 +80,7 @@ export default function Index() {
                 key={s.label}
                 className="bg-card border border-border/60 rounded-2xl p-4 sm:p-6 transition-colors hover:border-primary/30 group"
               >
-                <div className="font-serif text-2xl sm:text-2xl font-black text-primary group-hover:scale-110 transition-transform">
+                <div className={`${TYPOGRAPHY.heading.h2} text-primary group-hover:scale-110 transition-transform`}>
                   {s.n}
                 </div>
                 <div className="text-[10px] sm:text-xs font-black tracking-widest text-muted-foreground mt-1">

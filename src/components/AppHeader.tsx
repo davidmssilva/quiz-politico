@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useMemo } from "react";
 import { loadSession } from "@/lib/scoring";
+import { TYPOGRAPHY } from "@/lib/typography";
 
 interface AppHeaderProps {
   showBussola?: boolean;
@@ -26,7 +27,7 @@ export function AppHeader({
           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-primary-foreground font-bold transition-transform group-hover:scale-105">
             P
           </div>
-          <span className="font-serif text-lg font-bold tracking-tight">
+          <span className={TYPOGRAPHY.heading.h4}>
             Bússola Política
           </span>
         </div>

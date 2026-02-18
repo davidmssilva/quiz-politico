@@ -11,16 +11,16 @@ import {
   saveResult,
   loadHistory,
 } from "@/lib/scoring";
+import { generateShareUrl } from "@/lib/utils";
+import { TYPOGRAPHY } from "@/lib/typography";
 
 import PoliticalCompass from "@/components/PoliticalCompass";
-import PartyResults from "@/components/PartyResults";
 import { AppHeader } from "@/components/AppHeader";
 import { AppFooter } from "@/components/AppFooter";
-import { IdeologicalDimensions } from "@/components/IdeologicalDimensions";
 import { ShareResults } from "@/components/ShareResults";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import IdeologyResults from "@/components/IdeologyResults";
+import ResultsGrid from "@/components/ResultsGrid";
 
 export default function Results() {
   const location = useLocation();
@@ -97,7 +97,7 @@ export default function Results() {
   if (!scores || !userCoords) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center space-y-4">
-        <h2 className="text-xl font-serif font-bold text-balance">
+        <h2 className={TYPOGRAPHY.heading.h2}>
           Sem dados de resultados
         </h2>
         <Button onClick={() => navigate("/")}>Voltar ao Início</Button>
@@ -105,7 +105,12 @@ export default function Results() {
     );
   }
 
-  const shareUrl = `${window.location.origin}/quiz-politico/#/resultados?econ=${scores.economicScore.toFixed(1)}&auth=${scores.authorityScore.toFixed(1)}&soc=${scores.socialScore.toFixed(1)}&sov=${scores.sovereigntyScore.toFixed(1)}`;
+  const shareUrl = generateShareUrl(
+    scores.economicScore,
+    scores.authorityScore,
+    scores.socialScore,
+    scores.sovereigntyScore
+  );
   const shareText = `O meu perfil político para 2026! Partido mais próximo: ${ranked[0]?.shortName}.`;
 
   return (
@@ -116,7 +121,7 @@ export default function Results() {
           <motion.h1
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="font-serif text-3xl md:text-4xl font-black leading-tight"
+            className="font-sans text-3xl md:text-4xl font-black leading-tight"
           >
             A Tua <span className="text-primary italic">Identidade</span>{" "}
             Política
@@ -154,35 +159,11 @@ export default function Results() {
         </div>
 
         {/* Grid de Resultados: Stack vertical em mobile, 2 colunas em LG */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          {/* Coluna 1: Afinidade Partidária */}
-          <div className="space-y-8 w-full overflow-hidden">
-            <h2 className="font-serif text-2xl font-bold border-b pb-4">
-              Afinidade Partidária
-            </h2>
-            <PartyResults rankedParties={ranked} />
-          </div>
-
-          {/* Coluna 2: Dimensões e Ideologias */}
-          <div className="space-y-12 w-full overflow-hidden">
-            <section className="space-y-8">
-              <h2 className="font-serif text-2xl font-bold border-b pb-4">
-                Profundidade Ideológica
-              </h2>
-              <IdeologicalDimensions result={scores} />
-            </section>
-
-            <section className="space-y-8">
-              <h2 className="font-serif text-2xl font-bold border-b pb-4">
-                Espectro Ideológico
-              </h2>
-              <IdeologyResults
-                userCoords={userCoords}
-                ideologies={ideologies}
-              />
-            </section>
-          </div>
-        </div>
+        <ResultsGrid
+          result={scores}
+          rankedParties={ranked}
+          ideologies={ideologies}
+        />
 
         {/* Secção de Rodapé: Share e Ações em largura total */}
         <footer className="pt-8 border-t space-y-6 w-full">
