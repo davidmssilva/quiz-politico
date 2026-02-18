@@ -60,6 +60,10 @@ export function IdeologicalDimensions({ result }: { result: QuizResult }) {
             </span>
           </div>
           <div className="relative h-2 bg-secondary rounded-full overflow-hidden">
+            {/* Center marker */}
+            <div className="absolute top-0 bottom-0 left-1/2 w-0.5 bg-foreground/80 -translate-x-1/2 z-10" />
+            
+            {/* Filled bar */}
             <div
               className={`absolute h-full ${axis.color} transition-all duration-1000`}
               style={{
