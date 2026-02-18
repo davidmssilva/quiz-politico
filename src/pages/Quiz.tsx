@@ -15,13 +15,30 @@ import { TYPOGRAPHY } from "@/lib/typography";
 
 const IS_DEV = import.meta.env.DEV;
 
+const getInitialState = () => {
+  const session = loadSession();
+  if (session && Date.now() - session.timestamp < 24 * 60 * 60 * 1000) {
+    return {
+      current: session.currentQuestionIndex,
+      answers: session.answers,
+      importanceWeights: session.importanceWeights || {},
+    };
+  }
+  return {
+    current: 0,
+    answers: {},
+    importanceWeights: {},
+  };
+};
+
 export default function Quiz() {
   const navigate = useNavigate();
-  const [current, setCurrent] = useState(0);
-  const [answers, setAnswers] = useState<Record<number, Answer>>({});
+  const initialState = getInitialState();
+  const [current, setCurrent] = useState(initialState.current);
+  const [answers, setAnswers] = useState<Record<number, Answer>>(initialState.answers);
   const [importanceWeights, setImportanceWeights] = useState<
     Record<number, number>
-  >({});
+  >(initialState.importanceWeights);
   const [direction, setDirection] = useState(1);
   const [showTestMenu, setShowTestMenu] = useState(false);
   const [showEarlyFinish, setShowEarlyFinish] = useState(false);
@@ -49,16 +66,6 @@ export default function Quiz() {
   };
 
   useEffect(() => {
-    const session = loadSession();
-
-    if (session) {
-      setCurrent(session.currentQuestionIndex);
-      setAnswers(session.answers);
-      setImportanceWeights(session.importanceWeights || {});
-    }
-  }, []);
-
-  useEffect(() => {
     if (saveTimer.current) clearTimeout(saveTimer.current);
     // Only save if there are actual changes
     if (Object.keys(answers).length > 0 || current > 0) {
@@ -69,7 +76,7 @@ export default function Quiz() {
           importanceWeights,
           timestamp: Date.now(),
         });
-      }, 1500);
+      }, 500);
     }
     return () => clearTimeout(saveTimer.current);
   }, [current, answers, importanceWeights]);
@@ -84,6 +91,13 @@ export default function Quiz() {
       setCurrent((c) => c + 1);
       scrollContainerRef.current?.scrollTo({ top: 0, behavior: "instant" });
     } else {
+      // Save immediately before navigating to results
+      saveSession({
+        currentQuestionIndex: current,
+        answers,
+        importanceWeights,
+        timestamp: Date.now(),
+      });
       clearSession();
       navigate("/resultados", { state: { answers, importanceWeights } });
     }
@@ -98,9 +112,16 @@ export default function Quiz() {
   }, [current]);
 
   const handleEarlyFinish = useCallback(() => {
+    // Save immediately before navigating to results
+    saveSession({
+      currentQuestionIndex: current,
+      answers,
+      importanceWeights,
+      timestamp: Date.now(),
+    });
     clearSession();
     navigate("/resultados", { state: { answers, importanceWeights } });
-  }, [answers, importanceWeights, navigate]);
+  }, [answers, importanceWeights, navigate, current]);
 
   const renderAd = (title: string, desc: string, btn: string) => (
     <div className="w-full max-w-xl mx-auto space-y-4 sm:space-y-6">

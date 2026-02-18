@@ -58,7 +58,7 @@ export default function Index() {
               <Button
                 variant="outline"
                 size="lg"
-                className="w-full sm:w-auto h-16 px-10 rounded-2xl text-lg font-bold border-2 hover:bg-secondary"
+                className="w-full sm:w-auto h-16 px-10 rounded-2xl text-lg font-bold border-2 hover:bg-primary/10 hover:border-primary/50 hover:text-foreground/80 transition-all hover:scale-105 active:scale-95"
                 onClick={() => {
                   clearSession();
                   navigate("/quiz");
