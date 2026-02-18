@@ -47,10 +47,9 @@ export function IdeologicalDimensions({ result }: { result: any }) {
     <div className="space-y-6 bg-card p-6 rounded-2xl border border-border">
       {axes.map((axis) => (
         <div key={axis.label} className="space-y-2">
-          <div className="flex justify-between text-xs font-bold tracking-tighter">
-            <span className="uppercase">{axis.label}:</span>
-            {/* Mapeamento qualitativo em vez de raw float */}
-            <span className="font-semibold text-card-foreground ">
+          <div className="flex justify-between text-xs font-bold uppercase tracking-wider">
+            <span>{axis.label}:</span>
+            <span className="font-semibold text-card-foreground">
               {getQualitativeLabel(axis.val, axis.left, axis.right)}
             </span>
           </div>

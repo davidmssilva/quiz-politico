@@ -20,6 +20,7 @@ import { useState, useMemo } from "react";
 import { AppHeader } from "@/components/AppHeader";
 import { Trash2, History as HistoryIcon } from "lucide-react";
 import { AppFooter } from "@/components/AppFooter";
+import { TYPOGRAPHY } from "@/lib/typography";
 
 export default function Bussola() {
   const navigate = useNavigate();
@@ -138,7 +139,7 @@ export default function Bussola() {
                 <span className="text-[10px] font-bold uppercase opacity-80">
                   Atual
                 </span>
-                <span className="text-xs font-serif font-bold truncate">
+                <span className={`${TYPOGRAPHY.meta.sm} truncate`}>
                   Em curso...
                 </span>
               </button>
@@ -202,7 +203,7 @@ export default function Bussola() {
               </div>
 
               <div className="max-w-4xl mx-auto space-y-4">
-                <h2 className="font-serif text-2xl font-bold border-b pb-4">
+                <h2 className={`${TYPOGRAPHY.heading.h2} border-b pb-4`}>
                   Profundidade Ideológica
                 </h2>
                 <IdeologicalDimensions result={displayResult} />
@@ -213,7 +214,7 @@ export default function Bussola() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
               {/* Coluna 1: Afinidade Partidária */}
               <div className="space-y-8 w-full overflow-hidden">
-                <h2 className="font-serif text-2xl font-bold border-b pb-4">
+                <h2 className={`${TYPOGRAPHY.heading.h2} border-b pb-4`}>
                   Afinidade Partidária
                 </h2>
                 <PartyResults rankedParties={rankedParties} />
@@ -221,7 +222,7 @@ export default function Bussola() {
 
               {/* Coluna 2: Espectro Ideológico */}
               <div className="space-y-8 w-full overflow-hidden">
-                <h2 className="font-serif text-2xl font-bold border-b pb-4">
+                <h2 className={`${TYPOGRAPHY.heading.h2} border-b pb-4`}>
                   Espectro Ideológico
                 </h2>
                 <IdeologyResults

@@ -35,7 +35,7 @@ export function getIdeologyLabels(x: number, y: number): {
   const safeY = isNaN(y) || y === undefined ? 0 : y;
   
   const econ = safeX < 0 ? "Esquerda" : safeX > 0 ? "Direita" : "Centrismo";
-  const auth = safeY < 0 ? "Libertário" : safeY > 0 ? "Autoritário" : "Eixo Social Neutro";
+  const auth = safeY > 0 ? "Libertário" : safeY < 0 ? "Autoritário" : "Eixo Social Neutro";
   
   return { econ, auth };
 }

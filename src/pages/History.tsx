@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { AppHeader } from "@/components/AppHeader";
+import { TYPOGRAPHY } from "@/lib/typography";
 
 export default function History() {
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ export default function History() {
             </svg>
           </div>
           <div className="space-y-2">
-            <h2 className="text-2xl font-serif font-bold">Sem histórico</h2>
+            <h2 className={TYPOGRAPHY.heading.h2}>Sem histórico</h2>
             <p className="text-muted-foreground max-w-xs mx-auto">
               Ainda não concluíste nenhum questionário para guardar resultados.
             </p>
@@ -70,7 +71,7 @@ export default function History() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <h1 className="font-serif text-3xl text-foreground font-bold tracking-tight">
+          <h1 className={TYPOGRAPHY.heading.h1}>
             Evolução Ideológica
           </h1>
           <p className="text-muted-foreground mt-1 text-lg">
@@ -95,7 +96,7 @@ export default function History() {
 
         <div className="space-y-4">
           <div className="flex items-center justify-between border-b pb-3">
-            <h3 className="font-serif text-xl font-bold">Linha Temporal</h3>
+            <h3 className={TYPOGRAPHY.heading.h3}>Linha Temporal</h3>
             <Button
               variant="outline"
               size="sm"
@@ -126,7 +127,7 @@ export default function History() {
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-card-foreground font-bold font-serif text-base">
+                      <p className={`${TYPOGRAPHY.heading.h4} text-card-foreground`}>
                         {date.toLocaleDateString("pt-PT", {
                           day: "numeric",
                           month: "long",

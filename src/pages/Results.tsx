@@ -12,6 +12,7 @@ import {
   loadHistory,
 } from "@/lib/scoring";
 import { generateShareUrl } from "@/lib/utils";
+import { TYPOGRAPHY } from "@/lib/typography";
 
 import PoliticalCompass from "@/components/PoliticalCompass";
 import PartyResults from "@/components/PartyResults";
@@ -98,7 +99,7 @@ export default function Results() {
   if (!scores || !userCoords) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center space-y-4">
-        <h2 className="text-xl font-serif font-bold text-balance">
+        <h2 className={TYPOGRAPHY.heading.h2}>
           Sem dados de resultados
         </h2>
         <Button onClick={() => navigate("/")}>Voltar ao Início</Button>
@@ -122,7 +123,7 @@ export default function Results() {
           <motion.h1
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="font-serif text-3xl md:text-4xl font-black leading-tight"
+            className="font-sans text-3xl md:text-4xl font-black leading-tight"
           >
             A Tua <span className="text-primary italic">Identidade</span>{" "}
             Política
@@ -163,7 +164,7 @@ export default function Results() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           {/* Coluna 1: Afinidade Partidária */}
           <div className="space-y-8 w-full overflow-hidden">
-            <h2 className="font-serif text-2xl font-bold border-b pb-4">
+            <h2 className="font-sans text-2xl font-bold border-b pb-4">
               Afinidade Partidária
             </h2>
             <PartyResults rankedParties={ranked} />
@@ -172,14 +173,14 @@ export default function Results() {
           {/* Coluna 2: Dimensões e Ideologias */}
           <div className="space-y-12 w-full overflow-hidden">
             <section className="space-y-8">
-              <h2 className="font-serif text-2xl font-bold border-b pb-4">
+              <h2 className="font-sans text-2xl font-bold border-b pb-4">
                 Profundidade Ideológica
               </h2>
               <IdeologicalDimensions result={scores} />
             </section>
 
             <section className="space-y-8">
-              <h2 className="font-serif text-2xl font-bold border-b pb-4">
+              <h2 className="font-sans text-2xl font-bold border-b pb-4">
                 Espectro Ideológico
               </h2>
               <IdeologyResults

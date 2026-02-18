@@ -1,5 +1,6 @@
 // components/AdQuestionCard.tsx
 import { Button } from "@/components/ui/button";
+import { TYPOGRAPHY } from "@/lib/typography";
 
 export default function AdQuestionCard({
   onNext,
@@ -14,7 +15,7 @@ export default function AdQuestionCard({
         <span className="text-xs font-bold text-primary uppercase tracking-wider">
           Conteúdo Patrocinado
         </span>
-        <h2 className="font-serif text-2xl sm:text-3xl text-foreground leading-snug">
+        <h2 className={TYPOGRAPHY.heading.h2}>
           Visite os nossos parceiros para apoiar este projeto gratuito.
         </h2>
       </div>

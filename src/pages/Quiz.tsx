@@ -11,6 +11,7 @@ import { AppFooter } from "@/components/AppFooter";
 import { Button } from "@/components/ui/button";
 import { getCompletedCategories, getTotalCategories, getLikertActiveColor } from "@/lib/utils";
 import { LIKERT_SCALE, IMPORTANCE_OPTIONS, EARLY_FINISH_THRESHOLD } from "@/lib/constants";
+import { TYPOGRAPHY } from "@/lib/typography";
 
 const IS_DEV = import.meta.env.DEV;
 
@@ -103,7 +104,7 @@ export default function Quiz() {
         <span className="text-[10px] font-bold text-primary uppercase tracking-[0.2em] bg-primary/10 px-3 py-1 rounded-full">
           Patrocinado
         </span>
-        <h2 className="font-serif text-xl sm:text-3xl md:text-4xl text-foreground font-bold leading-tight">
+        <h2 className="font-sans text-xl sm:text-3xl md:text-4xl text-foreground font-bold leading-tight">
           {title}
         </h2>
         <p className="text-muted-foreground text-xs sm:text-base">{desc}</p>
@@ -198,7 +199,7 @@ export default function Quiz() {
 
                 {!isStartAd && !isEndAd && (
                   <div className="space-y-4 sm:space-y-6">
-                    <h2 className="font-serif text-lg sm:text-xl md:text-2xl font-bold text-foreground leading-snug text-center sm:text-left">
+                    <h2 className={TYPOGRAPHY.question.lg}>
                       {q.text}
                     </h2>
 

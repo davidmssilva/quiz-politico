@@ -6,6 +6,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { TYPOGRAPHY } from "@/lib/typography";
 
 interface Props {
   open: boolean;
@@ -26,20 +27,20 @@ export default function EarlyFinishModal({
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle className="font-serif text-xl">Terminar Agora?</DialogTitle>
+          <DialogTitle className={TYPOGRAPHY.heading.h2}>Terminar Agora?</DialogTitle>
           <DialogDescription asChild>
             <div className="pt-2 space-y-4">
-              <p className="text-sm text-foreground">
+              <p className="text-sm font-medium text-foreground">
                 Completaste <strong>{completedCategories.length}</strong> de{" "}
                 <strong>{totalCategories}</strong> categorias.
               </p>
 
               {completedCategories.length > 0 && (
                 <div>
-                  <p className="text-xs text-muted-foreground mb-2 font-medium">
+                  <p className="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wider">
                     Categorias respondidas:
                   </p>
-                  <ul className="text-sm text-foreground space-y-1">
+                  <ul className="text-sm font-medium text-foreground space-y-1">
                     {completedCategories.map((cat) => (
                       <li key={cat} className="flex items-center gap-2">
                         <span className="text-accent">✓</span> {cat}
@@ -49,7 +50,7 @@ export default function EarlyFinishModal({
                 </div>
               )}
 
-              <p className="text-xs text-muted-foreground bg-secondary/50 rounded-lg p-3">
+              <p className="text-xs font-medium text-muted-foreground bg-secondary/50 rounded-lg p-3">
                 <strong>Atenção:</strong> Ao terminar agora, receberás um resultado estimado baseado nas respostas fornecidas. 
                 Não poderás continuar este questionário depois de confirmar.
               </p>
