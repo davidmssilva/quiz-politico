@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { questions } from "@/data/questions";
@@ -14,27 +14,28 @@ const LIKERT: { label: string; value: Answer; color: string }[] = [
   {
     label: "Concordo totalmente",
     value: 2,
-    color: "hover:border-blue-500 hover:bg-blue-50",
+    color: "hover:border-emerald-500 hover:bg-emerald-50 active:bg-emerald-100",
   },
   {
     label: "Concordo",
     value: 1,
-    color: "hover:border-blue-300 hover:bg-blue-50/50",
+    color:
+      "hover:border-emerald-200 hover:bg-emerald-50/50 active:bg-emerald-50/80",
   },
   {
     label: "Neutro",
     value: 0,
-    color: "hover:border-slate-300 hover:bg-slate-50",
+    color: "hover:border-slate-300 hover:bg-slate-50 active:bg-slate-100",
   },
   {
     label: "Discordo",
     value: -1,
-    color: "hover:border-red-300 hover:bg-red-50/50",
+    color: "hover:border-red-200 hover:bg-red-50/50 active:bg-red-50/80",
   },
   {
     label: "Discordo totalmente",
     value: -2,
-    color: "hover:border-red-500 hover:bg-red-50",
+    color: "hover:border-red-500 hover:bg-red-50 active:bg-red-100",
   },
 ];
 
@@ -59,6 +60,7 @@ export default function Quiz() {
   const [showTestMenu, setShowTestMenu] = useState(false);
   const [showEarlyFinish, setShowEarlyFinish] = useState(false);
   const saveTimer = useRef<NodeJS.Timeout>();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const totalSteps = questions.length + 2;
   const isStartAd = current === 0;
@@ -98,7 +100,7 @@ export default function Quiz() {
         importanceWeights,
         timestamp: Date.now(),
       });
-    }, 200);
+    }, 1000); // Aumentado para 1s para diminuir escrita no disco em mobile
     return () => clearTimeout(saveTimer.current);
   }, [current, answers, importanceWeights]);
 
@@ -110,7 +112,8 @@ export default function Quiz() {
     if (current < totalSteps - 1) {
       setDirection(1);
       setCurrent((c) => c + 1);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      // "instant" é vital para mobile não engasgar durante a transição
+      scrollContainerRef.current?.scrollTo({ top: 0, behavior: "instant" });
     } else {
       clearSession();
       navigate("/resultados", { state: { answers, importanceWeights } });
@@ -121,12 +124,12 @@ export default function Quiz() {
     if (current > 0) {
       setDirection(-1);
       setCurrent((c) => c - 1);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      scrollContainerRef.current?.scrollTo({ top: 0, behavior: "instant" });
     }
   }, [current]);
 
   const renderAd = (title: string, desc: string, btn: string) => (
-    <div className="w-full max-w-xl mx-auto space-y-4 sm:space-y-6 animate-in fade-in zoom-in duration-500">
+    <div className="w-full max-w-xl mx-auto space-y-4 sm:space-y-6">
       <div className="space-y-1 text-center sm:text-left">
         <span className="text-[10px] font-bold text-primary uppercase tracking-[0.2em] bg-primary/10 px-3 py-1 rounded-full">
           Patrocinado
@@ -147,7 +150,7 @@ export default function Quiz() {
         ></ins>
       </div>
       <Button
-        className="w-full h-12 sm:h-16 text-base sm:text-lg font-bold rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.01] transition-transform"
+        className="w-full h-12 sm:h-16 text-base sm:text-lg font-bold rounded-2xl shadow-xl shadow-primary/20 transition-transform active:scale-95"
         onClick={next}
       >
         {btn}
@@ -185,7 +188,10 @@ export default function Quiz() {
         </div>
       )}
 
-      <main className="flex-1 flex flex-col overflow-y-auto sm:overflow-hidden px-4 py-2 sm:py-4 md:py-6">
+      <main
+        ref={scrollContainerRef}
+        className="flex-1 flex flex-col overflow-y-auto px-4 py-2 sm:py-4 md:py-6 touch-pan-y"
+      >
         <div className="w-full max-w-2xl mx-auto flex-1 flex flex-col justify-center">
           {!isStartAd && !isEndAd && (
             <div className="mb-4 sm:mb-6 md:mb-8">
@@ -198,14 +204,16 @@ export default function Quiz() {
           )}
 
           <div className="relative flex-1 sm:flex-initial">
-            <AnimatePresence mode="wait" custom={direction}>
+            {/* initial={false} evita animação na primeira carga, poupando CPU */}
+            <AnimatePresence mode="wait" custom={direction} initial={false}>
               <motion.div
                 key={current}
                 custom={direction}
-                initial={{ opacity: 0, x: direction * 30 }}
+                initial={{ opacity: 0, x: direction * 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -direction * 30 }}
-                transition={{ type: "spring", damping: 30, stiffness: 300 }}
+                exit={{ opacity: 0, x: -direction * 20 }}
+                /* Transição simplificada para performance mobile */
+                transition={{ duration: 0.2, ease: "easeInOut" }}
                 className="w-full"
               >
                 {isStartAd &&
@@ -228,32 +236,47 @@ export default function Quiz() {
                     </h2>
 
                     <div className="grid gap-1.5 sm:gap-2">
-                      {LIKERT.map((opt) => (
-                        <button
-                          key={opt.value}
-                          onClick={() => selectAnswer(opt.value)}
-                          className={`w-full text-left px-4 py-3 sm:py-4 rounded-xl border-2 transition-all flex items-center justify-between group
-                            ${
-                              answers[q.id] === opt.value
-                                ? "bg-primary border-primary text-white shadow-md scale-[1.01] z-10"
-                                : `bg-card border-border text-foreground/80 ${opt.color}`
-                            }`}
-                        >
-                          <span className="text-xs sm:text-sm md:text-base font-medium">
-                            {opt.label}
-                          </span>
-                          {answers[q.id] === opt.value && (
-                            <div className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
-                          )}
-                        </button>
-                      ))}
+                      {LIKERT.map((opt) => {
+                        const isSelected = answers[q.id] === opt.value;
+                        const activeColor =
+                          opt.value === 2
+                            ? "bg-emerald-600 border-emerald-600 text-white"
+                            : opt.value === 1
+                              ? "bg-emerald-100 border-emerald-200 text-emerald-800"
+                              : opt.value === 0
+                                ? "bg-slate-200 border-slate-300 text-slate-800"
+                                : opt.value === -1
+                                  ? "bg-red-100 border-red-200 text-red-800"
+                                  : "bg-red-600 border-red-600 text-white";
+
+                        return (
+                          <button
+                            key={opt.value}
+                            onClick={() => selectAnswer(opt.value)}
+                            className={`w-full text-left px-4 py-3 sm:py-4 rounded-xl border-2 transition-all flex items-center justify-between group tap-highlight-transparent
+                              ${
+                                isSelected
+                                  ? `${activeColor} shadow-md scale-[1.01] z-10`
+                                  : `bg-card border-border text-foreground/80 ${opt.color}`
+                              }`}
+                          >
+                            <span className="text-xs sm:text-sm md:text-base font-medium">
+                              {opt.label}
+                            </span>
+                            {isSelected && (
+                              <div
+                                className={`h-1.5 w-1.5 rounded-full ${Math.abs(opt.value) === 2 ? "bg-white" : "bg-current"}`}
+                              />
+                            )}
+                          </button>
+                        );
+                      })}
                     </div>
 
                     <div className="flex bg-secondary/40 p-1.5 rounded-xl gap-2 w-full max-w-md mx-auto">
                       {IMPORTANCE_OPTIONS.map((opt) => {
                         const isSelected =
                           (importanceWeights[q.id] ?? 0) === opt.value;
-
                         return (
                           <button
                             key={opt.value}
@@ -264,11 +287,11 @@ export default function Quiz() {
                               }))
                             }
                             className={`flex-1 flex flex-col items-center justify-center py-1.5 sm:py-2 rounded-lg transition-all duration-200 border-2
-          ${
-            isSelected
-              ? "bg-background border-primary shadow-md text-primary scale-[1.02] z-10"
-              : "bg-transparent border-transparent text-muted-foreground hover:bg-background/40 hover:border-border"
-          }`}
+                              ${
+                                isSelected
+                                  ? "bg-background border-primary shadow-md text-primary scale-[1.02] z-10"
+                                  : "bg-transparent border-transparent text-muted-foreground hover:bg-background/40 hover:border-border"
+                              }`}
                           >
                             <span className="text-sm sm:text-base font-bold leading-none">
                               {opt.short}
