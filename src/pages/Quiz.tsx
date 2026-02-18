@@ -50,8 +50,8 @@ export default function Quiz() {
 
   useEffect(() => {
     const session = loadSession();
-    // Only restore session if it's recent (within 24 hours)
-    if (session && Date.now() - session.timestamp < 24 * 60 * 60 * 1000) {
+
+    if (session) {
       setCurrent(session.currentQuestionIndex);
       setAnswers(session.answers);
       setImportanceWeights(session.importanceWeights || {});
