@@ -74,9 +74,9 @@ export default function Quiz() {
     return () => clearTimeout(saveTimer.current);
   }, [current, answers, importanceWeights]);
 
-  const selectAnswer = (value: Answer) => {
+  const selectAnswer = useCallback((value: Answer) => {
     setAnswers((p) => ({ ...p, [q.id]: value }));
-  };
+  }, [q?.id]);
 
   const next = useCallback(() => {
     if (current < totalSteps - 1) {
@@ -185,7 +185,7 @@ export default function Quiz() {
                 initial={{ opacity: 0, x: direction * 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -direction * 20 }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
+                transition={{ duration: 0.15, ease: "easeInOut" }}
                 className="w-full"
               >
                 {isStartAd &&

@@ -35,85 +35,92 @@ const IdeologyLayer = memo(function IdeologyLayer({
   onLeaveIdeology: () => void;
   onClickIdeology: (ideo: Ideology) => void;
 }) {
+  const ideologyCoords = useMemo(
+    () =>
+      ideologies.map((ideo) => ({
+        ideo,
+        ix: toX(ideo.x),
+        iy: toY(ideo.y),
+        lines: ideo.name.split("\n"),
+      })),
+    [],
+  );
+
   return (
     <g id="ideology-layer">
-      {ideologies.map((ideo) => {
-        const ix = toX(ideo.x);
-        const iy = toY(ideo.y);
-        const lines = ideo.name.split("\n");
-
-        return (
-          <g
-            key={ideo.name}
-            className="cursor-pointer group"
-            onMouseEnter={(e) => onHoverIdeology(ideo, e)}
-            onMouseMove={(e) => onHoverIdeology(ideo, e)}
-            onMouseLeave={onLeaveIdeology}
-            onClick={() => onClickIdeology(ideo)}
-          >
-            <circle
-              cx={ix}
-              cy={iy}
-              r={40}
+      {ideologyCoords.map(({ ideo, ix, iy, lines }) => (
+        <g
+          key={ideo.name}
+          className="cursor-pointer group"
+          onMouseEnter={(e) => onHoverIdeology(ideo, e)}
+          onMouseMove={(e) => onHoverIdeology(ideo, e)}
+          onMouseLeave={onLeaveIdeology}
+          onClick={() => onClickIdeology(ideo)}
+        >
+          <circle
+            cx={ix}
+            cy={iy}
+            r={40}
+            fill={ideo.color}
+            className="opacity-[0.05] group-hover:opacity-[0.15] transition-opacity duration-300"
+          />
+          {lines.map((line, li) => (
+            <text
+              key={li}
+              x={ix}
+              y={iy + (li - (lines.length - 1) / 2) * 11}
+              textAnchor="middle"
+              dominantBaseline="central"
+              fontSize={10}
+              fontWeight={500}
               fill={ideo.color}
-              className="opacity-[0.05] group-hover:opacity-[0.15] transition-opacity duration-300"
-            />
-            {lines.map((line, li) => (
-              <text
-                key={li}
-                x={ix}
-                y={iy + (li - (lines.length - 1) / 2) * 11}
-                textAnchor="middle"
-                dominantBaseline="central"
-                fontSize={10}
-                fontWeight={500}
-                fill={ideo.color}
-                className="select-none pointer-events-none opacity-30 group-hover:opacity-100 transition-all duration-200 uppercase tracking-tighter"
-                style={{ filter: "drop-shadow(0px 0px 2px white)" }}
-              >
-                {line}
-              </text>
-            ))}
-          </g>
-        );
-      })}
+              className="select-none pointer-events-none opacity-30 group-hover:opacity-100 transition-all duration-200 uppercase tracking-tighter"
+              style={{ filter: "drop-shadow(0px 0px 2px white)" }}
+            >
+              {line}
+            </text>
+          ))}
+        </g>
+      ))}
     </g>
   );
 });
 
 const GridLayer = memo(function GridLayer() {
+  const lines = Array.from({ length: 21 }, (_, i) => {
+    const pos = PADDING + (i / 20) * INNER;
+    const isCenter = i === 10;
+    return { pos, isCenter };
+  });
+
   return (
     <g id="grid-layer" className="pointer-events-none">
-      {Array.from({ length: 21 }, (_, i) => {
-        const pos = PADDING + (i / 20) * INNER;
-        const isCenter = i === 10;
-        return (
-          <g key={i}>
-            <line
-              x1={pos}
-              y1={PADDING}
-              x2={pos}
-              y2={PADDING + INNER}
-              stroke="currentColor"
-              className={
-                isCenter ? "text-foreground/20" : "text-foreground/[0.04]"
-              }
-              strokeWidth={isCenter ? 1.5 : 0.5}
-            />
-            <line
-              y1={pos}
-              x1={PADDING}
-              y2={pos}
-              x2={PADDING + INNER}
-              stroke="currentColor"
-              className={
-                isCenter ? "text-foreground/20" : "text-foreground/[0.04]"
-              }
-              strokeWidth={isCenter ? 1.5 : 0.5}
-            />
-          </g>
-        );
-      })}
+      {lines.map(({ pos, isCenter }) => (
+        <g key={pos}>
+          <line
+            x1={pos}
+            y1={PADDING}
+            x2={pos}
+            y2={PADDING + INNER}
+            stroke="currentColor"
+            className={
+              isCenter ? "text-foreground/20" : "text-foreground/[0.04]"
+            }
+            strokeWidth={isCenter ? 1.5 : 0.5}
+          />
+          <line
+            y1={pos}
+            x1={PADDING}
+            y2={pos}
+            x2={PADDING + INNER}
+            stroke="currentColor"
+            className={
+              isCenter ? "text-foreground/20" : "text-foreground/[0.04]"
+            }
+            strokeWidth={isCenter ? 1.5 : 0.5}
+          />
+        </g>
+      ))}
     </g>
   );
 });
@@ -128,10 +135,6 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
 
   // Gestão de Viewport Mobile
   const handleInteraction = useCallback((callback?: () => void) => {
-    if (window.innerWidth < 768) {
-      // Forçar escala legível se houver zoom ou scroll excessivo
-      window.scrollTo({ top: 100, behavior: "smooth" });
-    }
     if (callback) callback();
   }, []);
 

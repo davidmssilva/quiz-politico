@@ -12,11 +12,6 @@ export interface Ideology {
   description: string;
 }
 
-interface RankedIdeology extends Ideology {
-  distance: number;
-  match: number;
-}
-
 interface Props {
   userCoords: {
     economicScore: number;
