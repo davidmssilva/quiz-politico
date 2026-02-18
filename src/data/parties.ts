@@ -13,10 +13,10 @@ export interface Party {
 export const parties: Party[] = [
   {
     id: 1,
-    name: "Partido Comunista dos Trabalhadores Portugueses",
+    name: "Partido Comunista Trabalhadores Portugueses",
     shortName: "MRPP",
     x: -9.5,
-    y: -9.0,
+    y: 9.0, // Invertido: Era -9.0 (Auth agora é +)
     z: -3.0,
     s: 9.5,
     color: "#ff0000",
@@ -28,7 +28,7 @@ export const parties: Party[] = [
     name: "Movimento Alternativa Socialista",
     shortName: "MAS",
     x: -8.0,
-    y: -2.0,
+    y: 2.0, // Invertido: Era -2.0
     z: -9.5,
     s: 6.0,
     color: "#a32424",
@@ -40,7 +40,7 @@ export const parties: Party[] = [
     name: "Partido Comunista Português",
     shortName: "PCP",
     x: -8.0,
-    y: -6.0,
+    y: 6.0, // Invertido: Era -6.0
     z: -2.0,
     s: 9.0,
     color: "#d11d10",
@@ -52,7 +52,7 @@ export const parties: Party[] = [
     name: "Partido Ecologista Os Verdes",
     shortName: "PEV",
     x: -6.5,
-    y: -1.5,
+    y: 1.5, // Invertido: Era -1.5
     z: -6.5,
     s: 7.5,
     color: "#008000",
@@ -64,7 +64,7 @@ export const parties: Party[] = [
     name: "Bloco de Esquerda",
     shortName: "BE",
     x: -8.0,
-    y: 4.0,
+    y: -4.0, // Invertido: Era 4.0 (Libertário agora é -)
     z: -9.5,
     s: 4.0,
     color: "#e51d1d",
@@ -76,7 +76,7 @@ export const parties: Party[] = [
     name: "LIVRE",
     shortName: "L",
     x: -5.5,
-    y: 5.5,
+    y: -5.5, // Invertido: Era 5.5
     z: -10.0,
     s: -10.0,
     color: "#adc526",
@@ -88,7 +88,7 @@ export const parties: Party[] = [
     name: "Partido Trabalhista Português",
     shortName: "PTP",
     x: -5.0,
-    y: -0.5,
+    y: 0.5, // Invertido: Era -0.5
     z: -3.0,
     s: 2.0,
     color: "#ed1c24",
@@ -100,7 +100,7 @@ export const parties: Party[] = [
     name: "Partido Socialista",
     shortName: "PS",
     x: -2.0,
-    y: -1.0,
+    y: 1.0, // Invertido: Era -1.0
     z: -5.5,
     s: -7.0,
     color: "#ff1a6e",
@@ -112,7 +112,7 @@ export const parties: Party[] = [
     name: "Pessoas-Animais-Natureza",
     shortName: "PAN",
     x: -0.5,
-    y: 2.5,
+    y: -2.5, // Invertido: Era 2.5
     z: -8.5,
     s: -4.0,
     color: "#00703c",
@@ -123,8 +123,8 @@ export const parties: Party[] = [
     id: 10,
     name: "Volt Portugal",
     shortName: "Volt",
-    x: -1.0,
-    y: 3.5,
+    x: 0.0,
+    y: -3.5, // Invertido: Era 3.5
     z: -8.5,
     s: -10.0,
     color: "#502379",
@@ -135,7 +135,7 @@ export const parties: Party[] = [
     name: "Juntos pelo Povo",
     shortName: "JPP",
     x: 0.0,
-    y: 0.5,
+    y: -0.5, // Invertido: Era 0.5
     z: -1.0,
     s: 0.0,
     color: "#00a19a",
@@ -147,7 +147,7 @@ export const parties: Party[] = [
     name: "Reagir Incluir Reciclar",
     shortName: "R.I.R.",
     x: 0.0,
-    y: -4.0,
+    y: 4.0, // Invertido: Era -4.0
     z: 1.0,
     s: 3.5,
     color: "#00b2a9",
@@ -159,7 +159,7 @@ export const parties: Party[] = [
     name: "Partido da Terra",
     shortName: "MPT",
     x: 1.5,
-    y: 1.5,
+    y: -1.5, // Invertido: Era 1.5
     z: 3.0,
     s: -2.0,
     color: "#00a651",
@@ -171,7 +171,7 @@ export const parties: Party[] = [
     name: "Nós, Cidadãos!",
     shortName: "NC",
     x: 3.5,
-    y: 2.0,
+    y: -2.0, // Invertido: Era 2.0
     z: -2.0,
     s: -4.5,
     color: "#f39200",
@@ -182,8 +182,8 @@ export const parties: Party[] = [
     id: 15,
     name: "(A)TUA",
     shortName: "AT",
-    x: 0.5,
-    y: -0.5,
+    x: 0.0,
+    y: 1.5,
     z: 4.0,
     s: 1.5,
     color: "#06052e",
@@ -195,7 +195,7 @@ export const parties: Party[] = [
     name: "Partido Social Democrata",
     shortName: "PPD/PSD",
     x: 4.0,
-    y: -2.0,
+    y: 2.0, // Invertido: Era -2.0
     z: 2.0,
     s: -6.0,
     color: "#f26522",
@@ -207,7 +207,7 @@ export const parties: Party[] = [
     name: "Partido Liberal Social",
     shortName: "PLS",
     x: 3.0,
-    y: 3.0,
+    y: -3.0, // Invertido: Era 3.0
     z: -6.5,
     s: -5.0,
     color: "#f7d40e",
@@ -219,7 +219,7 @@ export const parties: Party[] = [
     name: "Iniciativa Liberal",
     shortName: "IL",
     x: 6.5,
-    y: 6.0,
+    y: -6.0, // Invertido: Era 6.0
     z: -7.5,
     s: -5.0,
     color: "#00aeef",
@@ -229,8 +229,8 @@ export const parties: Party[] = [
     id: 19,
     name: "CDS - Partido Popular",
     shortName: "CDS-PP",
-    x: 3.5,
-    y: -4.5,
+    x: 4.0,
+    y: 4.0, // Invertido: Era -4.5
     z: 8.5,
     s: 4.0,
     color: "#0066ad",
@@ -242,7 +242,7 @@ export const parties: Party[] = [
     name: "Partido Popular Monárquico",
     shortName: "PPM",
     x: 4.5,
-    y: -6.0,
+    y: 6.0, // Invertido: Era -6.0
     z: 9.0,
     s: 7.5,
     color: "#003366",
@@ -254,7 +254,7 @@ export const parties: Party[] = [
     name: "NOVA DIREITA",
     shortName: "ND",
     x: 6.5,
-    y: -5,
+    y: 5.0, // Invertido: Era -5
     z: 9.5,
     s: 9.0,
     color: "#1d3354",
@@ -266,7 +266,7 @@ export const parties: Party[] = [
     name: "Alternativa Democrática Nacional",
     shortName: "ADN",
     x: 4.5,
-    y: -7.5,
+    y: 7.5, // Invertido: Era -7.5
     z: 10.0,
     s: 10.0,
     color: "#002e5d",
@@ -278,7 +278,7 @@ export const parties: Party[] = [
     name: "CHEGA",
     shortName: "CH",
     x: 6.0,
-    y: -7.0,
+    y: 7.0, // Invertido: Era -7.0
     z: 10.0,
     s: 10.0,
     color: "#202056",

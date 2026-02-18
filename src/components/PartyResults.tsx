@@ -14,12 +14,14 @@ export default function PartyResults({ rankedParties }: Props) {
 
   return (
     <div className="space-y-3">
-      <h3 className="font-serif text-xl text-foreground">Partidos mais próximos</h3>
       {rankedParties.map((party, i) => {
-        const match = Math.max(0, Math.round((1 - party.distance / maxDist) * 100));
+        const match = Math.max(
+          0,
+          Math.round((1 - party.distance / maxDist) * 100),
+        );
         return (
           <motion.div
-            key={party.shortName}
+            key={party.id}
             className="flex items-center gap-3 bg-card border border-border rounded-lg p-3"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -34,7 +36,7 @@ export default function PartyResults({ rankedParties }: Props) {
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between gap-2">
                 <span className="font-semibold text-sm text-card-foreground truncate">
-                  {party.shortName}
+                  {party.name}
                 </span>
                 <span className="text-xs text-muted-foreground whitespace-nowrap">
                   {match}% afinidade

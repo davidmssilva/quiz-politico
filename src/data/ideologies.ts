@@ -10,11 +10,11 @@ export interface Ideology {
 }
 
 export const ideologies: Ideology[] = [
-  // ═══ AUTHORITARIAN LEFT (top-left: Y negativo) ═══
+  // ═══ AUTHORITARIAN LEFT (Top-Left: Y agora Positivo) ═══
   {
     name: "Maoísmo",
     x: -9.5,
-    y: -9.0,
+    y: 9.0, // Invertido: -9.0 -> 9.0
     color: "#b91c1c",
     opacity: GLOBAL_OPACITY,
     description:
@@ -23,7 +23,7 @@ export const ideologies: Ideology[] = [
   {
     name: "Marxismo-\nLeninismo",
     x: -8.0,
-    y: -6.0,
+    y: 6.0, // Invertido: -6.0 -> 6.0
     color: "#dc2626",
     opacity: GLOBAL_OPACITY,
     description:
@@ -32,7 +32,7 @@ export const ideologies: Ideology[] = [
   {
     name: "Capitalismo\nde Estado",
     x: -4.5,
-    y: -5.5,
+    y: 5.5, // Invertido: -5.5 -> 5.5
     color: "#7f1d1d",
     opacity: GLOBAL_OPACITY,
     description:
@@ -41,18 +41,18 @@ export const ideologies: Ideology[] = [
   {
     name: "Trotskismo",
     x: -8.0,
-    y: -2.0,
+    y: 2.0, // Invertido: -2.0 -> 2.0
     color: "#991b1b",
     opacity: GLOBAL_OPACITY,
     description:
       "Revolução permanente e internacionalismo. Opõe-se ao estalinismo e à teoria do 'socialismo num só país', defendendo que a revolução deve espalhar-se globalmente e que a democracia operária deve prevalecer sobre a burocracia partidária.",
   },
 
-  // ═══ AUTHORITARIAN RIGHT (top-right: Y negativo) ═══
+  // ═══ AUTHORITARIAN RIGHT (Top-Right: Y agora Positivo) ═══
   {
     name: "Fascismo",
     x: 7.5,
-    y: -9.0,
+    y: 9.0, // Invertido: -9.0 -> 9.0
     color: "#1f2937",
     opacity: GLOBAL_OPACITY,
     description:
@@ -61,7 +61,7 @@ export const ideologies: Ideology[] = [
   {
     name: "Nacional-\nConservadorismo",
     x: 6.0,
-    y: -7.0,
+    y: 7.0, // Invertido: -7.0 -> 7.0
     color: "#1e3a8a",
     opacity: GLOBAL_OPACITY,
     description:
@@ -70,7 +70,7 @@ export const ideologies: Ideology[] = [
   {
     name: "Reacionarismo",
     x: 4.5,
-    y: -6.0,
+    y: 6.0, // Invertido: -6.0 -> 6.0
     color: "#4a2511",
     opacity: GLOBAL_OPACITY,
     description:
@@ -79,29 +79,29 @@ export const ideologies: Ideology[] = [
   {
     name: "Democracia\nCristã",
     x: 3.0,
-    y: -3.0,
+    y: 3.0, // Invertido: -3.0 -> 3.0
     color: "#2563eb",
     opacity: GLOBAL_OPACITY,
     description:
       "Humanismo cristão e economia social de mercado. Procura aplicar princípios cristãos à política pública, equilibrando a liberdade individual com a responsabilidade social, a solidariedade comunitária e o papel subsidiário do Estado.",
   },
 
-  // ═══ AUTHORITARIAN CENTER (top-center) ═══
+  // ═══ AUTHORITARIAN CENTER (Top-Center) ═══
   {
     name: "Tecnocracia",
     x: 0.0,
-    y: -7.0,
+    y: 7.0, // Invertido: -7.0 -> 7.0
     color: "#475569",
     opacity: GLOBAL_OPACITY,
     description:
       "Governação baseada na competência técnica. Defende que as decisões políticas devem ser tomadas por especialistas, cientistas e engenheiros com base em dados objetivos e eficiência, em detrimento da política partidária ou da vontade popular.",
   },
 
-  // ═══ LIBERTARIAN LEFT (bottom-left: Y positivo) ═══
+  // ═══ LIBERTARIAN LEFT (Bottom-Left: Y agora Negativo) ═══
   {
     name: "Anarco-\nComunismo",
     x: -9.0,
-    y: 9.0,
+    y: -9.0, // Invertido: 9.0 -> -9.0
     color: "#111827",
     opacity: GLOBAL_OPACITY,
     description:
@@ -110,7 +110,7 @@ export const ideologies: Ideology[] = [
   {
     name: "Ecossocialismo",
     x: -6.5,
-    y: 6.0,
+    y: -6.0, // Invertido: 6.0 -> -6.0
     color: "#16a34a",
     opacity: GLOBAL_OPACITY,
     description:
@@ -119,7 +119,7 @@ export const ideologies: Ideology[] = [
   {
     name: "Socialismo\nLibertário",
     x: -6.0,
-    y: 3.0,
+    y: -3.0, // Invertido: 3.0 -> -3.0
     color: "#b91c1c",
     opacity: GLOBAL_OPACITY,
     description:
@@ -128,18 +128,18 @@ export const ideologies: Ideology[] = [
   {
     name: "Progressismo",
     x: -2.5,
-    y: 4.5,
+    y: -4.5, // Invertido: 4.5 -> -4.5
     color: "#a855f7",
     opacity: GLOBAL_OPACITY,
     description:
       "Reforma social e avanço dos direitos civis. Defende a utilização da ação política para melhorar a condição humana, focando-se na igualdade económica, na justiça social, na inclusão de minorias e na modernização constante das instituições.",
   },
 
-  // ═══ LIBERTARIAN RIGHT (bottom-right: Y positivo) ═══
+  // ═══ LIBERTARIAN RIGHT (Bottom-Right: Y agora Negativo) ═══
   {
     name: "Anarco-\nCapitalismo",
     x: 9.0,
-    y: 9.0,
+    y: -9.0, // Invertido: 9.0 -> -9.0
     color: "#ca8a04",
     opacity: GLOBAL_OPACITY,
     description:
@@ -148,7 +148,7 @@ export const ideologies: Ideology[] = [
   {
     name: "Minarquismo",
     x: 8.0,
-    y: 7.0,
+    y: -7.0, // Invertido: 7.0 -> -7.0
     color: "#d97706",
     opacity: GLOBAL_OPACITY,
     description:
@@ -157,7 +157,7 @@ export const ideologies: Ideology[] = [
   {
     name: "Liberalismo\nClássico",
     x: 6.5,
-    y: 5.0,
+    y: -5.0, // Invertido: 5.0 -> -5.0
     color: "#0ea5e9",
     opacity: GLOBAL_OPACITY,
     description:
@@ -166,18 +166,18 @@ export const ideologies: Ideology[] = [
   {
     name: "Liberalismo\nSocial",
     x: 2.5,
-    y: 3.0,
+    y: -3.0, // Invertido: 3.0 -> -3.0
     color: "#eab308",
     opacity: GLOBAL_OPACITY,
     description:
       "Liberdade com responsabilidade social. Acredita que a liberdade individual requer uma base mínima de igualdade de oportunidades, justificando a intervenção estatal na educação, saúde e segurança social para corrigir falhas de mercado.",
   },
 
-  // ═══ LIBERTARIAN CENTER (bottom-center) ═══
+  // ═══ LIBERTARIAN CENTER (Bottom-Center) ═══
   {
     name: "Georgismo",
     x: 1.0,
-    y: 7.5,
+    y: -7.5, // Invertido: 7.5 -> -7.5
     color: "#0d9488",
     opacity: GLOBAL_OPACITY,
     description:
@@ -187,8 +187,8 @@ export const ideologies: Ideology[] = [
   // ═══ CENTER ═══
   {
     name: "Social-\nDemocracia",
-    x: -2.0,
-    y: -1.0,
+    x: -2.5,
+    y: 0,
     color: "#f43f5e",
     opacity: GLOBAL_OPACITY,
     description:
@@ -205,8 +205,8 @@ export const ideologies: Ideology[] = [
   },
   {
     name: "Neoliberalismo",
-    x: 4.0,
-    y: -0.5,
+    x: 5.5,
+    y: 1.5,
     color: "#06b6d4",
     opacity: GLOBAL_OPACITY,
     description:
@@ -215,7 +215,7 @@ export const ideologies: Ideology[] = [
   {
     name: "Nacional-\nSindicalismo",
     x: 2.0,
-    y: -8.5,
+    y: 8.5, // Invertido: -8.5 -> 8.5
     color: "#44403c",
     opacity: GLOBAL_OPACITY,
     description:
@@ -224,7 +224,7 @@ export const ideologies: Ideology[] = [
   {
     name: "Euroceticismo",
     x: 4.5,
-    y: -7.5,
+    y: 7.5, // Invertido: -7.5 -> 7.5
     color: "#1e293b",
     opacity: GLOBAL_OPACITY,
     description:
@@ -233,7 +233,7 @@ export const ideologies: Ideology[] = [
   {
     name: "Populismo\nSincrético",
     x: 0.0,
-    y: -4.0,
+    y: 4.0, // Invertido: -4.0 -> 4.0
     color: "#f59e0b",
     opacity: GLOBAL_OPACITY,
     description:
@@ -244,7 +244,7 @@ export const ideologies: Ideology[] = [
   {
     name: "Federalismo\nEuropeu",
     x: -1.0,
-    y: 3.5,
+    y: -3.5, // Invertido: 3.5 -> -3.5
     color: "#5b21b6",
     opacity: GLOBAL_OPACITY,
     description:
@@ -253,7 +253,7 @@ export const ideologies: Ideology[] = [
   {
     name: "Ecologia\nHumanista",
     x: 1.5,
-    y: 1.5,
+    y: -1.5, // Invertido: 1.5 -> -1.5
     color: "#16a34a",
     opacity: GLOBAL_OPACITY,
     description:
@@ -261,8 +261,8 @@ export const ideologies: Ideology[] = [
   },
   {
     name: "Municipalismo",
-    x: -3.0,
-    y: 7.5,
+    x: -2.0,
+    y: -7.5, // Invertido: 7.5 -> -7.5
     color: "#0369a1",
     opacity: GLOBAL_OPACITY,
     description:
@@ -271,7 +271,7 @@ export const ideologies: Ideology[] = [
   {
     name: "Radicalismo\nDemocrático",
     x: -7.5,
-    y: 1.5,
+    y: -1.5, // Invertido: 1.5 -> -1.5
     color: "#be123c",
     opacity: GLOBAL_OPACITY,
     description:
@@ -281,8 +281,8 @@ export const ideologies: Ideology[] = [
   // ═══ NOVAS ENTRADAS (ECONOMIA MISTA / TRANSIÇÃO) ═══
   {
     name: "Distributismo",
-    x: -1.0,
-    y: 1.5,
+    x: -0.5,
+    y: -1.5, // Invertido: 1.5 -> -1.5
     color: "#7c3aed",
     opacity: GLOBAL_OPACITY,
     description:
@@ -291,7 +291,7 @@ export const ideologies: Ideology[] = [
   {
     name: "Ordoliberalismo",
     x: 5.5,
-    y: 1.5,
+    y: -1.5, // Invertido: 1.5 -> -1.5
     color: "#2563eb",
     opacity: GLOBAL_OPACITY,
     description:
@@ -300,7 +300,7 @@ export const ideologies: Ideology[] = [
   {
     name: "Mutualismo",
     x: -5.0,
-    y: 8.5,
+    y: -8.5, // Invertido: 8.5 -> -8.5
     color: "#d97706",
     opacity: GLOBAL_OPACITY,
     description:
@@ -309,7 +309,7 @@ export const ideologies: Ideology[] = [
   {
     name: "Socialismo\nReformista",
     x: -5.0,
-    y: -0.5,
+    y: 0.5, // Invertido: -0.5 -> 0.5
     color: "#e11d48",
     opacity: GLOBAL_OPACITY,
     description:
@@ -318,18 +318,18 @@ export const ideologies: Ideology[] = [
   {
     name: "Eurocomunismo",
     x: -6.0,
-    y: -1.5,
+    y: 1.5, // Invertido: -1.5 -> 1.5
     color: "#991b1b",
     opacity: GLOBAL_OPACITY,
     description:
       "Comunismo democrático e ocidental. Uma adaptação do comunismo à realidade da Europa democrática, rejeitando a ditadura do proletariado soviética e aceitando o pluralismo político, as liberdades civis e a via parlamentar para o socialismo.",
   },
 
-  // ═══ ENTRE GEORGISMO E EXTREMO DIREITA LIBERAL (Transição Libertária) ═══
+  // ═══ TRANSIÇÃO LIBERTÁRIA ═══
   {
     name: "Agorismo",
     x: 7.5,
-    y: 8.5,
+    y: -8.5, // Invertido: 8.5 -> -8.5
     color: "#a16207",
     opacity: GLOBAL_OPACITY,
     description:
@@ -338,7 +338,7 @@ export const ideologies: Ideology[] = [
   {
     name: "Paleolibertarismo",
     x: 6.0,
-    y: 7.5,
+    y: -7.5, // Invertido: 7.5 -> -7.5
     color: "#854d0e",
     opacity: GLOBAL_OPACITY,
     description:
@@ -347,7 +347,7 @@ export const ideologies: Ideology[] = [
   {
     name: "Liberalismo de\nRecursos",
     x: 4.5,
-    y: 8.0,
+    y: -8.0, // Invertido: 8.0 -> -8.0
     color: "#15803d",
     opacity: GLOBAL_OPACITY,
     description:
@@ -356,7 +356,7 @@ export const ideologies: Ideology[] = [
   {
     name: "Estratocracia",
     x: 3.5,
-    y: -9.0,
+    y: 9.0, // Invertido: -9.0 -> 9.0
     color: "#374151",
     opacity: GLOBAL_OPACITY,
     description:
@@ -365,7 +365,7 @@ export const ideologies: Ideology[] = [
   {
     name: "Socialismo de\nEstado",
     x: -2.5,
-    y: -6.5,
+    y: 6.5, // Invertido: -6.5 -> 6.5
     color: "#b91c1c",
     opacity: GLOBAL_OPACITY,
     description:
@@ -374,7 +374,7 @@ export const ideologies: Ideology[] = [
   {
     name: "Totalitarismo",
     x: 0.0,
-    y: -9.5,
+    y: 9.5, // Invertido: -9.5 -> 9.5
     color: "#1f2937",
     opacity: GLOBAL_OPACITY,
     description:
@@ -383,7 +383,7 @@ export const ideologies: Ideology[] = [
   {
     name: "Anarquismo\nIndividualista",
     x: 0.0,
-    y: 9.5,
+    y: -9.5, // Invertido: 9.5 -> -9.5
     color: "#a16207",
     opacity: GLOBAL_OPACITY,
     description:
@@ -392,7 +392,7 @@ export const ideologies: Ideology[] = [
   {
     name: "Socialismo de\nMercado",
     x: -3.5,
-    y: 2.0,
+    y: -2.0, // Invertido: 2.0 -> -2.0
     color: "#ef4444",
     opacity: GLOBAL_OPACITY,
     description:
@@ -401,7 +401,7 @@ export const ideologies: Ideology[] = [
   {
     name: "Autoritarismo\nCapitalista",
     x: 7.5,
-    y: -4.0,
+    y: 4.0, // Invertido: -4.0 -> 4.0
     color: "#1e40af",
     opacity: GLOBAL_OPACITY,
     description:
@@ -410,7 +410,7 @@ export const ideologies: Ideology[] = [
   {
     name: "Libertarianismo\nModerado",
     x: 3.5,
-    y: 6.5,
+    y: -6.5, // Invertido: 6.5 -> -6.5
     color: "#eab308",
     opacity: GLOBAL_OPACITY,
     description:
@@ -419,10 +419,100 @@ export const ideologies: Ideology[] = [
   {
     name: "Cooperativismo",
     x: -4.5,
-    y: 4.5,
+    y: -4.5,
     color: "#9333ea",
     opacity: GLOBAL_OPACITY,
     description:
-      "Economia baseada em cooperativas. Defende que empresas devem ser propriedade e geridas pelos trabalhadores, promovendo democracia económica e reduzindo desigualdades.",
+      "Doutrina económica que propõe a substituição da lógica do lucro privado pela colaboração mútua. Defende que as empresas devem pertencer e ser geridas democraticamente pelos seus próprios trabalhadores ou utilizadores, eliminando a distinção entre patrão e empregado e colocando o capital ao serviço das necessidades sociais.",
+  },
+  {
+    name: "Paternalismo\nConservador",
+    x: 5.5,
+    y: 3.5,
+    color: "#1e3a8a",
+    opacity: GLOBAL_OPACITY,
+    description:
+      "Filosofia política que defende que a sociedade é um organismo hierárquico onde as elites têm a obrigação moral de assegurar o bem-estar das classes trabalhadoras. Rejeita o individualismo liberal, propondo um Estado social forte que preserva a tradição e a estabilidade para evitar a fragmentação e o conflito de classes.",
+  },
+  {
+    name: "Ordoliberalismo",
+    x: 5.5,
+    y: -1.5,
+    color: "#2564eb6b",
+    opacity: GLOBAL_OPACITY,
+    description:
+      "Variante do liberalismo que argumenta que o mercado livre requer um quadro jurídico e institucional rigoroso (Ordo) criado pelo Estado. O papel do governo é garantir a livre concorrência e impedir a formação de monopólios, mantendo a estabilidade monetária sem intervir diretamente no processo de preços ou no planeamento económico.",
+  },
+  {
+    name: "Radicalismo",
+    x: -3.5,
+    y: -2.5,
+    color: "#be123c",
+    opacity: GLOBAL_OPACITY,
+    description:
+      "Herdeiro do iluminismo, foca-se na soberania popular absoluta, no laicismo intransigente e na reforma social profunda. Defende que a liberdade individual é inseparável da educação universal e da eliminação de privilégios hereditários, posicionando-se frequentemente como a ala mais democrática do republicanismo clássico.",
+  },
+  {
+    name: "Libertarianismo\nde Esquerda",
+    x: -4.5,
+    y: -7.0,
+    color: "#16a34a",
+    opacity: GLOBAL_OPACITY,
+    description:
+      "Corrente que une a autopropriedade individual absoluta à ideia de que os recursos naturais são originariamente comuns. Propõe que os indivíduos podem ser totalmente livres nas suas ações, mas devem compensar a comunidade pelo uso exclusivo de terras e recursos, rejeitando tanto o estatismo centralizador como a propriedade privada ilimitada.",
+  },
+  {
+    name: "Centralismo\nDemocrático",
+    x: -7.5,
+    y: 7.0,
+    color: "#dc2626",
+    opacity: GLOBAL_OPACITY,
+    description:
+      "Princípio de organização leninista que estabelece um equilíbrio entre o debate interno e a unidade de execução. Postula que as decisões são tomadas democraticamente após livre discussão, mas uma vez votadas pela maioria, tornam-se vinculativas para todos os membros, proibindo o divisionismo para garantir a eficácia da ação estatal.",
+  },
+  {
+    name: "Reformismo\nLiberal",
+    x: 3.0,
+    y: 0.0,
+    color: "#3b82f6",
+    opacity: GLOBAL_OPACITY,
+    description:
+      "Corrente que defende a evolução gradual das instituições políticas e económicas através de reformas dentro do quadro da democracia liberal. Ao contrário do radicalismo, privilegia a continuidade institucional e o pragmatismo, procurando melhorar a eficiência do mercado e a justiça social sem ruturas sistémicas ou ideologismo rígido.",
+  },
+  {
+    name: "Conservadorismo\nPragmático",
+    x: 2.0,
+    y: 1.0,
+    color: "#1e40af",
+    opacity: GLOBAL_OPACITY,
+    description:
+      "Vertente do conservadorismo que enfatiza a adaptação necessária para preservar a ordem social. Rejeita reações dogmáticas ao progresso, aceitando mudanças sociais e intervenções económicas moderadas desde que estas sirvam para manter a coesão nacional e a estabilidade das instituições tradicionais, evitando os excessos do laissez-faire.",
+  },
+  {
+    name: "Liberalismo\nInstitucional",
+    x: 3.0,
+    y: -1.0,
+    color: "#60a5fa",
+    opacity: GLOBAL_OPACITY,
+    description:
+      "Foca-se na primazia das regras e instituições como garante da liberdade individual e do funcionamento do mercado. Defende que a liberdade não é apenas a ausência de Estado, mas o resultado de um sistema jurídico robusto e de contrapesos de poder que protegem o cidadão tanto do autoritarismo estatal como da anarquia económica.",
+  },
+  {
+    name: "Paleo-\nconservadorismo",
+    x: 8.5,
+    y: 0.0,
+    color: "#1e293b",
+    opacity: GLOBAL_OPACITY,
+    description:
+      "Vertente da direita radical que enfatiza a tradição religiosa, a identidade nacional e a descentralização do poder. Opõe-se ao globalismo e à intervenção estatal moderna, mas ao contrário do libertarianismo, defende restrições culturais e protecionismo económico para preservar a homogeneidade social e a soberania da comunidade local.",
+  },
+  {
+    name: "Ecossocialismo\nLibertário",
+    x: -8.0,
+    y: -4.0,
+    color: "#e11d48",
+    opacity: GLOBAL_OPACITY,
+    description:
+      "Fusão da crítica marxista ao capital com a ecologia radical e a democracia participativa. Rejeita o produtivismo dos estados socialistas autoritários, defendendo a autogestão social, o planeamento democrático da economia para fins ecológicos e a libertação individual através da expansão radical dos direitos civis e minoritários.",
   },
 ];

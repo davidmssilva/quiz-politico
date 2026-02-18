@@ -15,8 +15,15 @@ const COMPASS_SIZE = 750;
 const PADDING = 40;
 const INNER = COMPASS_SIZE - PADDING * 2;
 
-function toPixel(value: number): number {
+// Transformação de Coordenadas
+function toX(value: number): number {
   return PADDING + ((value + 10) / 20) * INNER;
+}
+
+function toY(value: number): number {
+  // Inversão: y > 0 (Auth) sobe para o topo (valor SVG menor)
+  // y < 0 (Lib) desce para o fundo (valor SVG maior)
+  return PADDING + ((10 - value) / 20) * INNER;
 }
 
 const IdeologyLayer = memo(function IdeologyLayer({
@@ -31,8 +38,8 @@ const IdeologyLayer = memo(function IdeologyLayer({
   return (
     <g id="ideology-layer">
       {ideologies.map((ideo) => {
-        const ix = toPixel(ideo.x);
-        const iy = toPixel(ideo.y);
+        const ix = toX(ideo.x);
+        const iy = toY(ideo.y);
         const lines = ideo.name.split("\n");
 
         return (
@@ -51,7 +58,6 @@ const IdeologyLayer = memo(function IdeologyLayer({
               fill={ideo.color}
               className="opacity-[0.05] group-hover:opacity-[0.15] transition-opacity duration-300"
             />
-
             {lines.map((line, li) => (
               <text
                 key={li}
@@ -63,9 +69,7 @@ const IdeologyLayer = memo(function IdeologyLayer({
                 fontWeight={500}
                 fill={ideo.color}
                 className="select-none pointer-events-none opacity-30 group-hover:opacity-100 transition-all duration-200 uppercase tracking-tighter"
-                style={{
-                  filter: "drop-shadow(0px 0px 2px white)",
-                }}
+                style={{ filter: "drop-shadow(0px 0px 2px white)" }}
               >
                 {line}
               </text>
@@ -122,7 +126,15 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
   const [hoveredIdeology, setHoveredIdeology] = useState<Ideology | null>(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
 
-  // Handler unificado para movimento do rato sobre elementos com tooltip
+  // Gestão de Viewport Mobile
+  const handleInteraction = useCallback((callback?: () => void) => {
+    if (window.innerWidth < 768) {
+      // Forçar escala legível se houver zoom ou scroll excessivo
+      window.scrollTo({ top: 100, behavior: "smooth" });
+    }
+    if (callback) callback();
+  }, []);
+
   const handleMouseMove = useCallback(
     (e: React.MouseEvent, type: "party" | "ideology", data: any) => {
       setTooltipPos({ x: e.clientX, y: e.clientY });
@@ -137,17 +149,16 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
     if (type === "ideology") setHoveredIdeology(null);
   }, []);
 
-  const userX = toPixel(userResult.economicScore);
-  const userY = toPixel(userResult.authorityScore);
+  const userX = toX(userResult.economicScore);
+  const userY = toY(userResult.authorityScore);
   const limitedPast = useMemo(() => pastResults.slice(-10), [pastResults]);
 
   return (
-    <div className="relative w-full max-w-[800px] mx-auto p-6 bg-background rounded-3xl border shadow-xl transition-all">
+    <div className="relative w-full max-w-[800px] mx-auto p-6 bg-background rounded-3xl border transition-all">
       <svg
         viewBox={`0 0 ${COMPASS_SIZE} ${COMPASS_SIZE}`}
         className="w-full h-auto overflow-visible"
       >
-        {/* Quadrantes suaves no fundo */}
         <g id="quadrants" opacity={0.03}>
           <rect
             x={PADDING}
@@ -179,31 +190,29 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
           />
         </g>
 
-        {/* Camada 1: Ideologias */}
         <IdeologyLayer
           onHoverIdeology={(ideo, e) => handleMouseMove(e, "ideology", ideo)}
           onLeaveIdeology={() => handleMouseLeave("ideology")}
-          onClickIdeology={(ideo) => setSelectedIdeology(ideo)}
+          onClickIdeology={(ideo) =>
+            handleInteraction(() => setSelectedIdeology(ideo))
+          }
         />
 
-        {/* Camada 2: Grelha */}
         <GridLayer />
 
-        {/* Camada 3: Resultados Antigos */}
         {limitedPast.map((r, i) => (
           <circle
             key={r.id || i}
-            cx={toPixel(r.economicScore)}
-            cy={toPixel(r.authorityScore)}
+            cx={toX(r.economicScore)}
+            cy={toY(r.authorityScore)}
             r={5}
             className="fill-primary/10 stroke-background stroke-1"
           />
         ))}
 
-        {/* Camada 4: Partidos */}
         {parties.map((party) => {
-          const px = toPixel(party.x);
-          const py = toPixel(party.y);
+          const px = toX(party.x);
+          const py = toY(party.y);
           const isHovered = hoveredParty?.shortName === party.shortName;
 
           return (
@@ -212,6 +221,7 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
               onMouseEnter={(e) => handleMouseMove(e, "party", party)}
               onMouseMove={(e) => handleMouseMove(e, "party", party)}
               onMouseLeave={() => handleMouseLeave("party")}
+              onClick={() => handleInteraction()}
               className="cursor-help transition-all"
             >
               <circle
@@ -235,17 +245,16 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
           );
         })}
 
-        {/* Camada 5: Marcador do Utilizador */}
         <g className="drop-shadow-lg pointer-events-none">
           <circle
             cx={userX}
             cy={userY}
-            r={14}
+            r={10}
             className="fill-primary stroke-background stroke-[4px]"
           />
           <text
             x={userX}
-            y={userY - 24}
+            y={userY - 20}
             textAnchor="middle"
             fontSize={16}
             fontWeight={950}
@@ -255,7 +264,6 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
           </text>
         </g>
 
-        {/* Eixos */}
         <g className="fill-muted-foreground/40 text-[11px] font-black uppercase tracking-[0.2em] pointer-events-none">
           <text x={COMPASS_SIZE / 2} y={PADDING - 30} textAnchor="middle">
             Autoritário
@@ -286,14 +294,10 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
         </g>
       </svg>
 
-      {/* TOOLTIP DOS PARTIDOS CORRIGIDO */}
       {hoveredParty && (
         <div
-          className="fixed z-50 pointer-events-none bg-card/95 backdrop-blur-md border-2 rounded-2xl p-4 shadow-2xl max-w-[220px] animate-in fade-in zoom-in-95"
-          style={{
-            left: tooltipPos.x + 20,
-            top: tooltipPos.y - 20,
-          }}
+          className="fixed z-50 pointer-events-none bg-card/95 backdrop-blur-md border-2 rounded-2xl p-4 max-w-[220px] animate-in fade-in zoom-in-95"
+          style={{ left: tooltipPos.x + 20, top: tooltipPos.y - 20 }}
         >
           <div className="flex items-center gap-2 mb-2">
             <div

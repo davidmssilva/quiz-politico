@@ -1,8 +1,21 @@
 export function IdeologicalDimensions({ result }: { result: any }) {
+  // Utilitário de mapeamento qualitativo
+  const getQualitativeLabel = (val: number, left: string, right: string) => {
+    const abs = Math.abs(val);
+    let prefix = "";
+
+    if (abs >= 7) prefix = "Muito ";
+    else if (abs >= 3.5) prefix = " ";
+    else if (abs >= 1.5) prefix = "Ligeiramente ";
+    else return "Equilibrado / Neutro";
+
+    return `${prefix}${val < 0 ? left : right}`;
+  };
+
   const axes = [
     {
       label: "Economia",
-      left: "Intervenção",
+      left: "Intervencionista",
       right: "Mercado Livre",
       val: result.economicScore,
       color: "bg-blue-500",
@@ -32,14 +45,14 @@ export function IdeologicalDimensions({ result }: { result: any }) {
 
   return (
     <div className="space-y-6 bg-card p-6 rounded-2xl border border-border">
-      <h3 className="font-serif text-xl font-bold border-b pb-2">
-        Profundidade Ideológica
-      </h3>
       {axes.map((axis) => (
         <div key={axis.label} className="space-y-2">
-          <div className="flex justify-between text-xs font-bold uppercase tracking-tighter">
-            <span>{axis.label}</span>
-            <span className="text-muted-foreground">{axis.val.toFixed(1)}</span>
+          <div className="flex justify-between text-xs font-bold tracking-tighter">
+            <span className="uppercase">{axis.label}:</span>
+            {/* Mapeamento qualitativo em vez de raw float */}
+            <span className="font-semibold text-card-foreground ">
+              {getQualitativeLabel(axis.val, axis.left, axis.right)}
+            </span>
           </div>
           <div className="relative h-2 bg-secondary rounded-full overflow-hidden">
             <div
