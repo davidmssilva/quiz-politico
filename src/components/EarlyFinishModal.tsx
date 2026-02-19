@@ -58,7 +58,7 @@ export default function EarlyFinishModal({
           </DialogDescription>
         </DialogHeader>
         <div className="flex gap-3 pt-2">
-          <Button variant="outline" className="flex-1" onClick={onClose}>
+          <Button variant="outline" className="flex-1 hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/20 dark:hover:border-primary/50 transition-all duration-200" onClick={onClose}>
             Continuar
           </Button>
           <Button className="flex-1" onClick={onFinish}>

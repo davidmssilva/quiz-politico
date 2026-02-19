@@ -54,7 +54,7 @@ export function ShareResults({ url, text }: ShareProps) {
             key={p.name}
             variant="outline"
             size="sm"
-            className="flex items-center gap-2 justify-start h-10 sm:h-11 px-3 sm:px-4 text-xs sm:text-sm"
+            className="flex items-center gap-2 justify-start h-10 sm:h-11 px-3 sm:px-4 text-xs sm:text-sm hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/20 dark:hover:border-primary/50 transition-all duration-200"
             onClick={() => window.open(p.href, "_blank")}
           >
             {p.icon}

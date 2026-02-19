@@ -81,7 +81,7 @@ export default function IdeologyModal({ ideology, open, onClose, onNavigate, has
                 size="sm"
                 onClick={() => onNavigate('prev')}
                 disabled={!hasPrev}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/20 dark:hover:border-primary/50 transition-all duration-200"
               >
                 <ChevronLeft className="w-4 h-4" />
                 Anterior
@@ -91,7 +91,7 @@ export default function IdeologyModal({ ideology, open, onClose, onNavigate, has
                 size="sm"
                 onClick={() => onNavigate('next')}
                 disabled={!hasNext}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/20 dark:hover:border-primary/50 transition-all duration-200"
               >
                 Próxima
                 <ChevronRight className="w-4 h-4" />

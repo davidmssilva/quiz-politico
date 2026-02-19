@@ -437,8 +437,17 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
             cx={userX}
             cy={userY}
             r={10}
-            className="fill-primary stroke-background stroke-[4px]"
-          />
+            className="fill-primary stroke-background dark:stroke-white stroke-[3px] dark:stroke-[2px]"
+          >
+            <animate
+              attributeName="cy"
+              values={`${userY};${userY - 3};${userY}`}
+              dur="2s"
+              repeatCount="indefinite"
+              calcMode="spline"
+              keySplines="0.42 0 0.58 1; 0.42 0 0.58 1"
+            />
+          </circle>
           <text
             x={userX}
             y={userY - 20}
@@ -447,6 +456,14 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
             fontWeight={950}
             className="fill-primary uppercase tracking-tighter"
           >
+            <animate
+              attributeName="y"
+              values={`${userY - 20};${userY - 23};${userY - 20}`}
+              dur="2s"
+              repeatCount="indefinite"
+              calcMode="spline"
+              keySplines="0.42 0 0.58 1; 0.42 0 0.58 1"
+            />
             TU
           </text>
         </g>

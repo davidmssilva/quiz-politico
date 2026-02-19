@@ -176,7 +176,7 @@ export default function Bussola() {
                 <span className="text-[10px] font-bold uppercase opacity-80">
                   Atual
                 </span>
-                <span className={`${TYPOGRAPHY.meta.sm} truncate`}>
+                <span className={`${TYPOGRAPHY.meta.sm} text-white truncate`}>
                   Em curso...
                 </span>
               </button>

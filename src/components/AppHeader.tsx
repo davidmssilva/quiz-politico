@@ -25,7 +25,8 @@ export function AppHeader({
     if (onHistoricoClick) {
       onHistoricoClick();
     } else {
-      navigate("/histórico");
+      // Pass state to indicate we should select based on ongoing quiz
+      navigate("/histórico", { state: { selectOngoing: true } });
     }
   }, [navigate, onHistoricoClick]);
   return (
@@ -62,7 +63,7 @@ export function AppHeader({
       ${
         hasProgress
           ? "bg-primary text-primary-foreground hover:scale-105 hover:shadow-lg shadow-primary/20 dark:shadow-primary/30"
-          : "border-primary/20 bg-primary/5 hover:bg-primary hover:text-primary-foreground hover:border-primary dark:bg-primary/10 dark:hover:bg-primary dark:border-primary/30"
+          : "border-primary/20 bg-primary/5 hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:bg-primary/10 dark:hover:bg-primary/20 dark:hover:border-primary/50"
       }`}
               onClick={() => navigate("/quiz")}
             >

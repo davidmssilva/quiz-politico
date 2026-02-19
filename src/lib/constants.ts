@@ -15,7 +15,7 @@ export const LIKERT_SCALE: { label: string; value: Answer; color: string }[] = [
   {
     label: "Neutro",
     value: 0,
-    color: "hover:border-slate-300 hover:bg-slate-50 active:bg-slate-100 dark:hover:bg-slate-800/50 dark:hover:border-slate-600 dark:active:bg-slate-800/70",
+    color: "hover:border-slate-400 hover:bg-slate-100 active:bg-slate-150 dark:hover:bg-slate-800/50 dark:hover:border-slate-600 dark:active:bg-slate-800/70",
   },
   {
     label: "Discordo",

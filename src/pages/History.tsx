@@ -1,17 +1,62 @@
-import { useNavigate } from "react-router-dom";
-import { loadHistory, clearHistory, StoredResult } from "@/lib/scoring";
+import { useNavigate, useLocation } from "react-router-dom";
+import { loadHistory, clearHistory, StoredResult, loadSession } from "@/lib/scoring";
 import { parties } from "@/data/parties";
 import PoliticalCompass from "@/components/PoliticalCompass";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AppHeader } from "@/components/AppHeader";
 import { TYPOGRAPHY } from "@/lib/typography";
 
 export default function History() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [history, setHistory] = useState<StoredResult[]>(() => loadHistory());
   const [selected, setSelected] = useState<StoredResult | null>(null);
+  const [ongoingSession, setOngoingSession] = useState<StoredResult | null>(null);
+
+  // Set initial selection based on whether there's an ongoing quiz or not
+  useEffect(() => {
+    const state = location.state as { selectOngoing?: boolean } | undefined;
+    
+    // Check if there's an ongoing quiz session
+    const session = loadSession();
+    let ongoing: StoredResult | null = null;
+    
+    if (session && Object.keys(session.answers).length > 0) {
+      // Create a temporary result from the ongoing session
+      ongoing = {
+        id: 'ongoing-session',
+        date: new Date(session.timestamp).toISOString(),
+        economicScore: 0,
+        authorityScore: 0,
+        socialScore: 0,
+        sovereigntyScore: 0,
+        answers: session.answers,
+        importanceWeights: session.importanceWeights,
+        closestParties: [],
+      };
+      setOngoingSession(ongoing);
+      
+      // Select ongoing session by default
+      if (state?.selectOngoing || !selected) {
+        setSelected(ongoing);
+      }
+    } else {
+      // No ongoing session, select the latest result
+      setOngoingSession(null);
+      if (!selected && history.length > 0) {
+        setSelected(history[history.length - 1]);
+      }
+    }
+  }, []);
+  
+  // Update selection when history changes and nothing is selected
+  useEffect(() => {
+    if (!selected && !ongoingSession && history.length > 0) {
+      setSelected(history[history.length - 1]);
+    }
+  }, [history, selected, ongoingSession]);
 
   const displayResult = selected ?? history[history.length - 1];
 
@@ -108,9 +153,56 @@ export default function History() {
           </div>
 
           <div className="grid gap-3">
+            {/* Show ongoing session first if it exists */}
+            {ongoingSession && (
+              <motion.button
+                key="ongoing-session"
+                onClick={() => setSelected(ongoingSession)}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                className={`w-full text-left px-5 py-4 rounded-xl border transition-all duration-300 ${
+                  selected?.id === 'ongoing-session'
+                    ? "bg-primary/5 border-primary shadow-sm"
+                    : "bg-card border-border hover:border-primary/30"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className={`${TYPOGRAPHY.heading.h4} text-card-foreground flex items-center gap-2`}>
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                      </span>
+                      Sessão em Progresso
+                    </p>
+                    <p className="text-muted-foreground text-xs uppercase tracking-wider">
+                      {Object.keys(ongoingSession.answers).length} respostas
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-medium text-white dark:text-foreground">
+                      Em curso
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-3 flex items-center gap-2">
+                  <div className="h-1 flex-1 bg-muted rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-primary/40" 
+                      style={{ width: `${(Object.keys(ongoingSession.answers).length / 100) * 100}%` }}
+                    ></div>
+                  </div>
+                  <span className="text-[10px] text-muted-foreground font-semibold whitespace-nowrap">
+                    {Math.round((Object.keys(ongoingSession.answers).length / 100) * 100)}% COMPLETO
+                  </span>
+                </div>
+              </motion.button>
+            )}
+            
+            {/* Show completed history */}
             {[...history].reverse().map((r, i) => {
               const isSelected =
-                selected?.id === r.id || (!selected && i === 0);
+                selected?.id === r.id || (!selected && !ongoingSession && i === 0);
               const date = new Date(r.date);
               return (
                 <motion.button
@@ -118,7 +210,7 @@ export default function History() {
                   onClick={() => setSelected(r)}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.03 }}
+                  transition={{ delay: (ongoingSession ? i + 1 : i) * 0.03 }}
                   className={`w-full text-left px-5 py-4 rounded-xl border transition-all duration-300 ${
                     isSelected
                       ? "bg-primary/5 border-primary shadow-sm"

@@ -219,7 +219,7 @@ export default function Quiz() {
     
     // Navigate after a brief delay to show the save happened
     setTimeout(() => {
-      navigate("/histórico");
+      navigate("/histórico", { state: { selectOngoing: true } });
     }, 300);
   }, [current, answers, importanceWeights, navigate]);
 
@@ -287,7 +287,7 @@ export default function Quiz() {
       )}
 
       {IS_DEV && (
-        <div className="relative z-[60] px-4 py-1">
+        <div className="absolute z-[60] px-4 py-1">
           <button
             onClick={() => setShowTestMenu(!showTestMenu)}
             className="text-[10px] text-accent font-medium hover:text-accent/80 px-2 py-0.5 rounded border border-accent/30"
@@ -314,7 +314,7 @@ export default function Quiz() {
 
       <main
         ref={scrollContainerRef}
-        className="flex-1 flex flex-col overflow-y-auto px-4 py-2 sm:py-4 md:py-6 touch-pan-y"
+        className="flex-1 flex flex-col overflow-y-auto px-4 py-2 sm:py-2 md:py-4 touch-pan-y"
       >
         <div className="w-full max-w-2xl mx-auto flex-1 flex flex-col justify-center">
           {!isStartAd && !isEndAd && (
@@ -352,49 +352,56 @@ export default function Quiz() {
                   )}
 
                 {!isStartAd && !isEndAd && (
-                  <div className="space-y-3 sm:space-y-4" onKeyDown={handleKeyDown}>
-                    <h2 className={TYPOGRAPHY.question.lg}>
-                      {q.text}
-                    </h2>
-
-                    <div className="grid gap-1.5 sm:gap-2" role="radiogroup" aria-label="Resposta">
-                      {LIKERT_SCALE.map((opt, idx) => {
-                        const isSelected = answers[q.id] === opt.value;
-                        const activeColor = getLikertActiveColor(opt.value);
-
-                        return (
-                          <button
-                            key={opt.value}
-                            onClick={() => selectAnswer(opt.value)}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter" || e.key === " ") {
-                                e.preventDefault();
-                                selectAnswer(opt.value);
-                              }
-                            }}
-                            role="radio"
-                            aria-checked={isSelected}
-                            tabIndex={0}
-                            className={`w-full text-left px-4 py-3 sm:py-4 rounded-xl border-2 transition-all flex items-center justify-between group tap-highlight-transparent focus:ring-2 focus:ring-primary focus:ring-offset-2
-                              ${
-                                isSelected
-                                  ? `${activeColor} shadow-md scale-[1.01] z-10`
-                                  : `bg-card border-border text-foreground/80 ${opt.color}`
-                              }`}
-                          >
-                            <span className="text-xs sm:text-sm md:text-base font-medium">
-                              {opt.label}
-                            </span>
-                            {isSelected && (
-                              <div
-                                className={`h-1.5 w-1.5 rounded-full ${Math.abs(opt.value) === 2 ? "bg-white" : "bg-current"}`}
-                              />
-                            )}
-                          </button>
-                        );
-                      })}
+                  <div className="flex flex-col h-full" onKeyDown={handleKeyDown}>
+                    {/* Question - Fixed height area */}
+                    <div className="mb-4 sm:mb-6 min-h-[80px] sm:min-h-[100px] flex items-center">
+                      <h2 className={TYPOGRAPHY.question.lg}>
+                        {q.text}
+                      </h2>
                     </div>
 
+                    {/* Answer options - Fixed spacing */}
+                    <div className="mb-4 sm:mb-6">
+                      <div className="grid gap-1.5 sm:gap-2" role="radiogroup" aria-label="Resposta">
+                        {LIKERT_SCALE.map((opt) => {
+                          const isSelected = answers[q.id] === opt.value;
+                          const activeColor = getLikertActiveColor(opt.value);
+
+                          return (
+                            <button
+                              key={opt.value}
+                              onClick={() => selectAnswer(opt.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter" || e.key === " ") {
+                                  e.preventDefault();
+                                  selectAnswer(opt.value);
+                                }
+                              }}
+                              role="radio"
+                              aria-checked={isSelected}
+                              tabIndex={0}
+                              className={`w-full text-left px-4 py-3 sm:py-4 rounded-xl border-2 transition-all flex items-center justify-between group tap-highlight-transparent focus:ring-2 focus:ring-primary focus:ring-offset-2
+                                ${
+                                  isSelected
+                                    ? `${activeColor} shadow-md scale-[1.01] z-10`
+                                    : `bg-card border-border text-foreground/80 ${opt.color}`
+                                }`}
+                            >
+                              <span className="text-xs sm:text-sm md:text-base font-medium">
+                                {opt.label}
+                              </span>
+                              {isSelected && (
+                                <div
+                                  className={`h-1.5 w-1.5 rounded-full ${Math.abs(opt.value) === 2 ? "bg-white" : "bg-current"}`}
+                                />
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Importance selector - Fixed position */}
                     <div className="flex bg-secondary/40 p-1.5 rounded-xl gap-2 w-full max-w-md mx-auto" role="group" aria-label="Importância da pergunta">
                       {IMPORTANCE_OPTIONS.map((opt, idx) => {
                         const isSelected =
@@ -467,7 +474,7 @@ export default function Quiz() {
                     variant="outline"
                     onClick={() => setShowEarlyFinish(true)}
                     aria-label="Terminar questionário agora"
-                    className="px-4 h-10 text-xs sm:text-sm font-bold"
+                    className="px-4 h-10 text-xs sm:text-sm font-bold hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/20 dark:hover:border-primary/50 transition-all duration-200"
                   >
                     Terminar Agora
                   </Button>
