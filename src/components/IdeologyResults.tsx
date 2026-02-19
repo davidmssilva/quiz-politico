@@ -69,14 +69,14 @@ function IdeologyResults({ userCoords, ideologies }: Props) {
 
           <div className="flex items-start justify-between mb-4">
             <div className="space-y-1">
-              <span className="text-[10px] font-bold text-muted-foreground/40 uppercase tracking-[0.2em]">
+              <span className="text-[10px] font-bold text-muted-foreground/40 uppercase tracking-[0.2em] font-sans">
                 Afinidade #0{i + 1}
               </span>
-              <h4 className={TYPOGRAPHY.heading.h4}>
+              <h4 className="font-sans text-lg font-bold leading-snug">
                 {ideology.name.replace("\n", " ")}
               </h4>
             </div>
-            <span className="text-xl font-black text-primary font-mono">
+            <span className="text-xl font-black text-primary">
               {ideology.match}%
             </span>
           </div>

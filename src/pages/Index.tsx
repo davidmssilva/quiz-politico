@@ -6,6 +6,7 @@ import { useMemo } from "react";
 import { AppHeader } from "@/components/AppHeader";
 import { AppFooter } from "@/components/AppFooter";
 import { TYPOGRAPHY } from "@/lib/typography";
+import { Lock } from "lucide-react";
 
 export default function Index() {
   const navigate = useNavigate();
@@ -90,15 +91,22 @@ export default function Index() {
             ))}
           </motion.div>
 
-          <motion.p
-            className="text-xs sm:text-sm text-muted-foreground/60 font-medium"
+          <motion.div
+            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-4 py-4 sm:py-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/20"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8 }}
           >
-            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-            Privacidade Total: Os seus dados não saem do seu navegador.
-          </motion.p>
+            <Lock className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600 flex-shrink-0" />
+            <div className="text-center sm:text-left">
+              <p className="font-sans text-xs sm:text-sm font-semibold text-emerald-700">
+                Privacidade Total
+              </p>
+              <p className="font-sans text-xs text-emerald-600/80 mt-0.5">
+                Os seus dados não saem do seu navegador
+              </p>
+            </div>
+          </motion.div>
         </div>
       </main>
 

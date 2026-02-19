@@ -12,18 +12,56 @@ import { parties } from "@/data/parties";
 import { ideologies } from "@/data/ideologies";
 import PoliticalCompass from "@/components/PoliticalCompass";
 import ResultsGrid from "@/components/ResultsGrid";
+import { ShareResults } from "@/components/ShareResults";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { useState, useMemo } from "react";
 import { AppHeader } from "@/components/AppHeader";
 import { Trash2, History as HistoryIcon } from "lucide-react";
 import { AppFooter } from "@/components/AppFooter";
 import { TYPOGRAPHY } from "@/lib/typography";
+import { generateShareUrl } from "@/lib/utils";
+
+const getAxisLabel = (value: number, left: string, right: string): string => {
+  const abs = Math.abs(value);
+  if (abs < 1.5) return "Neutro";
+  if (abs < 3.5) return value < 0 ? left : right;
+  return value < 0 ? `${left}` : `${right}`;
+};
+
+const getQuadrantColor = (economicScore: number, authorityScore: number): string => {
+  // Check if neutral on both axes
+  const economicNeutral = Math.abs(economicScore) < 1.5;
+  const authorityNeutral = Math.abs(authorityScore) < 1.5;
+  
+  if (economicNeutral && authorityNeutral) return "bg-gray-200"; // Neutral
+  
+  // Quadrants: Left-Auth (red), Right-Auth (orange), Left-Lib (green), Right-Lib (blue)
+  const isLeft = economicScore < 0;
+  const isAuth = authorityScore > 0;
+  
+  if (isLeft && isAuth) return "bg-red-400"; // Left-Authoritarian
+  if (!isLeft && isAuth) return "bg-orange-400"; // Right-Authoritarian
+  if (isLeft && !isAuth) return "bg-green-400"; // Left-Libertarian
+  return "bg-blue-400"; // Right-Libertarian
+};
+
+const getProfileDescription = (result: StoredResult): string => {
+  const econ = getAxisLabel(result.economicScore, "Esq", "Dir");
+  const auth = getAxisLabel(result.authorityScore, "Lib", "Aut");
+  const soc = getAxisLabel(result.socialScore, "Prog", "Cons");
+  const sov = getAxisLabel(result.sovereigntyScore, "Global", "Nac");
+  return `${econ} • ${auth} • ${soc} • ${sov}`;
+};
 
 export default function Bussola() {
   const navigate = useNavigate();
   const [history, setHistory] = useState<StoredResult[]>(() => loadHistory());
-  const [selected, setSelected] = useState<StoredResult | null>(null);
+  const [selected, setSelected] = useState<StoredResult | null>(() => {
+    const hist = loadHistory();
+    return hist.length > 0 ? hist[hist.length - 1] : null;
+  });
 
   const liveResult = useMemo(() => {
     const session = loadSession();
@@ -109,7 +147,7 @@ export default function Bussola() {
         <div className="space-y-3">
           <div className="flex items-center gap-2 px-1">
             <HistoryIcon className="w-4 h-4 text-primary" />
-            <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+            <h2 className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
               Histórico de Sessões
             </h2>
           </div>
@@ -150,7 +188,7 @@ export default function Bussola() {
                 <button
                   key={r.id}
                   onClick={() => setSelected(isSelected ? null : r)}
-                  className={`flex-shrink-0 flex flex-col justify-between w-32 h-16 p-3 rounded-2xl border transition-all ${
+                  className={`flex-shrink-0 flex flex-col justify-between w-32 h-20 p-3 rounded-2xl border transition-all ${
                     isSelected
                       ? "bg-primary text-primary-foreground border-primary ring-2 ring-primary/20"
                       : "bg-card border-border hover:border-primary/50"
@@ -164,12 +202,11 @@ export default function Bussola() {
                       })}
                     </span>
                     <div
-                      className={`w-2 h-2 rounded-full border border-white/20 ${r.economicScore < 0 ? "bg-red-400" : "bg-blue-400"}`}
+                      className={`w-2 h-2 rounded-full border border-white/20 ${getQuadrantColor(r.economicScore, r.authorityScore)}`}
                     />
                   </div>
-                  <span className="text-[10px] font-mono opacity-90 truncate">
-                    E:{r.economicScore.toFixed(0)} A:
-                    {r.authorityScore.toFixed(0)}
+                  <span className="text-[10px] font-mono opacity-90 line-clamp-2 text-center">
+                    {getProfileDescription(r)}
                   </span>
                 </button>
               );
@@ -201,15 +238,15 @@ export default function Bussola() {
 
             {/* 3. Nota Metodológica */}
             <div className="w-full mx-auto p-6 rounded-2xl bg-secondary/20 border border-border/50">
-              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
+              <h4 className="font-sans text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
                 Nota Metodológica
               </h4>
-              <p className="text-xs text-muted-foreground leading-relaxed italic">
+              <p className="text-xs text-muted-foreground leading-relaxed">
                 A proximidade é calculada através da distância euclidiana num espaço
                 multidimensional que inclui os 4 eixos (Economia, Autoridade,
                 Sociedade e Soberania).
               </p>
-              <p className="text-xs text-muted-foreground leading-relaxed italic">
+              <p className="text-xs text-muted-foreground leading-relaxed">
                 O valor reflete a compatibilidade entre a tua posição e o programa
                 oficial dos partidos para 2026.
               </p>
@@ -221,6 +258,21 @@ export default function Bussola() {
               rankedParties={rankedParties}
               ideologies={ideologies}
             />
+
+            {/* 5. Share Results */}
+            <Card className="border-primary/20 bg-primary/5 rounded-2xl md:rounded-3xl overflow-hidden">
+              <CardContent className="p-4 md:p-8">
+                <ShareResults
+                  url={generateShareUrl(
+                    displayResult.economicScore,
+                    displayResult.authorityScore,
+                    displayResult.socialScore,
+                    displayResult.sovereigntyScore,
+                  )}
+                  text={`O meu perfil político para 2026! Partido mais próximo: ${rankedParties[0]?.shortName}.`}
+                />
+              </CardContent>
+            </Card>
           </div>
         )}
       </main>

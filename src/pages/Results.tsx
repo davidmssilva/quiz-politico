@@ -144,15 +144,15 @@ export default function Results() {
 
         {/* Nota Metodológica no Fim de Tudo */}
         <div className="w-full mx-auto p-6 rounded-2xl bg-secondary/20 border border-border/50">
-          <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
+          <h4 className="font-sans text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
             Nota Metodológica
           </h4>
-          <p className="text-xs text-muted-foreground leading-relaxed italic">
+          <p className="text-xs text-muted-foreground leading-relaxed">
             A proximidade é calculada através da distância euclidiana num espaço
             multidimensional que inclui os 4 eixos (Economia, Autoridade,
             Sociedade e Soberania).
           </p>
-          <p className="text-xs text-muted-foreground leading-relaxed italic">
+          <p className="text-xs text-muted-foreground leading-relaxed">
             O valor reflete a compatibilidade entre a tua posição e o programa
             oficial dos partidos para 2026.
           </p>
