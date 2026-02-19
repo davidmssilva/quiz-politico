@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { getCompletedCategories, getTotalCategories, getLikertActiveColor } from "@/lib/utils";
 import { LIKERT_SCALE, IMPORTANCE_OPTIONS, EARLY_FINISH_THRESHOLD } from "@/lib/constants";
 import { TYPOGRAPHY } from "@/lib/typography";
+import { updateMetaTags, SEO_CONFIGS } from "@/lib/seo";
 
 const IS_DEV = import.meta.env.DEV;
 
@@ -52,6 +53,11 @@ export default function Quiz() {
   const isEndAd = current === questions.length + 1;
   const questionIndex = current - 1;
   const q = questions[questionIndex];
+
+  // SEO
+  useEffect(() => {
+    updateMetaTags(SEO_CONFIGS.quiz);
+  }, []);
 
   const handleTestProfile = (profileName: string) => {
     const profile = testProfiles.find((p) => p.name === profileName);

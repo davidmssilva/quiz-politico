@@ -13,6 +13,7 @@ import {
 } from "@/lib/scoring";
 import { generateShareUrl } from "@/lib/utils";
 import { TYPOGRAPHY } from "@/lib/typography";
+import { updateMetaTags, SEO_CONFIGS } from "@/lib/seo";
 
 import PoliticalCompass from "@/components/PoliticalCompass";
 import { AppHeader } from "@/components/AppHeader";
@@ -25,6 +26,10 @@ import ResultsGrid from "@/components/ResultsGrid";
 export default function Results() {
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    updateMetaTags(SEO_CONFIGS.results);
+  }, []);
 
   const { scores, isReadOnly } = useMemo(() => {
     const hash = window.location.hash;

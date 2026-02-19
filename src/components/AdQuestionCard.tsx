@@ -1,6 +1,13 @@
 // components/AdQuestionCard.tsx
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { TYPOGRAPHY } from "@/lib/typography";
+
+declare global {
+  interface Window {
+    adsbygoogle: any[];
+  }
+}
 
 export default function AdQuestionCard({
   onNext,
@@ -9,6 +16,17 @@ export default function AdQuestionCard({
   onNext: () => void;
   isLast?: boolean;
 }) {
+  useEffect(() => {
+    try {
+      // Initialize AdSense ad
+      if (window.adsbygoogle && window.adsbygoogle.length !== undefined) {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      }
+    } catch (err) {
+      console.error("AdSense error:", err);
+    }
+  }, []);
+
   return (
     <div className="space-y-6">
       <div className="space-y-2">
@@ -24,21 +42,14 @@ export default function AdQuestionCard({
         <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-2">
           Publicidade
         </span>
-        {
-          <ins
-            className="adsbygoogle"
-            style={{ display: "block" }}
-            data-ad-client="ca-pub-1926080014819451"
-            data-ad-slot="1839039008"
-            data-ad-format="auto"
-            data-full-width-responsive="true"
-          ></ins>
-        }
-        <div id="adsense-slot">
-          <p className="text-sm text-muted-foreground">
-            Publicidade AdSense aqui
-          </p>
-        </div>
+        <ins
+          className="adsbygoogle"
+          style={{ display: "block" }}
+          data-ad-client="ca-pub-1926080014819451"
+          data-ad-slot="1839039008"
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        ></ins>
       </div>
 
       <div className="pt-4">

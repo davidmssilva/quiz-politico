@@ -2,15 +2,20 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { loadSession, clearSession } from "@/lib/scoring";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { AppHeader } from "@/components/AppHeader";
 import { AppFooter } from "@/components/AppFooter";
 import { TYPOGRAPHY } from "@/lib/typography";
 import { Lock } from "lucide-react";
+import { updateMetaTags, SEO_CONFIGS } from "@/lib/seo";
 
 export default function Index() {
   const navigate = useNavigate();
   const session = useMemo(() => loadSession(), []);
+
+  useEffect(() => {
+    updateMetaTags(SEO_CONFIGS.home);
+  }, []);
 
   const stats = [
     { n: "100", label: "Perguntas" },

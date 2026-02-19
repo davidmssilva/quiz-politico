@@ -1,4 +1,4 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   loadHistory,
   clearHistory,
@@ -15,13 +15,13 @@ import ResultsGrid from "@/components/ResultsGrid";
 import { ShareResults } from "@/components/ShareResults";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { motion } from "framer-motion";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { AppHeader } from "@/components/AppHeader";
 import { Trash2, History as HistoryIcon } from "lucide-react";
 import { AppFooter } from "@/components/AppFooter";
 import { TYPOGRAPHY } from "@/lib/typography";
 import { generateShareUrl } from "@/lib/utils";
+import { updateMetaTags, SEO_CONFIGS } from "@/lib/seo";
 
 const getAxisLabel = (value: number, left: string, right: string): string => {
   const abs = Math.abs(value);
@@ -57,9 +57,12 @@ const getProfileDescription = (result: StoredResult): string => {
 
 export default function Bussola() {
   const navigate = useNavigate();
-  const location = useLocation();
   const [history, setHistory] = useState<StoredResult[]>(() => loadHistory());
   const [selected, setSelected] = useState<StoredResult | null>(null);
+
+  useEffect(() => {
+    updateMetaTags(SEO_CONFIGS.history);
+  }, []);
 
   const liveResult = useMemo(() => {
     const session = loadSession();
