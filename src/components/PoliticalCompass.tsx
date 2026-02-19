@@ -192,6 +192,23 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
 
   // Create sorted list when an ideology is first selected
   const handleIdeologyClick = useCallback((ideology: Ideology) => {
+    // Reset zoom on mobile when clicking an ideology
+    if (window.innerWidth < 640) {
+      // Force viewport reset by temporarily changing the meta tag
+      const viewport = document.querySelector('meta[name="viewport"]');
+      if (viewport) {
+        const originalContent = viewport.getAttribute('content');
+        viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+        
+        // Restore original viewport after a brief delay
+        setTimeout(() => {
+          if (originalContent) {
+            viewport.setAttribute('content', originalContent);
+          }
+        }, 100);
+      }
+    }
+    
     // Sort ideologies from left to right (by x coordinate)
     const sorted = [...ideologies].sort((a, b) => a.x - b.x);
     
