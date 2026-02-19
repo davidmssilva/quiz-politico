@@ -135,31 +135,6 @@ export default function Quiz() {
     };
   }, [current, answers, importanceWeights]);
 
-  const selectAnswer = useCallback((value: Answer) => {
-    setAnswers((p) => ({ ...p, [q.id]: value }));
-  }, [q?.id]);
-
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (!q) return;
-    
-    // Arrow keys for Likert scale
-    if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
-      e.preventDefault();
-      const currentIndex = LIKERT_SCALE.findIndex(opt => opt.value === answers[q.id]);
-      if (currentIndex > 0) {
-        selectAnswer(LIKERT_SCALE[currentIndex - 1].value);
-      }
-    } else if (e.key === "ArrowDown" || e.key === "ArrowRight") {
-      e.preventDefault();
-      const currentIndex = LIKERT_SCALE.findIndex(opt => opt.value === answers[q.id]);
-      if (currentIndex < LIKERT_SCALE.length - 1) {
-        selectAnswer(LIKERT_SCALE[currentIndex + 1].value);
-      } else if (currentIndex === -1) {
-        selectAnswer(LIKERT_SCALE[0].value);
-      }
-    }
-  }, [q, answers, selectAnswer]);
-
   const formatLastSavedTime = (date: Date | null): string => {
     if (!date) return "";
     const now = new Date();
@@ -189,6 +164,36 @@ export default function Quiz() {
       navigate("/resultados", { state: { answers, importanceWeights } });
     }
   }, [current, answers, importanceWeights, navigate, totalSteps]);
+
+  const selectAnswer = useCallback((value: Answer) => {
+    setAnswers((p) => ({ ...p, [q.id]: value }));
+    
+    // Auto-advance after a short delay to allow user to see their selection
+    setTimeout(() => {
+      next();
+    }, 400);
+  }, [q?.id, next]);
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (!q) return;
+    
+    // Arrow keys for Likert scale
+    if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+      e.preventDefault();
+      const currentIndex = LIKERT_SCALE.findIndex(opt => opt.value === answers[q.id]);
+      if (currentIndex > 0) {
+        selectAnswer(LIKERT_SCALE[currentIndex - 1].value);
+      }
+    } else if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+      e.preventDefault();
+      const currentIndex = LIKERT_SCALE.findIndex(opt => opt.value === answers[q.id]);
+      if (currentIndex < LIKERT_SCALE.length - 1) {
+        selectAnswer(LIKERT_SCALE[currentIndex + 1].value);
+      } else if (currentIndex === -1) {
+        selectAnswer(LIKERT_SCALE[0].value);
+      }
+    }
+  }, [q, answers, selectAnswer]);
 
   const prev = useCallback(() => {
     if (current > 0) {
@@ -313,7 +318,7 @@ export default function Quiz() {
       >
         <div className="w-full max-w-2xl mx-auto flex-1 flex flex-col justify-center">
           {!isStartAd && !isEndAd && (
-            <div className="mb-4 sm:mb-6 md:mb-8">
+            <div className="mb-3 sm:mb-4 md:mb-6">
               <QuizProgress
                 current={questionIndex}
                 total={questions.length}
@@ -322,7 +327,7 @@ export default function Quiz() {
             </div>
           )}
 
-          <div className="relative flex-1 sm:flex-initial">
+          <div className="relative flex-1 sm:flex-initial min-h-0">
             <AnimatePresence mode="wait" custom={direction} initial={false}>
               <motion.div
                 key={current}
@@ -330,7 +335,7 @@ export default function Quiz() {
                 initial={{ opacity: 0, x: direction * 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -direction * 20 }}
-                transition={{ duration: 0.15, ease: "easeInOut" }}
+                transition={{ duration: 0.2, ease: "easeInOut" }}
                 className="w-full"
               >
                 {isStartAd &&
@@ -347,7 +352,7 @@ export default function Quiz() {
                   )}
 
                 {!isStartAd && !isEndAd && (
-                  <div className="space-y-4 sm:space-y-6" onKeyDown={handleKeyDown}>
+                  <div className="space-y-3 sm:space-y-4" onKeyDown={handleKeyDown}>
                     <h2 className={TYPOGRAPHY.question.lg}>
                       {q.text}
                     </h2>
@@ -447,7 +452,7 @@ export default function Quiz() {
           </div>
 
           {!isStartAd && !isEndAd && (
-            <div className="flex items-center justify-between mt-6 sm:mt-8 pt-4 border-t border-border/40">
+            <div className="flex items-center justify-between mt-4 sm:mt-6 pt-4 border-t border-border/40">
               <Button
                 variant="ghost"
                 onClick={prev}

@@ -6,92 +6,99 @@
 
 @layer base {
   :root {
-    --background: 220 20% 97%;
+    /* Darker light mode - more sophisticated and easier on the eyes */
+    --background: 215 25% 92%;
     --foreground: 222 47% 11%;
 
-    --card: 0 0% 100%;
+    --card: 0 0% 98%;
     --card-foreground: 222 47% 11%;
 
-    --popover: 0 0% 100%;
+    --popover: 0 0% 98%;
     --popover-foreground: 222 47% 11%;
 
-    --primary: 222 60% 20%;
+    --primary: 222 70% 28%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 210 30% 93%;
+    --secondary: 210 35% 88%;
     --secondary-foreground: 222 47% 11%;
 
-    --muted: 210 25% 93%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 210 30% 88%;
+    --muted-foreground: 215 16% 42%;
 
-    --accent: 153 50% 40%;
+    --accent: 153 55% 38%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214 20% 88%;
-    --input: 214 20% 88%;
-    --ring: 222 60% 20%;
+    --border: 214 25% 82%;
+    --input: 214 25% 82%;
+    --ring: 222 70% 28%;
 
     --radius: 0.75rem;
 
     --compass-left: 0 72% 51%;
-    --compass-right: 153 50% 40%;
+    --compass-right: 153 55% 38%;
     --compass-lib: 210 80% 55%;
     --compass-auth: 30 80% 50%;
-    --compass-grid: 220 15% 82%;
+    --compass-grid: 220 20% 78%;
     --compass-user: 340 75% 55%;
 
-    --sidebar-background: 0 0% 98%;
+    --sidebar-background: 0 0% 96%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent: 240 4.8% 92%;
     --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
+    --sidebar-border: 220 18% 86%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
-    --background: 222 47% 6%;
-    --foreground: 210 40% 96%;
+    /* Completely different dark mode - warm, inviting, with purple/amber accents */
+    --background: 260 30% 8%;
+    --foreground: 45 100% 95%;
 
-    --card: 222 47% 10%;
-    --card-foreground: 210 40% 96%;
+    --card: 260 25% 12%;
+    --card-foreground: 45 100% 95%;
 
-    --popover: 222 47% 10%;
-    --popover-foreground: 210 40% 96%;
+    --popover: 260 25% 12%;
+    --popover-foreground: 45 100% 95%;
 
-    --primary: 210 60% 60%;
-    --primary-foreground: 222 47% 6%;
+    --primary: 280 65% 60%;
+    --primary-foreground: 260 30% 8%;
 
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 96%;
+    --secondary: 260 20% 18%;
+    --secondary-foreground: 45 100% 95%;
 
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 260 20% 18%;
+    --muted-foreground: 45 20% 70%;
 
-    --accent: 153 50% 45%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 45 90% 55%;
+    --accent-foreground: 260 30% 8%;
 
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 45 100% 95%;
 
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 210 60% 60%;
+    --border: 260 20% 22%;
+    --input: 260 20% 22%;
+    --ring: 280 65% 60%;
 
-    --compass-grid: 220 15% 25%;
+    --compass-left: 340 80% 60%;
+    --compass-right: 45 90% 55%;
+    --compass-lib: 200 70% 60%;
+    --compass-auth: 30 85% 60%;
+    --compass-grid: 260 15% 28%;
+    --compass-user: 280 75% 65%;
 
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 260 25% 10%;
+    --sidebar-foreground: 45 100% 95%;
+    --sidebar-primary: 280 65% 60%;
+    --sidebar-primary-foreground: 260 30% 8%;
+    --sidebar-accent: 260 20% 16%;
+    --sidebar-accent-foreground: 45 100% 95%;
+    --sidebar-border: 260 20% 20%;
+    --sidebar-ring: 280 65% 60%;
   }
 }
 

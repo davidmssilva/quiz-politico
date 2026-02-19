@@ -39,7 +39,7 @@ function PartyResults({ rankedParties }: Props) {
                 <span className="font-semibold text-sm text-card-foreground truncate">
                   {party.name}
                 </span>
-                <span className="text-xs font-medium text-muted-foreground whitespace-nowrap">
+                <span className="text-xs font-bold text-muted-foreground whitespace-nowrap">
                   {match}% afinidade
                 </span>
               </div>

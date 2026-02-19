@@ -104,13 +104,45 @@ const IdeologyLayer = memo(function IdeologyLayer({
           onMouseLeave={onLeaveIdeology}
           onClick={() => onClickIdeology(ideo)}
         >
+          {/* Light mode circle */}
           <circle
             cx={ix}
             cy={iy}
             r={circleRadius}
             fill={ideo.color}
-            className="opacity-[0.05] group-hover:opacity-[0.15] transition-opacity duration-300"
+            className="opacity-[0.04] group-hover:opacity-[0.1] transition-opacity duration-300 dark:opacity-0"
           />
+          {/* Light mode border */}
+          <circle
+            cx={ix}
+            cy={iy}
+            r={circleRadius}
+            fill="none"
+            stroke={ideo.color}
+            strokeWidth="1"
+            className="opacity-15 group-hover:opacity-30 transition-opacity duration-300 dark:opacity-0"
+          />
+          
+          {/* Dark mode circle - subtle colored tint */}
+          <circle
+            cx={ix}
+            cy={iy}
+            r={circleRadius}
+            fill={ideo.color}
+            className="opacity-0 group-hover:opacity-[0.15] transition-opacity duration-300 dark:opacity-[0.08] dark:group-hover:opacity-[0.2]"
+          />
+          {/* Dark mode border - subtle white */}
+          <circle
+            cx={ix}
+            cy={iy}
+            r={circleRadius}
+            fill="none"
+            stroke="rgba(255, 255, 255, 0.4)"
+            strokeWidth="1"
+            className="opacity-0 transition-opacity duration-300 dark:opacity-100 dark:group-hover:opacity-100"
+          />
+          
+          {/* Light mode text */}
           {lines.map((line, li) => (
             <text
               key={li}
@@ -119,10 +151,29 @@ const IdeologyLayer = memo(function IdeologyLayer({
               textAnchor="middle"
               dominantBaseline="central"
               fontSize={fontSize}
-              fontWeight={500}
+              fontWeight={600}
               fill={ideo.color}
-              className="select-none pointer-events-none opacity-30 group-hover:opacity-100 transition-all duration-200 uppercase tracking-tighter"
-              style={{ filter: "drop-shadow(0px 0px 2px white)" }}
+              className="select-none pointer-events-none opacity-35 group-hover:opacity-90 transition-all duration-200 uppercase tracking-tighter dark:opacity-0"
+            >
+              {line}
+            </text>
+          ))}
+          
+          {/* Dark mode text - white with subtle color on hover */}
+          {lines.map((line, li) => (
+            <text
+              key={`dark-${li}`}
+              x={ix}
+              y={iy + (li - (lines.length - 1) / 2) * lineSpacing}
+              textAnchor="middle"
+              dominantBaseline="central"
+              fontSize={fontSize}
+              fontWeight={600}
+              fill="rgba(255, 255, 255, 0.85)"
+              className="select-none pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-200 uppercase tracking-tighter dark:opacity-100"
+              style={{ 
+                filter: "drop-shadow(0px 0px 2px rgba(0,0,0,0.8))",
+              }}
             >
               {line}
             </text>
@@ -365,7 +416,7 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
                 cy={py}
                 r={isHovered ? 12 : 8}
                 fill={party.color}
-                className="stroke-background stroke-[3px] shadow-sm transition-all duration-300"
+                className="stroke-foreground/20 dark:stroke-white stroke-[2px] shadow-sm transition-all duration-300"
               />
               <text
                 x={px}

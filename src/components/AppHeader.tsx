@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useMemo, useCallback } from "react";
 import { loadSession, saveSession } from "@/lib/scoring";
 import { TYPOGRAPHY } from "@/lib/typography";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface AppHeaderProps {
   showBussola?: boolean;
@@ -42,11 +43,12 @@ export function AppHeader({
           </span>
         </div>
         <div className="flex items-center gap-2 sm:gap-3">
+          <ThemeToggle />
           {showBussola && (
             <Button
               variant="outline"
               size="sm"
-              className="text-xs sm:text-sm font-medium hover:bg-primary/10 hover:text-primary transition-all duration-200"
+              className="text-xs sm:text-sm font-medium hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/20 dark:hover:border-primary/50 transition-all duration-200"
               onClick={handleHistoricoClick}
             >
               Histórico
@@ -54,13 +56,13 @@ export function AppHeader({
           )}
           {showNewQuiz && (
             <Button
-              variant={hasProgress ? "default" : "outline"} // Dá mais destaque se for para continuar
+              variant={hasProgress ? "default" : "outline"}
               size="sm"
               className={`text-xs sm:text-sm font-medium transition-all duration-300 shadow-sm 
       ${
         hasProgress
-          ? "bg-primary text-primary-foreground hover:scale-105 shadow-primary/20"
-          : "border-primary/20 bg-primary/5 hover:bg-primary hover:text-primary-foreground"
+          ? "bg-primary text-primary-foreground hover:scale-105 hover:shadow-lg shadow-primary/20 dark:shadow-primary/30"
+          : "border-primary/20 bg-primary/5 hover:bg-primary hover:text-primary-foreground hover:border-primary dark:bg-primary/10 dark:hover:bg-primary dark:border-primary/30"
       }`}
               onClick={() => navigate("/quiz")}
             >
