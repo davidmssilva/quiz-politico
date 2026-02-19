@@ -435,15 +435,6 @@ export const ideologies: Ideology[] = [
       "Filosofia política que defende que a sociedade é um organismo hierárquico onde as elites têm a obrigação moral de assegurar o bem-estar das classes trabalhadoras. Rejeita o individualismo liberal, propondo um Estado social forte que preserva a tradição e a estabilidade para evitar a fragmentação e o conflito de classes.",
   },
   {
-    name: "Ordoliberalismo",
-    x: 5.5,
-    y: -1.5,
-    color: "#2564eb6b",
-    opacity: GLOBAL_OPACITY,
-    description:
-      "Variante do liberalismo que argumenta que o mercado livre requer um quadro jurídico e institucional rigoroso (Ordo) criado pelo Estado. O papel do governo é garantir a livre concorrência e impedir a formação de monopólios, mantendo a estabilidade monetária sem intervir diretamente no processo de preços ou no planeamento económico.",
-  },
-  {
     name: "Radicalismo",
     x: -3.5,
     y: -2.5,

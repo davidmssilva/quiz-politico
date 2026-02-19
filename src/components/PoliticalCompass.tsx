@@ -39,14 +39,14 @@ function getResponsiveCompassSize(): { size: number; padding: number; fontSize: 
     return {
       size: 400,
       padding: 25,
-      fontSize: { label: 7, party: 10, axis: 8 },
+      fontSize: {label: 4, party: 10, axis: 8 },
     };
   } else if (width < 1024) {
     // Tablet: 640-1024px
     return {
       size: 550,
       padding: 32,
-      fontSize: { label: 8, party: 11, axis: 9 },
+      fontSize: {label: 6, party: 11, axis: 9 },
     };
   }
   
@@ -66,7 +66,7 @@ const IdeologyLayer = memo(function IdeologyLayer({
   inner,
   toX,
   toY,
-  fontSize,
+  isMobile,
 }: {
   onHoverIdeology: (ideo: Ideology, e: React.MouseEvent) => void;
   onLeaveIdeology: () => void;
@@ -75,7 +75,7 @@ const IdeologyLayer = memo(function IdeologyLayer({
   inner: number;
   toX: (value: number) => number;
   toY: (value: number) => number;
-  fontSize: number;
+  isMobile: boolean;
 }) {
   const ideologyCoords = useMemo(
     () =>
@@ -87,6 +87,11 @@ const IdeologyLayer = memo(function IdeologyLayer({
       })),
     [toX, toY],
   );
+
+  // Use smaller circles and text on mobile
+  const circleRadius = isMobile ? 20 : 40;
+  const fontSize = isMobile ? 5 : 9;
+  const lineSpacing = isMobile ? 8 : 11;
 
   return (
     <g id="ideology-layer">
@@ -102,7 +107,7 @@ const IdeologyLayer = memo(function IdeologyLayer({
           <circle
             cx={ix}
             cy={iy}
-            r={40}
+            r={circleRadius}
             fill={ideo.color}
             className="opacity-[0.05] group-hover:opacity-[0.15] transition-opacity duration-300"
           />
@@ -110,7 +115,7 @@ const IdeologyLayer = memo(function IdeologyLayer({
             <text
               key={li}
               x={ix}
-              y={iy + (li - (lines.length - 1) / 2) * 11}
+              y={iy + (li - (lines.length - 1) / 2) * lineSpacing}
               textAnchor="middle"
               dominantBaseline="central"
               fontSize={fontSize}
@@ -183,6 +188,43 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
   const [hoveredIdeology, setHoveredIdeology] = useState<Ideology | null>(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
   const [windowSize, setWindowSize] = useState(() => getResponsiveCompassSize());
+  const [sortedIdeologiesList, setSortedIdeologiesList] = useState<Ideology[]>([]);
+
+  // Create sorted list when an ideology is first selected
+  const handleIdeologyClick = useCallback((ideology: Ideology) => {
+    // Sort ideologies from left to right (by x coordinate)
+    const sorted = [...ideologies].sort((a, b) => a.x - b.x);
+    
+    setSortedIdeologiesList(sorted);
+    setSelectedIdeology(ideology);
+  }, []);
+
+  const handleIdeologyNavigate = useCallback((direction: 'prev' | 'next') => {
+    if (!selectedIdeology || sortedIdeologiesList.length === 0) return;
+    
+    // Find current index by comparing x and y coordinates (more reliable than name)
+    const currentIndex = sortedIdeologiesList.findIndex(
+      (ideo) => ideo.x === selectedIdeology.x && ideo.y === selectedIdeology.y
+    );
+    
+    if (currentIndex === -1) {
+      console.error('Current ideology not found in sorted list', selectedIdeology);
+      return;
+    }
+    
+    if (direction === 'prev' && currentIndex > 0) {
+      setSelectedIdeology(sortedIdeologiesList[currentIndex - 1]);
+    } else if (direction === 'next' && currentIndex < sortedIdeologiesList.length - 1) {
+      setSelectedIdeology(sortedIdeologiesList[currentIndex + 1]);
+    }
+  }, [selectedIdeology, sortedIdeologiesList]);
+
+  const currentIdeologyIndex = useMemo(() => {
+    if (!selectedIdeology || sortedIdeologiesList.length === 0) return -1;
+    return sortedIdeologiesList.findIndex(
+      (ideo) => ideo.x === selectedIdeology.x && ideo.y === selectedIdeology.y
+    );
+  }, [selectedIdeology, sortedIdeologiesList]);
 
   // Handle window resize
   useEffect(() => {
@@ -198,6 +240,7 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
   const padding = windowSize.padding;
   const inner = compassSize - padding * 2;
   const fontSize = windowSize.fontSize;
+  const isMobile = windowSize.size < 550; // Mobile if size is less than 550
 
   // Create responsive coordinate functions
   const toXResponsive = (value: number) => padding + ((value + 10) / 20) * inner;
@@ -266,14 +309,12 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
         <IdeologyLayer
           onHoverIdeology={(ideo, e) => handleMouseMove(e, "ideology", ideo)}
           onLeaveIdeology={() => handleMouseLeave("ideology")}
-          onClickIdeology={(ideo) =>
-            handleInteraction(() => setSelectedIdeology(ideo))
-          }
+          onClickIdeology={handleIdeologyClick}
           padding={padding}
           inner={inner}
           toX={toXResponsive}
           toY={toYResponsive}
-          fontSize={fontSize.label}
+          isMobile={isMobile}
         />
 
         <GridLayer padding={padding} inner={inner} compassSize={compassSize} />
@@ -404,7 +445,13 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
       <IdeologyModal
         ideology={selectedIdeology}
         open={!!selectedIdeology}
-        onClose={() => setSelectedIdeology(null)}
+        onClose={() => {
+          setSelectedIdeology(null);
+          setSortedIdeologiesList([]);
+        }}
+        onNavigate={handleIdeologyNavigate}
+        hasPrev={currentIdeologyIndex > 0}
+        hasNext={currentIdeologyIndex < sortedIdeologiesList.length - 1}
       />
     </div>
   );

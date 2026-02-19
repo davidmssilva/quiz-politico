@@ -23,13 +23,15 @@ export default function About() {
           </div>
 
           <section className="space-y-6">
-            <h2 className={TYPOGRAPHY.heading.h2}>O Nosso Propósito</h2>
-            <p className="text-base leading-relaxed">
-              A Bússola Política Portugal nasceu da necessidade de criar uma ferramenta profunda e imparcial 
-              que ajude os portugueses a compreender melhor a sua posição no espectro político. Ao contrário 
-              de outros quizzes superficiais, analisamos 4 dimensões políticas através de 100 perguntas 
-              cuidadosamente elaboradas.
-            </p>
+            <div className="p-6 border border-border rounded-xl">
+              <h2 className={TYPOGRAPHY.heading.h2}>O Nosso Propósito</h2>
+              <p className="text-base leading-relaxed mt-4">
+                A Bússola Política Portugal nasceu da necessidade de criar uma ferramenta profunda e imparcial 
+                que ajude os portugueses a compreender melhor a sua posição no espectro político. Ao contrário 
+                de outros quizzes superficiais, analisamos 4 dimensões políticas através de 100 perguntas 
+                cuidadosamente elaboradas.
+              </p>
+            </div>
           </section>
 
           <section className="grid md:grid-cols-2 gap-6">

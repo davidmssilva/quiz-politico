@@ -353,7 +353,7 @@ export default function Quiz() {
                     </h2>
 
                     <div className="grid gap-1.5 sm:gap-2" role="radiogroup" aria-label="Resposta">
-                      {LIKERT_SCALE.map((opt) => {
+                      {LIKERT_SCALE.map((opt, idx) => {
                         const isSelected = answers[q.id] === opt.value;
                         const activeColor = getLikertActiveColor(opt.value);
 
@@ -369,7 +369,7 @@ export default function Quiz() {
                             }}
                             role="radio"
                             aria-checked={isSelected}
-                            tabIndex={isSelected ? 0 : -1}
+                            tabIndex={0}
                             className={`w-full text-left px-4 py-3 sm:py-4 rounded-xl border-2 transition-all flex items-center justify-between group tap-highlight-transparent focus:ring-2 focus:ring-primary focus:ring-offset-2
                               ${
                                 isSelected
@@ -421,7 +421,7 @@ export default function Quiz() {
                             role="radio"
                             aria-checked={isSelected}
                             aria-label={`Importância: ${opt.label}`}
-                            tabIndex={isSelected ? 0 : -1}
+                            tabIndex={0}
                             title={opt.label}
                             className={`flex-1 flex flex-col items-center justify-center py-1.5 sm:py-2 rounded-lg transition-all duration-200 border-2 focus:ring-2 focus:ring-primary focus:ring-offset-2
                               ${
