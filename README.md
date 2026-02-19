@@ -1,8 +1,8 @@
-# Bússola Política Portugal 🧭
+# Bússola Política Portugal
 
 Uma ferramenta educacional interativa para ajudar os portugueses a compreender a sua posição no espectro político através de análise profunda e imparcial.
 
-## 🎯 Características
+## Características
 
 - **100 Perguntas Profundas**: Cobrindo 8 categorias temáticas (Economia, Autoridade, Valores Sociais, Soberania, etc.)
 - **4 Dimensões Políticas**: Análise em 4 eixos (Económico, Autoridade, Social, Soberania)
@@ -11,7 +11,7 @@ Uma ferramenta educacional interativa para ajudar os portugueses a compreender a
 - **Histórico de Resultados**: Guarde e compare até 10 resultados anteriores
 - **Partilha de Resultados**: URL encoding para partilhar resultados facilmente
 
-## 🎨 Metodologia
+## Metodologia
 
 ### Dimensões Políticas
 
@@ -27,7 +27,6 @@ Uma ferramenta educacional interativa para ajudar os portugueses a compreender a
 - Ponderação de importância opcional (0-5) para refinar resultados
 - Cálculo de distância euclidiana 4D para ranking de partidos
 
-## 🙏 Agradecimentos
 
 Desenvolvido com o auxílio de assistentes de IA generativa, mas com revisão humana cuidadosa para garantir imparcialidade e precisão.
 
