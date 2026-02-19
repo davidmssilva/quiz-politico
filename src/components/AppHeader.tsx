@@ -1,22 +1,32 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useMemo } from "react";
-import { loadSession } from "@/lib/scoring";
+import { useMemo, useCallback } from "react";
+import { loadSession, saveSession } from "@/lib/scoring";
 import { TYPOGRAPHY } from "@/lib/typography";
 
 interface AppHeaderProps {
   showBussola?: boolean;
   showNewQuiz?: boolean;
+  onHistoricoClick?: () => void;
 }
 
 export function AppHeader({
   showBussola = true,
   showNewQuiz = true,
+  onHistoricoClick,
 }: AppHeaderProps) {
   const navigate = useNavigate();
 
   const session = useMemo(() => loadSession(), []);
   const hasProgress = session && Object.keys(session.answers).length > 0;
+
+  const handleHistoricoClick = useCallback(() => {
+    if (onHistoricoClick) {
+      onHistoricoClick();
+    } else {
+      navigate("/histórico");
+    }
+  }, [navigate, onHistoricoClick]);
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-card/80 backdrop-blur-md">
       <div className="container max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
@@ -37,9 +47,9 @@ export function AppHeader({
               variant="outline"
               size="sm"
               className="text-xs sm:text-sm font-medium hover:bg-primary/10 hover:text-primary transition-all duration-200"
-              onClick={() => navigate("/bussola")}
+              onClick={handleHistoricoClick}
             >
-              Resultados
+              Histórico
             </Button>
           )}
           {showNewQuiz && (

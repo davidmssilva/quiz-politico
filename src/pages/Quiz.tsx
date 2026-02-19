@@ -42,6 +42,8 @@ export default function Quiz() {
   const [direction, setDirection] = useState(1);
   const [showTestMenu, setShowTestMenu] = useState(false);
   const [showEarlyFinish, setShowEarlyFinish] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [lastSavedTime, setLastSavedTime] = useState<Date | null>(null);
   const saveTimer = useRef<NodeJS.Timeout>();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -69,6 +71,7 @@ export default function Quiz() {
     if (saveTimer.current) clearTimeout(saveTimer.current);
     // Only save if there are actual changes
     if (Object.keys(answers).length > 0 || current > 0) {
+      setIsSaving(true);
       saveTimer.current = setTimeout(() => {
         saveSession({
           currentQuestionIndex: current,
@@ -76,14 +79,92 @@ export default function Quiz() {
           importanceWeights,
           timestamp: Date.now(),
         });
-      }, 500);
+        setLastSavedTime(new Date());
+        setIsSaving(false);
+      }, 15000);
     }
     return () => clearTimeout(saveTimer.current);
+  }, [current, answers, importanceWeights]);
+
+  // Save on page visibility change or window blur
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        // Page is hidden, save immediately
+        if (saveTimer.current) clearTimeout(saveTimer.current);
+        if (Object.keys(answers).length > 0 || current > 0) {
+          saveSession({
+            currentQuestionIndex: current,
+            answers,
+            importanceWeights,
+            timestamp: Date.now(),
+          });
+          setLastSavedTime(new Date());
+          setIsSaving(false);
+        }
+      }
+    };
+
+    const handleWindowBlur = () => {
+      // Window lost focus, save immediately
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+      if (Object.keys(answers).length > 0 || current > 0) {
+        saveSession({
+          currentQuestionIndex: current,
+          answers,
+          importanceWeights,
+          timestamp: Date.now(),
+        });
+        setLastSavedTime(new Date());
+        setIsSaving(false);
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("blur", handleWindowBlur);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("blur", handleWindowBlur);
+    };
   }, [current, answers, importanceWeights]);
 
   const selectAnswer = useCallback((value: Answer) => {
     setAnswers((p) => ({ ...p, [q.id]: value }));
   }, [q?.id]);
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (!q) return;
+    
+    // Arrow keys for Likert scale
+    if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+      e.preventDefault();
+      const currentIndex = LIKERT_SCALE.findIndex(opt => opt.value === answers[q.id]);
+      if (currentIndex > 0) {
+        selectAnswer(LIKERT_SCALE[currentIndex - 1].value);
+      }
+    } else if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+      e.preventDefault();
+      const currentIndex = LIKERT_SCALE.findIndex(opt => opt.value === answers[q.id]);
+      if (currentIndex < LIKERT_SCALE.length - 1) {
+        selectAnswer(LIKERT_SCALE[currentIndex + 1].value);
+      } else if (currentIndex === -1) {
+        selectAnswer(LIKERT_SCALE[0].value);
+      }
+    }
+  }, [q, answers, selectAnswer]);
+
+  const formatLastSavedTime = (date: Date | null): string => {
+    if (!date) return "";
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffSecs = Math.floor(diffMs / 1000);
+    const diffMins = Math.floor(diffSecs / 60);
+    
+    if (diffSecs < 60) return "há uns segundos";
+    if (diffMins < 60) return `há ${diffMins}m`;
+    return "há pouco";
+  };
 
   const next = useCallback(() => {
     if (current < totalSteps - 1) {
@@ -110,6 +191,26 @@ export default function Quiz() {
       scrollContainerRef.current?.scrollTo({ top: 0, behavior: "instant" });
     }
   }, [current]);
+
+  const handleHistoricoClick = useCallback(() => {
+    // Force save immediately before navigating
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    setIsSaving(true);
+    
+    saveSession({
+      currentQuestionIndex: current,
+      answers,
+      importanceWeights,
+      timestamp: Date.now(),
+    });
+    setLastSavedTime(new Date());
+    setIsSaving(false);
+    
+    // Navigate after a brief delay to show the save happened
+    setTimeout(() => {
+      navigate("/histórico");
+    }, 300);
+  }, [current, answers, importanceWeights, navigate]);
 
   const handleEarlyFinish = useCallback(() => {
     // Save immediately before navigating to results
@@ -155,7 +256,24 @@ export default function Quiz() {
 
   return (
     <div className="h-screen max-h-screen bg-background flex flex-col font-sans antialiased overflow-hidden">
-      <AppHeader showNewQuiz={false} />
+      <AppHeader showNewQuiz={false} onHistoricoClick={handleHistoricoClick} />
+
+      {/* Save Status Indicator */}
+      {(Object.keys(answers).length > 0 || current > 0) && (
+        <div className="px-4 py-2 bg-card/50 border-b border-border/50 flex items-center justify-center gap-2 text-xs text-muted-foreground">
+          {isSaving ? (
+            <>
+              <div className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" />
+              <span>{lastSavedTime ? `Guardado ${formatLastSavedTime(lastSavedTime)}` : "Por guardar..."}</span>
+            </>
+          ) : lastSavedTime ? (
+            <>
+              <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
+              <span>Guardado Agora</span>
+            </>
+          ) : null}
+        </div>
+      )}
 
       {IS_DEV && (
         <div className="relative z-[60] px-4 py-1">
@@ -223,12 +341,12 @@ export default function Quiz() {
                   )}
 
                 {!isStartAd && !isEndAd && (
-                  <div className="space-y-4 sm:space-y-6">
+                  <div className="space-y-4 sm:space-y-6" onKeyDown={handleKeyDown}>
                     <h2 className={TYPOGRAPHY.question.lg}>
                       {q.text}
                     </h2>
 
-                    <div className="grid gap-1.5 sm:gap-2">
+                    <div className="grid gap-1.5 sm:gap-2" role="radiogroup" aria-label="Resposta">
                       {LIKERT_SCALE.map((opt) => {
                         const isSelected = answers[q.id] === opt.value;
                         const activeColor = getLikertActiveColor(opt.value);
@@ -237,7 +355,16 @@ export default function Quiz() {
                           <button
                             key={opt.value}
                             onClick={() => selectAnswer(opt.value)}
-                            className={`w-full text-left px-4 py-3 sm:py-4 rounded-xl border-2 transition-all flex items-center justify-between group tap-highlight-transparent
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                selectAnswer(opt.value);
+                              }
+                            }}
+                            role="radio"
+                            aria-checked={isSelected}
+                            tabIndex={isSelected ? 0 : -1}
+                            className={`w-full text-left px-4 py-3 sm:py-4 rounded-xl border-2 transition-all flex items-center justify-between group tap-highlight-transparent focus:ring-2 focus:ring-primary focus:ring-offset-2
                               ${
                                 isSelected
                                   ? `${activeColor} shadow-md scale-[1.01] z-10`
@@ -257,8 +384,8 @@ export default function Quiz() {
                       })}
                     </div>
 
-                    <div className="flex bg-secondary/40 p-1.5 rounded-xl gap-2 w-full max-w-md mx-auto">
-                      {IMPORTANCE_OPTIONS.map((opt) => {
+                    <div className="flex bg-secondary/40 p-1.5 rounded-xl gap-2 w-full max-w-md mx-auto" role="group" aria-label="Importância da pergunta">
+                      {IMPORTANCE_OPTIONS.map((opt, idx) => {
                         const isSelected =
                           (importanceWeights[q.id] ?? 0) === opt.value;
                         return (
@@ -270,7 +397,27 @@ export default function Quiz() {
                                 [q.id]: opt.value,
                               }))
                             }
-                            className={`flex-1 flex flex-col items-center justify-center py-1.5 sm:py-2 rounded-lg transition-all duration-200 border-2
+                            onKeyDown={(e) => {
+                              if (e.key === "ArrowLeft" && idx > 0) {
+                                e.preventDefault();
+                                setImportanceWeights((p) => ({
+                                  ...p,
+                                  [q.id]: IMPORTANCE_OPTIONS[idx - 1].value,
+                                }));
+                              } else if (e.key === "ArrowRight" && idx < IMPORTANCE_OPTIONS.length - 1) {
+                                e.preventDefault();
+                                setImportanceWeights((p) => ({
+                                  ...p,
+                                  [q.id]: IMPORTANCE_OPTIONS[idx + 1].value,
+                                }));
+                              }
+                            }}
+                            role="radio"
+                            aria-checked={isSelected}
+                            aria-label={`Importância: ${opt.label}`}
+                            tabIndex={isSelected ? 0 : -1}
+                            title={opt.label}
+                            className={`flex-1 flex flex-col items-center justify-center py-1.5 sm:py-2 rounded-lg transition-all duration-200 border-2 focus:ring-2 focus:ring-primary focus:ring-offset-2
                               ${
                                 isSelected
                                   ? "bg-background border-primary shadow-md text-primary scale-[1.02] z-10"
@@ -298,6 +445,7 @@ export default function Quiz() {
               <Button
                 variant="ghost"
                 onClick={prev}
+                aria-label="Pergunta anterior"
                 className="px-4 h-10 text-xs sm:text-sm font-bold text-muted-foreground"
               >
                 Anterior
@@ -307,18 +455,20 @@ export default function Quiz() {
                   <Button
                     variant="outline"
                     onClick={() => setShowEarlyFinish(true)}
+                    aria-label="Terminar questionário agora"
                     className="px-4 h-10 text-xs sm:text-sm font-bold"
                   >
                     Terminar Agora
                   </Button>
                 )}
-                <div className="text-[10px] font-bold text-muted-foreground/40 hidden sm:block uppercase tracking-widest">
+                <div className="text-[10px] font-bold text-muted-foreground/40 hidden sm:block uppercase tracking-widest" aria-live="polite">
                   {current} / {questions.length}
                 </div>
               </div>
               <Button
                 onClick={next}
                 disabled={answers[q.id] === undefined}
+                aria-label={current === questions.length ? "Ver resultados" : "Próxima pergunta"}
                 className="px-6 h-10 text-xs sm:text-sm font-bold rounded-lg shadow-lg"
               >
                 {current === questions.length ? "Finalizar" : "Seguinte"}

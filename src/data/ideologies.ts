@@ -391,8 +391,8 @@ export const ideologies: Ideology[] = [
   },
   {
     name: "Socialismo de\nMercado",
-    x: -3.5,
-    y: -2.0, // Invertido: 2.0 -> -2.0
+    x: -4.0,
+    y: -1.5,
     color: "#ef4444",
     opacity: GLOBAL_OPACITY,
     description:
@@ -514,5 +514,106 @@ export const ideologies: Ideology[] = [
     opacity: GLOBAL_OPACITY,
     description:
       "Fusão da crítica marxista ao capital com a ecologia radical e a democracia participativa. Rejeita o produtivismo dos estados socialistas autoritários, defendendo a autogestão social, o planeamento democrático da economia para fins ecológicos e a libertação individual através da expansão radical dos direitos civis e minoritários.",
+  },
+// ═══ QUADRANTE SUPERIOR ESQUERDO (X < 0, Y > 0): O ELO ENTRE SOCIALISMO E REFORMISMO ═══
+
+  {
+    name: "Socialismo\nDemocrático",
+    x: -4.0,
+    y: 2.5,
+    color: "#be123c",
+    opacity: GLOBAL_OPACITY,
+    description:
+      "Ideologia que defende a transição para uma economia socialista através de meios democráticos e parlamentares. Diferencia-se da social-democracia por manter o objetivo final de superar o capitalismo e socializar os meios de produção (através da propriedade pública ou cooperativa), mas recusa o autoritarismo de partido único, insistindo no pluripartidarismo, nas liberdades civis e no controlo democrático das instituições económicas.",
+  },
+  {
+    name: "Dirigismo",
+    x: -2.5,
+    y: 4.5,
+    color: "#991b1b",
+    opacity: GLOBAL_OPACITY,
+    description:
+      "Modelo económico onde o Estado exerce uma influência diretiva forte sobre o setor privado sem o abolir. Foi a base do crescimento europeu no pós-guerra, utilizando planos estatais, grandes empresas públicas (campeões nacionais) e controlo de crédito para guiar a economia. Representa uma autoridade central robusta que coloca o desenvolvimento industrial e a soberania nacional acima da dinâmica espontânea do mercado livre.",
+  },
+  {
+    name: "Jacobinismo\nModerno",
+    x: -4.0,
+    y: 8.5,
+    color: "#dc2626",
+    opacity: GLOBAL_OPACITY,
+    description:
+      "Herdeiro da ala radical da Revolução Francesa, defende uma República centralizada, laica e indivisível. Acredita que o Estado deve ser o instrumento de 'vontade geral' para erradicar privilégios e submeter os interesses particulares ao bem comum. Justifica a utilização do poder estatal forte e, se necessário, medidas de exceção para garantir a igualdade cívica e proteger os valores republicanos contra forças reacionárias.",
+  },
+  {
+    name: "Progressismo\nAutoritário",
+    x: -1.5,
+    y: 6.5,
+    color: "#6d28d9",
+    opacity: GLOBAL_OPACITY,
+    description:
+      "Corrente que utiliza o poder do Estado e da burocracia central para impor reformas sociais e culturais progressistas. Ao contrário do progressismo liberal, que foca na mudança orgânica, esta vertente defende o uso de legislação punitiva, reengenharia social e controlo das instituições para acelerar a justiça social e a inclusão de minorias, acreditando que a autoridade estatal é necessária para vencer resistências culturais tradicionais.",
+  },
+
+  // ═══ ZONAS VERDES: CENTRO-AUTORITÁRIO E DIREITA TRADICIONAL ═══
+
+  {
+    name: "Nacionalismo\nCívico",
+    x: 1.5,
+    y: 5.5,
+    color: "#1e40af",
+    opacity: GLOBAL_OPACITY,
+    description:
+      "Defende que a nação é uma comunidade política baseada na cidadania e na lealdade às instituições do Estado, e não na etnia. Promove um Estado forte e centralizado como garante da identidade coletiva e da ordem, mas opera num quadro de mercado regulado. Procura a unidade nacional através da integração cultural e do patriotismo constitucional, situando-se entre o conservadorismo e o centrismo autoritário.",
+  },
+  {
+    name: "Integralismo",
+    x: 7.0,
+    y: 8.0,
+    color: "#0f172a",
+    opacity: GLOBAL_OPACITY,
+    description:
+      "Doutrina que visualiza a sociedade como um organismo hierárquico onde cada classe e instituição (como a família, sindicatos verticais e a Igreja) deve estar integrada num Estado forte e corporativo. Rejeita o individualismo liberal e o conflito de classes marxista em favor de uma ordem moral tradicional e nacionalista, defendendo que a liberdade individual só existe quando subordinada à harmonia e aos fins espirituais da nação.",
+  },
+
+  // ═══ ZONAS VERDES: ESQUERDA RADICAL LIBERTÁRIA ═══
+
+  {
+    name: "Comunismo\nde Conselhos",
+    x: -9.5,
+    y: -2.0,
+    color: "#991b1b",
+    opacity: GLOBAL_OPACITY,
+    description:
+      "Vertente do marxismo que rejeita o partido de vanguarda e o centralismo estatal. Defende que a revolução deve ser gerida diretamente pelos conselhos operários (sovietes) eleitos democraticamente nos locais de trabalho. Procura a abolição do Estado em favor de uma federação de comunas e conselhos, onde o poder económico e político é exercido de baixo para cima sem burocracias profissionais.",
+  },
+  {
+    name: "Anarco-\nSindicalismo",
+    x: -9.0,
+    y: -4.5,
+    color: "#000000",
+    opacity: GLOBAL_OPACITY,
+    description:
+      "Método de organização revolucionária através de sindicatos autogeridos pelos trabalhadores. Defende que o sindicato é o instrumento tanto para a luta contra o capitalismo como para a gestão da futura sociedade sem Estado. Utiliza a ação direta e a greve geral para substituir o governo e o mercado por uma rede de associações de produtores livres que gerem a produção conforme as necessidades sociais.",
+  },
+
+  // ═══ ZONAS VERDES: CENTRO E DIREITA LIBERTÁRIA ═══
+
+  {
+    name: "Humanismo\nSecular",
+    x: -1.0,
+    y: -5.5,
+    color: "#8b5cf6",
+    opacity: GLOBAL_OPACITY,
+    description:
+      "Filosofia ética centrada no ser humano, na razão e na ciência, rejeitando dogmas religiosos ou autoritarismos políticos. No espectro político, traduz-se numa defesa intransigente das liberdades civis, da autonomia corporal e do secularismo. Representa um progressismo libertário que apoia um Estado mínimo necessário apenas para proteger os direitos humanos e garantir a igualdade de oportunidades num quadro de tolerância radical.",
+  },
+  {
+    name: "Voluntarismo",
+    x: 9.5,
+    y: -7.5,
+    color: "#4ade80",
+    opacity: GLOBAL_OPACITY,
+    description:
+      "Filosofia política radical que defende que todas as formas de interação humana devem ser estritamente voluntárias. Argumenta que o Estado, por basear-se no uso da força (impostos e leis impostas), é intrinsecamente ilegítimo. Propõe que todos os serviços, incluindo justiça e segurança, devem ser fornecidos através de contratos privados e cooperação voluntária entre indivíduos soberanos num mercado totalmente livre.",
   },
 ];

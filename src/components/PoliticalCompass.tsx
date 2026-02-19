@@ -1,7 +1,7 @@
 import { Party } from "@/data/parties";
 import { QuizResult, StoredResult } from "@/lib/scoring";
 import { Ideology, ideologies } from "@/data/ideologies";
-import { memo, useMemo, useState, useCallback } from "react";
+import { memo, useMemo, useState, useCallback, useEffect } from "react";
 import IdeologyModal from "@/components/IdeologyModal";
 import IdeologyTooltip from "@/components/IdeologyTooltip";
 
@@ -26,14 +26,56 @@ function toY(value: number): number {
   return PADDING + ((10 - value) / 20) * INNER;
 }
 
+// Get responsive compass size based on viewport
+function getResponsiveCompassSize(): { size: number; padding: number; fontSize: { label: number; party: number; axis: number } } {
+  if (typeof window === "undefined") {
+    return { size: COMPASS_SIZE, padding: PADDING, fontSize: { label: 10, party: 13, axis: 11 } };
+  }
+  
+  const width = window.innerWidth;
+  
+  if (width < 640) {
+    // Mobile: 320-640px
+    return {
+      size: 400,
+      padding: 25,
+      fontSize: { label: 7, party: 10, axis: 8 },
+    };
+  } else if (width < 1024) {
+    // Tablet: 640-1024px
+    return {
+      size: 550,
+      padding: 32,
+      fontSize: { label: 8, party: 11, axis: 9 },
+    };
+  }
+  
+  // Desktop: 1024px+
+  return {
+    size: COMPASS_SIZE,
+    padding: PADDING,
+    fontSize: { label: 10, party: 13, axis: 11 },
+  };
+}
+
 const IdeologyLayer = memo(function IdeologyLayer({
   onHoverIdeology,
   onLeaveIdeology,
   onClickIdeology,
+  padding,
+  inner,
+  toX,
+  toY,
+  fontSize,
 }: {
   onHoverIdeology: (ideo: Ideology, e: React.MouseEvent) => void;
   onLeaveIdeology: () => void;
   onClickIdeology: (ideo: Ideology) => void;
+  padding: number;
+  inner: number;
+  toX: (value: number) => number;
+  toY: (value: number) => number;
+  fontSize: number;
 }) {
   const ideologyCoords = useMemo(
     () =>
@@ -43,7 +85,7 @@ const IdeologyLayer = memo(function IdeologyLayer({
         iy: toY(ideo.y),
         lines: ideo.name.split("\n"),
       })),
-    [],
+    [toX, toY],
   );
 
   return (
@@ -71,7 +113,7 @@ const IdeologyLayer = memo(function IdeologyLayer({
               y={iy + (li - (lines.length - 1) / 2) * 11}
               textAnchor="middle"
               dominantBaseline="central"
-              fontSize={10}
+              fontSize={fontSize}
               fontWeight={500}
               fill={ideo.color}
               className="select-none pointer-events-none opacity-30 group-hover:opacity-100 transition-all duration-200 uppercase tracking-tighter"
@@ -86,9 +128,17 @@ const IdeologyLayer = memo(function IdeologyLayer({
   );
 });
 
-const GridLayer = memo(function GridLayer() {
+const GridLayer = memo(function GridLayer({
+  padding,
+  inner,
+  compassSize,
+}: {
+  padding: number;
+  inner: number;
+  compassSize: number;
+}) {
   const lines = Array.from({ length: 21 }, (_, i) => {
-    const pos = PADDING + (i / 20) * INNER;
+    const pos = padding + (i / 20) * inner;
     const isCenter = i === 10;
     return { pos, isCenter };
   });
@@ -99,9 +149,9 @@ const GridLayer = memo(function GridLayer() {
         <g key={pos}>
           <line
             x1={pos}
-            y1={PADDING}
+            y1={padding}
             x2={pos}
-            y2={PADDING + INNER}
+            y2={padding + inner}
             stroke="currentColor"
             className={
               isCenter ? "text-foreground/20" : "text-foreground/[0.04]"
@@ -110,9 +160,9 @@ const GridLayer = memo(function GridLayer() {
           />
           <line
             y1={pos}
-            x1={PADDING}
+            x1={padding}
             y2={pos}
-            x2={PADDING + INNER}
+            x2={padding + inner}
             stroke="currentColor"
             className={
               isCenter ? "text-foreground/20" : "text-foreground/[0.04]"
@@ -132,6 +182,26 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
   );
   const [hoveredIdeology, setHoveredIdeology] = useState<Ideology | null>(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
+  const [windowSize, setWindowSize] = useState(() => getResponsiveCompassSize());
+
+  // Handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize(getResponsiveCompassSize());
+    };
+    
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const compassSize = windowSize.size;
+  const padding = windowSize.padding;
+  const inner = compassSize - padding * 2;
+  const fontSize = windowSize.fontSize;
+
+  // Create responsive coordinate functions
+  const toXResponsive = (value: number) => padding + ((value + 10) / 20) * inner;
+  const toYResponsive = (value: number) => padding + ((10 - value) / 20) * inner;
 
   // Gestão de Viewport Mobile
   const handleInteraction = useCallback((callback?: () => void) => {
@@ -152,43 +222,43 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
     if (type === "ideology") setHoveredIdeology(null);
   }, []);
 
-  const userX = toX(userResult.economicScore);
-  const userY = toY(userResult.authorityScore);
+  const userX = toXResponsive(userResult.economicScore);
+  const userY = toYResponsive(userResult.authorityScore);
   const limitedPast = useMemo(() => pastResults.slice(-10), [pastResults]);
 
   return (
-    <div className="relative w-full max-w-[800px] mx-auto p-6 bg-background rounded-3xl border transition-all">
+    <div className="relative w-full max-w-[800px] mx-auto p-2 sm:p-3 bg-background rounded-3xl border transition-all">
       <svg
-        viewBox={`0 0 ${COMPASS_SIZE} ${COMPASS_SIZE}`}
+        viewBox={`0 0 ${compassSize} ${compassSize}`}
         className="w-full h-auto overflow-visible"
       >
         <g id="quadrants" opacity={0.03}>
           <rect
-            x={PADDING}
-            y={PADDING}
-            width={INNER / 2}
-            height={INNER / 2}
+            x={padding}
+            y={padding}
+            width={inner / 2}
+            height={inner / 2}
             fill="#ff4b4b"
           />
           <rect
-            x={PADDING + INNER / 2}
-            y={PADDING}
-            width={INNER / 2}
-            height={INNER / 2}
+            x={padding + inner / 2}
+            y={padding}
+            width={inner / 2}
+            height={inner / 2}
             fill="#f59e0b"
           />
           <rect
-            x={PADDING}
-            y={PADDING + INNER / 2}
-            width={INNER / 2}
-            height={INNER / 2}
+            x={padding}
+            y={padding + inner / 2}
+            width={inner / 2}
+            height={inner / 2}
             fill="#10b981"
           />
           <rect
-            x={PADDING + INNER / 2}
-            y={PADDING + INNER / 2}
-            width={INNER / 2}
-            height={INNER / 2}
+            x={padding + inner / 2}
+            y={padding + inner / 2}
+            width={inner / 2}
+            height={inner / 2}
             fill="#3b82f6"
           />
         </g>
@@ -199,23 +269,28 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
           onClickIdeology={(ideo) =>
             handleInteraction(() => setSelectedIdeology(ideo))
           }
+          padding={padding}
+          inner={inner}
+          toX={toXResponsive}
+          toY={toYResponsive}
+          fontSize={fontSize.label}
         />
 
-        <GridLayer />
+        <GridLayer padding={padding} inner={inner} compassSize={compassSize} />
 
         {limitedPast.map((r, i) => (
           <circle
             key={r.id || i}
-            cx={toX(r.economicScore)}
-            cy={toY(r.authorityScore)}
+            cx={toXResponsive(r.economicScore)}
+            cy={toYResponsive(r.authorityScore)}
             r={5}
             className="fill-primary/10 stroke-background stroke-1"
           />
         ))}
 
         {parties.map((party) => {
-          const px = toX(party.x);
-          const py = toY(party.y);
+          const px = toXResponsive(party.x);
+          const py = toYResponsive(party.y);
           const isHovered = hoveredParty?.shortName === party.shortName;
 
           return (
@@ -238,7 +313,7 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
                 x={px}
                 y={py - 18}
                 textAnchor="middle"
-                fontSize={13}
+                fontSize={fontSize.party}
                 fontWeight={800}
                 className="fill-foreground select-none pointer-events-none tracking-tight"
               >
@@ -259,7 +334,7 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
             x={userX}
             y={userY - 20}
             textAnchor="middle"
-            fontSize={16}
+            fontSize={fontSize.party}
             fontWeight={950}
             className="fill-primary uppercase tracking-tighter"
           >
@@ -267,30 +342,33 @@ function PoliticalCompass({ parties, userResult, pastResults = [] }: Props) {
           </text>
         </g>
 
-        <g className="fill-muted-foreground/40 text-[11px] font-black uppercase tracking-[0.2em] pointer-events-none">
-          <text x={COMPASS_SIZE / 2} y={PADDING - 30} textAnchor="middle">
+        <g className="fill-muted-foreground/40 font-black uppercase tracking-[0.2em] pointer-events-none">
+          <text x={compassSize / 2} y={padding - 30} textAnchor="middle" fontSize={fontSize.axis}>
             Autoritário
           </text>
           <text
-            x={COMPASS_SIZE / 2}
-            y={COMPASS_SIZE - PADDING + 45}
+            x={compassSize / 2}
+            y={compassSize - padding + 45}
             textAnchor="middle"
+            fontSize={fontSize.axis}
           >
             Libertário
           </text>
           <text
-            x={PADDING - 35}
-            y={COMPASS_SIZE / 2}
+            x={padding - 35}
+            y={compassSize / 2}
             textAnchor="middle"
-            transform={`rotate(-90, ${PADDING - 35}, ${COMPASS_SIZE / 2})`}
+            fontSize={fontSize.axis}
+            transform={`rotate(-90, ${padding - 35}, ${compassSize / 2})`}
           >
             Esquerda
           </text>
           <text
-            x={COMPASS_SIZE - PADDING + 35}
-            y={COMPASS_SIZE / 2}
+            x={compassSize - padding + 35}
+            y={compassSize / 2}
             textAnchor="middle"
-            transform={`rotate(90, ${COMPASS_SIZE - PADDING + 35}, ${COMPASS_SIZE / 2})`}
+            fontSize={fontSize.axis}
+            transform={`rotate(90, ${compassSize - padding + 35}, ${compassSize / 2})`}
           >
             Direita
           </text>

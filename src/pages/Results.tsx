@@ -116,8 +116,8 @@ export default function Results() {
   return (
     <div className="min-h-screen bg-background flex flex-col overflow-x-hidden">
       <AppHeader />
-      <main className="flex-1 container max-w-5xl mx-auto px-4 py-8 space-y-12">
-        <section className="text-center space-y-4 px-2">
+      <main className="flex-1 container max-w-5xl mx-auto px-4 py-3 space-y-6">
+        <section className="text-center space-y-2 px-2">
           <motion.h1
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

@@ -21,7 +21,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/quiz" element={<Quiz />} />
           <Route path="/resultados" element={<Results />} />
-          <Route path="/bussola" element={<Bussola />} />
+          <Route path="/histórico" element={<Bussola />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </HashRouter>

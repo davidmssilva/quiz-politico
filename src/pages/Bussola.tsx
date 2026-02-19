@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   loadHistory,
   clearHistory,
@@ -57,11 +57,9 @@ const getProfileDescription = (result: StoredResult): string => {
 
 export default function Bussola() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [history, setHistory] = useState<StoredResult[]>(() => loadHistory());
-  const [selected, setSelected] = useState<StoredResult | null>(() => {
-    const hist = loadHistory();
-    return hist.length > 0 ? hist[hist.length - 1] : null;
-  });
+  const [selected, setSelected] = useState<StoredResult | null>(null);
 
   const liveResult = useMemo(() => {
     const session = loadSession();
@@ -142,7 +140,7 @@ export default function Bussola() {
     <div className="min-h-screen bg-background flex flex-col overflow-x-hidden">
       <AppHeader showBussola={false} />
 
-      <main className="flex-1 container max-w-6xl mx-auto px-4 py-6 space-y-12">
+      <main className="flex-1 container max-w-6xl mx-auto px-4 py-3 space-y-6">
         {/* 1. Histórico Horizontal */}
         <div className="space-y-3">
           <div className="flex items-center gap-2 px-1">
@@ -156,7 +154,7 @@ export default function Bussola() {
             {history.length > 0 && (
               <button
                 onClick={handleClear}
-                className="flex-shrink-0 flex flex-col items-center justify-center w-24 h-16 rounded-2xl border border-dashed border-destructive/30 bg-destructive/5 hover:bg-destructive/10 text-destructive transition-colors"
+                className="flex-shrink-0 flex flex-col items-center justify-center w-24 h-20 rounded-2xl border border-dashed border-destructive/30 bg-destructive/5 hover:bg-destructive/10 text-destructive transition-colors"
               >
                 <Trash2 className="w-4 h-4 mb-1" />
                 <span className="text-[10px] font-bold uppercase">Limpar</span>
@@ -166,7 +164,7 @@ export default function Bussola() {
             {liveResult && (
               <button
                 onClick={() => setSelected(null)}
-                className={`flex-shrink-0 flex flex-col justify-between w-32 h-16 p-3 rounded-2xl border transition-all ${
+                className={`flex-shrink-0 flex flex-col justify-between w-32 h-20 p-3 rounded-2xl border transition-all ${
                   !selected
                     ? "bg-primary text-primary-foreground border-primary ring-2 ring-primary/20"
                     : "bg-card border-border hover:border-primary/50"
@@ -216,7 +214,7 @@ export default function Bussola() {
 
         {hasNoData ? (
           <div className="flex flex-col items-center justify-center py-20 text-center space-y-4">
-            <p className="text-muted-foreground italic">Sem dados guardados.</p>
+            <p className="text-muted-foreground italic">Nada por guardar.</p>
             <Button onClick={() => navigate("/quiz")} className="rounded-full">
               Começar Quiz
             </Button>
