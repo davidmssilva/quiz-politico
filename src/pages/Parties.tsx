@@ -202,7 +202,7 @@ export default function Parties() {
                     >
                       <div className="px-4 sm:px-5 py-4 bg-muted/30">
                         <p className="text-sm text-muted-foreground leading-relaxed mb-4 font-normal">
-                          {party.description}
+                          {party.longDescription}
                         </p>
                         <div className="grid grid-cols-2 gap-3 text-xs mb-4">
                           <div>

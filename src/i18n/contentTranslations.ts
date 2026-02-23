@@ -417,98 +417,121 @@ export const questionTranslations: Record<number, { text: string; category: stri
   }
 };
 
-export const partyTranslations: Record<string, { name: string; description: string }> = {
+export const partyTranslations: Record<string, { name: string; description: string; longDescription: string }> = {
   "MRPP": {
-    name: "Partido Comunista dos Trabalhadores Portugueses",
-    description: "Revolutionary Maoism, fully planned economy, vanguard party, anti-capitalism and absolute national sovereignty."
+    name: "Partido Comunista Trabalhadores Portugueses",
+    description: "Revolutionary Maoism, fully planned economy, vanguard party, anti-capitalism and absolute national sovereignty.",
+    longDescription: "Founded in 1970, MRPP was one of the main opposition movements to the Estado Novo dictatorship. Historically aligned with Maoism, it advocates for a proletarian revolution and the dictatorship of the proletariat. The party sees itself as the true and only vanguard of the working class, rejecting the 'revisionism' of PCP and positioning itself as the authentic defender of pure communism, fighting for a classless society and the end of capitalist exploitation."
   },
   "MAS": {
     name: "Movimento Alternativa Socialista",
-    description: "Trotskyism, internationalist socialism, workers' democracy, strong social progressivism and structural critique of capitalism."
+    description: "Trotskyism, internationalist socialism, workers' democracy, strong social progressivism and structural critique of capitalism.",
+    longDescription: "Founded in 2000, MAS is a radical left-wing Portuguese political party rooted in the Trotskyist tradition. It emerged from a split within Bloco de Esquerda and seeks to represent workers and the precarious youth. The party sees itself as the true anti-capitalist and revolutionary voice, refusing alliances with the institutional left (like PS) and focusing on grassroots mobilization, strikes, and social movements to achieve a government run by the workers themselves."
   },
   "PCP": {
     name: "Partido Comunista Português",
-    description: "Marxism-Leninism, state control of economy, national sovereignty and structural opposition to European federalism."
+    description: "Marxism-Leninism, state control of economy, national sovereignty and structural opposition to European federalism.",
+    longDescription: "Founded in 1921, PCP is a Marxist-Leninist party with a strong trade union base, particularly in the CGTP. It played a fundamental role in the anti-fascist resistance and the Carnation Revolution. The party prides itself on being the 'party of the workers,' maintaining a centralized and disciplined organization. It sees itself as an essential patriotic and internationalist force for the defense of labor rights, rejecting submission to the dictates of the European Union and big capital."
   },
   "PEV": {
-    name: "Os Verdes",
-    description: "Ecosocialism, planned sustainable economy, environmental progressivism and critical European sovereignism."
+    name: "Partido Ecologista Os Verdes",
+    description: "Ecosocialism, planned sustainable economy, environmental progressivism and critical European sovereignism.",
+    longDescription: "Created in 1982, the PEV is the oldest ecologist party in Portugal and frequently acts in coalition with the PCP through the CDU. It focuses on the intersection between social justice and environmental protection. The Greens see themselves as the consistent voice of political ecology in Portugal, arguing that there is no true environmentalism without ending capitalist exploitation and combating social and regional inequalities."
   },
   "BE": {
     name: "Bloco de Esquerda",
-    description: "Libertarian socialism, economic redistribution, participatory democracy and advanced social progressivism."
+    description: "Libertarian socialism, economic redistribution, participatory democracy and advanced social progressivism.",
+    longDescription: "Bloco de Esquerda was founded in 1999 through the convergence of various radical left forces (Trotskyists, ex-PCP, and Maoists). Over the years, it became the main force to the left of PS, advocating for strong welfare policies, feminism, LGBTQ+ rights, and sustainability. BE sees itself as a modern, pluralistic, and transformative left, capable of combining democratic socialism with new social movements, serving as the main alternative against austerity and precariousness."
   },
   "L": {
     name: "LIVRE",
-    description: "Democratic ecosocialism, radical social progressivism and complete European federalism."
+    description: "Democratic ecosocialism, radical social progressivism and complete European federalism.",
+    longDescription: "Founded in 2014, LIVRE was created around academic and activist figures, aiming to unite the ecologist and pro-European left. It stands out for its open primary elections. The party sees itself as the 'green pro-European left,' positioning itself as a bridge for constructive dialogue among various progressive political forces. It considers itself pragmatic, utopian, and deeply focused on a just ecological transition, universal basic income, and a solidary federal Europe."
   },
   "PTP": {
     name: "Partido Trabalhista Português",
-    description: "Reformist socialism, workers' defense, mixed economy and moderate sovereignty."
+    description: "Reformist socialism, workers' defense, mixed economy and moderate sovereignty.",
+    longDescription: "Founded in 1979, PTP was created to defend working-class interests in a more centrist way than traditional communist parties. It has had some projection, especially in Madeira. The party sees itself as the party of the 'working people,' focusing on exposing corruption, defending pensioners' rights, and fighting established political elites. It adopts an anti-establishment stance within the moderate left, often using populist rhetoric to advocate for public transparency."
   },
   "PS": {
     name: "Partido Socialista",
-    description: "Social democracy, regulated market economy, strong welfare state and European integration."
+    description: "Social democracy, regulated market economy, strong welfare state and European integration.",
+    longDescription: "Partido Socialista, founded in 1973 in Germany, is one of the two pillars of the post-Carnation Revolution Portuguese party system. Originally Marxist, it evolved into standard center-left social democracy. The party sees itself as the 'party of the Welfare State' and the country's modernization, styling itself as the great driver of Portugal's European integration, economic development with social justice, and governmental stability."
   },
   "PAN": {
     name: "Pessoas-Animais-Natureza",
-    description: "Environmental progressivism, sustainable economy and animal rights defense."
+    description: "Environmental progressivism, sustainable economy and animal rights defense.",
+    longDescription: "Founded in 2009, Pessoas-Animais-Natureza introduced animal welfare and biocentrism to the national political agenda. PAN focuses on overcoming the anthropocentric vision of society. It sees itself as a vanguard, post-ideological party (neither left nor right), whose mission is to be the voice for those who lack political representation (animals and nature), promoting a transition to a green, peaceful economy highly sensitive to ecological balances."
   },
   "Volt": {
     name: "Volt Portugal",
-    description: "Progressive social liberalism and total European federalism."
+    description: "Progressive social liberalism and total European federalism.",
+    longDescription: "Founded in 2018, Volt Portugal is the Portuguese chapter of the pan-European movement Volt Europa. It focuses on evidence-based policies and best practices shared across European countries. The party sees itself as the first truly European party, focused on pragmatism, innovation, and solving structural problems. Rejecting old left-right dogmas, Volt defines itself by its commitment to creating a United States of Europe, combating populism, and fostering technological and social progress."
   },
   "JPP": {
-    name: "Juntos Pelo Povo",
-    description: "Pragmatic centrism, democratic regionalism and local governance."
+    name: "Juntos pelo Povo",
+    description: "Pragmatic centrism, democratic regionalism and local governance.",
+    longDescription: "Founded in 2015, Juntos pelo Povo was born as an independent citizens' movement on the island of Madeira, focused on solving concrete local problems, later expanding into a national party. The party sees itself as the ultimate expression of active citizenship and municipalism, distancing itself from grand national ideological disputes to focus on government transparency, fighting monopolies (especially regional ones), and providing quick, pragmatic responses to the population's needs."
   },
   "R.I.R.": {
     name: "Reagir Incluir Reciclar",
-    description: "Moderate social populism, community defense and economic sovereignty."
+    description: "Moderate social populism, community defense and economic sovereignty.",
+    longDescription: "Founded in 2014 by the popular figure Vitorino Silva (Tino de Rans), R.I.R. is a party with a strong humanist and grassroots component. It focuses on everyday issues and common sense. The party sees itself as the true 'voice of the genuine people,' far from Lisbon's elites and traditional politicians. Its identity relies on a politics of proximity, plain language, and direct contact with people, appealing to a positive and affable protest vote."
   },
   "MPT": {
     name: "Partido da Terra",
-    description: "Humanist ecology, sustainable market economy and moderate conservatism."
+    description: "Humanist ecology, sustainable market economy and moderate conservatism.",
+    longDescription: "Partido da Terra was founded in 1993 and is distinguished by its center-right ecologism. It combines concerns about land management with liberal and conservative principles. MPT sees itself as the voice of 'humanist and realistic ecologism,' arguing that economic development and free enterprise are not incompatible with environmental protection, calling for policies based on balanced management of natural resources without the radical anti-capitalist component."
   },
   "NC": {
     name: "Nós, Cidadãos!",
-    description: "Social liberalism, institutional reform and democratic Europeanism."
+    description: "Social liberalism, institutional reform and democratic Europeanism.",
+    longDescription: "Founded in 2011, Nós, Cidadãos! emerged following the Troika intervention, driven by academics and liberal professionals, calling for the reform of the electoral and political system. The party sees itself as an outraged civic movement that transitioned into formal politics. It positions itself as an anti-corruption, pro-European force and a staunch defender of the renewal of democratic institutions, focusing on reducing the state's burden and promoting meritocracy."
   },
   "AT": {
     name: "(A)TUA",
-    description: "Social distributism, pensioners' defense and moderate conservatism."
+    description: "Social distributism, pensioners' defense and moderate conservatism.",
+    longDescription: "Founded in 2011 as the United Party of Retirees and Pensioners (PURP), it later reorganized as (A)TUA. It was initially designed to combat the loss of purchasing power and dignity of the elderly after the austerity crisis. The party sees itself as the protective shield for the generation that built the country, rejecting conventional ideological divides to demand an end to corruption, better healthcare, and fair pensions for all those it considers to have been abandoned by the system."
   },
   "PPD/PSD": {
     name: "Partido Social Democrata",
-    description: "Liberal conservatism, market economy and European integration."
+    description: "Liberal conservatism, market economy and European integration.",
+    longDescription: "Founded in 1974, Partido Social Democrata (despite its name, which dates back to its reformist roots) is the main pillar of the Portuguese center-right. Alongside PS, it has dominated the country's governance during democracy. The party sees itself as the inter-class force of freedom, personalist humanism, and economic progress. It styles itself as the party of structural reforms, financial responsibility, and unequivocal support for private enterprise."
   },
   "PLS": {
     name: "Partido Liberal Social",
-    description: "Social liberalism, market economy and moderate progressivism."
+    description: "Social liberalism, market economy and moderate progressivism.",
+    longDescription: "Founded in 2019, Partido Liberal Social brings forward proposals from the moderate liberal spectrum, seeking space between PS and PSD. It advocates a modern approach that reconciles economic freedom with a strong social safety net. The party sees itself as the representative of balanced liberalism, focused on an efficient, transparent, and small state, but capable of guaranteeing equal opportunities and social development without dogmatic prejudices."
   },
   "IL": {
     name: "Iniciativa Liberal",
-    description: "Classical liberalism, minimal state and economic freedom."
+    description: "Classical liberalism, minimal state and economic freedom.",
+    longDescription: "Iniciativa Liberal, founded in 2017, forcefully brought classical economic and political liberalism to the Portuguese parliamentary debate. It adopts a markedly anti-statist and reformist vision. IL sees itself as the only force capable of pulling Portugal from the 'tail end of Europe' through radical tax cuts, ending state monopolies, and fiercely defending freedom of choice in education and health, harshly criticizing the 'socialism' that dominates the political system."
   },
   "CDS-PP": {
     name: "CDS - Partido Popular",
-    description: "Christian democracy, social conservatism and market economy."
+    description: "Christian democracy, social conservatism and market economy.",
+    longDescription: "Founded in 1974, CDS - Partido Popular has strong roots in European Christian democracy. Historically positioned to the right of PSD, with whom it frequently governs in coalition. The party sees itself as the great conservative bastion of the traditional Portuguese right, founded on the uncompromising defense of the family, the promotion of life, patriotism, the rural world, support for security forces, and the principle of economic subsidiarity."
   },
   "PPM": {
     name: "Partido Popular Monárquico",
-    description: "Monarchism, conservative traditionalism and national sovereignism."
+    description: "Monarchism, conservative traditionalism and national sovereignism.",
+    longDescription: "PPM, founded in 1974, combines the defense of the monarchist cause and the restoration of the crown with deep conservatism and incipient ecologism (historically introduced by Gonçalo Ribeiro Telles). The party sees itself as the authentic heir to Portugal's tradition and history, advocating for the King as the ultimate figure of institutional impartiality, opposing the Republic, and valuing decentralization, respect for the land, and Catholic socio-cultural matrices."
   },
   "ND": {
     name: "NOVA DIREITA",
-    description: "National conservatism, state authority and national sovereignty."
+    description: "National conservatism, state authority and national sovereignty.",
+    longDescription: "Founded in 2021, NOVA DIREITA presents itself as a conservative and sovereignist force in the national landscape. It focuses on bridging the gap between the traditional democratic right (PSD/CDS) and the radical populist right. The party sees itself as a 'strong, unapologetic, and constructive' right, highly valuing national identity, the demanding and controlled integration of immigrants, and an authoritative yet surgical state presence to restore order and traditional values."
   },
   "ADN": {
     name: "Alternativa Democrática Nacional",
-    description: "Radical conservatism, national sovereignty and state authority."
+    description: "Radical conservatism, national sovereignty and state authority.",
+    longDescription: "Founded in 2019 (formerly PDR founded by Marinho e Pinto), ADN underwent a radical rightward shift in recent years. It has gained traction through sharp skepticism toward global institutions. The party sees itself as the last stronghold defending Christian values and Portugal's non-negotiable sovereignty against globalist agendas ('woke' and gender ideologies), adopting a strong anti-system and, in various instances, health-denialist stance."
   },
   "CH": {
     name: "CHEGA",
-    description: "Populist national conservatism, state authority and sovereignism."
+    description: "Populist national conservatism, state authority and sovereignism.",
+    longDescription: "CHEGA was founded in 2019 and quickly established itself as the third-largest political force in Portugal, disrupting decades of bloc dynamics. It is characterized by a strongly securitarian and national-populist discourse. The party sees itself as the courageous voice of the 'silent majority' and of good, ordinary Portuguese citizens who are tired of corruption, the system's impunity (the 'regime'), and 'laxity' regarding borders and justice, openly assuming itself as the true and only anti-system patriotic right."
   }
 };
 
@@ -774,11 +797,15 @@ export function getTranslatedQuestion(id: number, locale: string, originalText: 
   return { text: originalText, category: originalCategory };
 }
 
-export function getTranslatedParty(shortName: string, locale: string, originalName: string, originalDescription: string) {
+export function getTranslatedParty(shortName: string, locale: string, originalName: string, originalDescription: string, originalLongDescription?: string) {
   if (locale === 'en' && partyTranslations[shortName]) {
     return partyTranslations[shortName];
   }
-  return { name: originalName, description: originalDescription };
+  return { 
+    name: originalName, 
+    description: originalDescription,
+    longDescription: originalLongDescription || originalDescription
+  };
 }
 
 export function getTranslatedIdeology(name: string, locale: string, originalDescription: string) {

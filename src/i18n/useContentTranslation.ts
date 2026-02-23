@@ -25,11 +25,12 @@ export function useTranslatedParties(parties: Party[]): Party[] {
   if (locale === 'pt') return parties;
   
   return parties.map(p => {
-    const translated = getTranslatedParty(p.shortName, locale, p.name, p.description);
+    const translated = getTranslatedParty(p.shortName, locale, p.name, p.description, p.longDescription);
     return {
       ...p,
       name: translated.name,
-      description: translated.description
+      description: translated.description,
+      longDescription: translated.longDescription || p.longDescription
     };
   });
 }
