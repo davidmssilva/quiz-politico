@@ -3,8 +3,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
 import { questions } from "@/data/questions";
-import { parties } from "@/data/parties";
+import { parties as originalParties } from "@/data/parties";
 import { ideologies } from "@/data/ideologies";
+import { useTranslatedParties } from "@/i18n/useContentTranslation";
+import { useI18n } from "@/i18n/i18nContext";
 import {
   calculateResult,
   rankParties,
@@ -26,6 +28,8 @@ import ResultsGrid from "@/components/ResultsGrid";
 export default function Results() {
   const location = useLocation();
   const navigate = useNavigate();
+  const parties = useTranslatedParties(originalParties);
+  const { t } = useI18n();
 
   useEffect(() => {
     updateMetaTags(SEO_CONFIGS.results);
@@ -103,9 +107,9 @@ export default function Results() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center space-y-4">
         <h2 className={TYPOGRAPHY.heading.h2}>
-          Sem dados de resultados
+          {t('resultsPage.noData')}
         </h2>
-        <Button onClick={() => navigate("/")}>Voltar ao Início</Button>
+        <Button onClick={() => navigate("/")}>{t('resultsPage.backToHome')}</Button>
       </div>
     );
   }
@@ -116,7 +120,7 @@ export default function Results() {
     scores.socialScore,
     scores.sovereigntyScore
   );
-  const shareText = `O meu perfil político para 2026! Partido mais próximo: ${ranked[0]?.shortName}.`;
+  const shareText = t('resultsPage.shareText', { party: ranked[0]?.shortName || '' });
 
   return (
     <div className="min-h-screen bg-background flex flex-col overflow-x-hidden">
@@ -128,12 +132,11 @@ export default function Results() {
             animate={{ opacity: 1 }}
             className="font-sans text-3xl md:text-4xl font-black leading-tight"
           >
-            A Tua <span className="text-primary italic">Identidade</span>{" "}
-            Política
+            {t('resultsPage.yourIdentity')} <span className="text-primary italic">{t('resultsPage.politicalIdentity')}</span>
           </motion.h1>
           {isReadOnly && (
             <p className="text-xs font-bold text-primary uppercase tracking-widest bg-primary/10 w-fit mx-auto px-3 py-1 rounded-full">
-              Modo de Visualização
+              {t('resultsPage.viewMode')}
             </p>
           )}
         </section>
@@ -150,16 +153,13 @@ export default function Results() {
         {/* Nota Metodológica no Fim de Tudo */}
         <div className="w-full mx-auto p-6 rounded-2xl bg-secondary/20 border border-border/50">
           <h4 className="font-sans text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
-            Nota Metodológica
+            {t('resultsPage.methodologyTitle')}
           </h4>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            A proximidade é calculada através da distância euclidiana num espaço
-            multidimensional que inclui os 4 eixos (Economia, Autoridade,
-            Sociedade e Soberania).
+            {t('resultsPage.methodologyDesc1')}
           </p>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            O valor reflete a compatibilidade entre a tua posição e o programa
-            oficial dos partidos para 2026.
+            {t('resultsPage.methodologyDesc2')}
           </p>
         </div>
 
@@ -183,7 +183,7 @@ export default function Results() {
             size="lg"
             className="w-full h-14 md:h-16 rounded-2xl font-bold text-base md:text-lg shadow-xl hover:shadow-primary/20 transition-all active:scale-[0.98]"
           >
-            Repetir Questionário
+            {t('resultsPage.repeatQuiz')}
           </Button>
         </footer>
       </main>

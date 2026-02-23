@@ -3,8 +3,11 @@ import { AppFooter } from "@/components/AppFooter";
 import { TYPOGRAPHY } from "@/lib/typography";
 import { useEffect } from "react";
 import { updateMetaTags, SEO_CONFIGS } from "@/lib/seo";
+import { useI18n } from "@/i18n/i18nContext";
 
 export default function Terms() {
+  const { t } = useI18n();
+  
   useEffect(() => {
     updateMetaTags(SEO_CONFIGS.terms);
   }, []);
@@ -14,32 +17,30 @@ export default function Terms() {
       
       <main className="flex-1 container max-w-4xl mx-auto px-4 py-12">
         <article className="prose prose-slate max-w-none">
-          <h1 className={TYPOGRAPHY.heading.h1}>Termos de Serviço</h1>
-          <p className="text-muted-foreground text-lg">Última atualização: 19 de fevereiro de 2026</p>
+          <h1 className={TYPOGRAPHY.heading.h1}>{t('terms.title')}</h1>
+          <p className="text-muted-foreground text-lg">{t('terms.lastUpdated')}</p>
           
           <section className="mt-8 space-y-6">
             <div>
-              <h2 className={TYPOGRAPHY.heading.h2}>Sobre Este Serviço</h2>
+              <h2 className={TYPOGRAPHY.heading.h2}>{t('terms.aboutServiceTitle')}</h2>
               <p className="text-base leading-relaxed">
-                A Bússola Política Portugal é uma ferramenta educacional gratuita que ajuda a compreender 
-                a sua posição no espectro político português através de um questionário de 100 perguntas.
+                {t('terms.aboutServiceDesc')}
               </p>
             </div>
 
             <div>
-              <h2 className={TYPOGRAPHY.heading.h2}>Natureza Educacional</h2>
+              <h2 className={TYPOGRAPHY.heading.h2}>{t('terms.educationalTitle')}</h2>
               <p className="text-base leading-relaxed">
-                Este website tem fins puramente educacionais. Os resultados são aproximações baseadas em 
-                programas políticos dos partidos e informações recolhidas da internet, não constituem aconselhamento político ou recomendações de voto.
+                {t('terms.educationalDesc')}
               </p>
             </div>
 
             <div>
-              <h2 className={TYPOGRAPHY.heading.h2}>Imparcialidade</h2>
+              <h2 className={TYPOGRAPHY.heading.h2}>{t('terms.impartialityTitle')}</h2>
               <p className="text-base leading-relaxed">
-                Comprometemo-nos a manter este projeto imparcial. As perguntas são baseadas em análise 
-                objetiva de programas políticos. Sugestões de melhoria são bem-vindas através da nossa 
-                <a href="/#/contacto" className="text-primary hover:underline"> página de contacto</a>.
+                {t('terms.impartialityDesc')}
+                {' '}
+                <a href="/#/contacto" className="text-primary hover:underline">{t('terms.contactLink')}</a>.
               </p>
             </div>
 
@@ -53,17 +54,16 @@ export default function Terms() {
             </div> */}
 
             <div>
-              <h2 className={TYPOGRAPHY.heading.h2}>Utilização</h2>
+              <h2 className={TYPOGRAPHY.heading.h2}>{t('terms.usageTitle')}</h2>
               <p className="text-base leading-relaxed">
-                Este é um serviço gratuito fornecido "como está". Por favor, utilize-o de forma responsável 
-                e não tente interferir com o seu funcionamento.
+                {t('terms.usageDesc')}
               </p>
             </div>
 
             <div>
-              <h2 className={TYPOGRAPHY.heading.h2}>Alterações</h2>
+              <h2 className={TYPOGRAPHY.heading.h2}>{t('terms.changesTitle')}</h2>
               <p className="text-base leading-relaxed">
-                Podemos atualizar estes termos ocasionalmente. A data da última atualização está indicada no topo desta página.
+                {t('terms.changesDesc')}
               </p>
             </div>
           </section>

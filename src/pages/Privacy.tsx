@@ -3,8 +3,11 @@ import { AppFooter } from "@/components/AppFooter";
 import { TYPOGRAPHY } from "@/lib/typography";
 import { useEffect } from "react";
 import { updateMetaTags, SEO_CONFIGS } from "@/lib/seo";
+import { useI18n } from "@/i18n/i18nContext";
 
 export default function Privacy() {
+  const { t } = useI18n();
+  
   useEffect(() => {
     updateMetaTags(SEO_CONFIGS.privacy);
   }, []);
@@ -14,24 +17,21 @@ export default function Privacy() {
       
       <main className="flex-1 container max-w-4xl mx-auto px-4 py-12">
         <article className="prose prose-slate max-w-none">
-          <h1 className={TYPOGRAPHY.heading.h1}>Política de Privacidade</h1>
-          <p className="text-muted-foreground text-lg">Última atualização: 19 de fevereiro de 2026</p>
+          <h1 className={TYPOGRAPHY.heading.h1}>{t('privacy.title')}</h1>
+          <p className="text-muted-foreground text-lg">{t('privacy.lastUpdated')}</p>
           
           <section className="mt-8 space-y-6">
             <div>
-              <h2 className={TYPOGRAPHY.heading.h2}>A Sua Privacidade</h2>
+              <h2 className={TYPOGRAPHY.heading.h2}>{t('privacy.yourPrivacyTitle')}</h2>
               <p className="text-base leading-relaxed">
-                Este é um projeto educacional gratuito. Levamos a sua privacidade a sério 
-                e mantemos tudo o mais simples possível.
+                {t('privacy.yourPrivacyDesc')}
               </p>
             </div>
 
             <div>
-              <h2 className={TYPOGRAPHY.heading.h2}>Os Seus Dados Ficam Consigo</h2>
+              <h2 className={TYPOGRAPHY.heading.h2}>{t('privacy.dataStaysTitle')}</h2>
               <p className="text-base leading-relaxed">
-                As suas respostas e resultados do questionário são guardados apenas no seu navegador 
-                (localStorage). Nunca enviamos estes dados para nenhum servidor. Pode apagar tudo a 
-                qualquer momento limpando os dados do navegador.
+                {t('privacy.dataStaysDesc')}
               </p>
             </div>
 
@@ -49,18 +49,18 @@ export default function Privacy() {
             </div> */}
 
             <div>
-              <h2 className={TYPOGRAPHY.heading.h2}>Partilha de Resultados</h2>
+              <h2 className={TYPOGRAPHY.heading.h2}>{t('privacy.sharingTitle')}</h2>
               <p className="text-base leading-relaxed">
-                Quando partilha os seus resultados, apenas as suas pontuações políticas são incluídas 
-                no URL. Nenhuma informação pessoal é partilhada.
+                {t('privacy.sharingDesc')}
               </p>
             </div>
 
             <div>
-              <h2 className={TYPOGRAPHY.heading.h2}>Questões?</h2>
+              <h2 className={TYPOGRAPHY.heading.h2}>{t('privacy.questionsTitle')}</h2>
               <p className="text-base leading-relaxed">
-                Se tiver dúvidas sobre privacidade, pode contactar-nos através da 
-                <a href="/#/contacto" className="text-primary hover:underline"> página de contacto</a>.
+                {t('privacy.questionsDesc')}
+                {' '}
+                <a href="/#/contacto" className="text-primary hover:underline">{t('privacy.contactLink')}</a>.
               </p>
             </div>
           </section>

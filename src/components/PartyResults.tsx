@@ -1,6 +1,8 @@
 import { Party } from "@/data/parties";
 import { motion } from "framer-motion";
 import { memo } from "react";
+import { useNavigate } from "react-router-dom";
+import { useI18n } from "@/i18n/i18nContext";
 
 interface RankedParty extends Party {
   distance: number;
@@ -11,6 +13,8 @@ interface Props {
 }
 
 function PartyResults({ rankedParties }: Props) {
+  const navigate = useNavigate();
+  const { t } = useI18n();
   const maxDist = Math.max(...rankedParties.map((p) => p.distance), 1);
 
   return (
@@ -21,9 +25,10 @@ function PartyResults({ rankedParties }: Props) {
           Math.round((1 - party.distance / maxDist) * 100),
         );
         return (
-          <motion.div
+          <motion.button
             key={party.id}
-            className="flex items-center gap-3 bg-card border border-border rounded-lg p-3"
+            onClick={() => navigate(`/partidos?party=${party.id}`, { state: { fromResults: true } })}
+            className="w-full flex items-center gap-3 bg-card border border-border rounded-lg p-3 hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: i * 0.05 }}
@@ -34,13 +39,13 @@ function PartyResults({ rankedParties }: Props) {
             >
               {i + 1}
             </div>
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 text-left">
               <div className="flex items-center justify-between gap-2">
                 <span className="font-semibold text-sm text-card-foreground truncate">
                   {party.name}
                 </span>
                 <span className="text-xs font-bold text-muted-foreground whitespace-nowrap">
-                  {match}% afinidade
+                  {match}% {t('results.affinity')}
                 </span>
               </div>
               <div className="w-full h-1.5 bg-secondary rounded-full mt-1 overflow-hidden">
@@ -53,7 +58,7 @@ function PartyResults({ rankedParties }: Props) {
                 />
               </div>
             </div>
-          </motion.div>
+          </motion.button>
         );
       })}
     </div>

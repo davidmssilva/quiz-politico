@@ -4,6 +4,7 @@ import { Ideology } from "@/data/ideologies";
 import PartyResults from "@/components/PartyResults";
 import IdeologyResults from "@/components/IdeologyResults";
 import { IdeologicalDimensions } from "@/components/IdeologicalDimensions";
+import { useI18n } from "@/i18n/i18nContext";
 
 interface Props {
   result: QuizResult;
@@ -16,6 +17,7 @@ export default function ResultsGrid({
   rankedParties,
   ideologies,
 }: Props) {
+  const { t } = useI18n();
   const userCoords = {
     economicScore: result.economicScore,
     authorityScore: result.authorityScore,
@@ -28,7 +30,7 @@ export default function ResultsGrid({
       {/* Coluna 1: Afinidade Partidária */}
       <div className="space-y-8 w-full overflow-hidden">
         <h2 className="font-sans text-2xl font-bold border-b pb-4">
-          Afinidade Partidária
+          {t('results.partyAffinity')}
         </h2>
         <PartyResults rankedParties={rankedParties} />
       </div>
@@ -37,14 +39,14 @@ export default function ResultsGrid({
       <div className="space-y-12 w-full overflow-hidden">
         <section className="space-y-8">
           <h2 className="font-sans text-2xl font-bold border-b pb-4">
-            Profundidade Ideológica
+            {t('results.ideologicalDepth')}
           </h2>
           <IdeologicalDimensions result={result} />
         </section>
 
         <section className="space-y-8">
           <h2 className="font-sans text-2xl font-bold border-b pb-4">
-            Espectro Ideológico
+            {t('results.ideologicalSpectrum')}
           </h2>
           <IdeologyResults userCoords={userCoords} ideologies={ideologies} />
         </section>

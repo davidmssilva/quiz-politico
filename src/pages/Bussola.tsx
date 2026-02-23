@@ -8,8 +8,10 @@ import {
   QuizResult,
 } from "@/lib/scoring";
 import { questions } from "@/data/questions";
-import { parties } from "@/data/parties";
+import { parties as originalParties } from "@/data/parties";
 import { ideologies } from "@/data/ideologies";
+import { useTranslatedParties } from "@/i18n/useContentTranslation";
+import { useI18n } from "@/i18n/i18nContext";
 import PoliticalCompass from "@/components/PoliticalCompass";
 import ResultsGrid from "@/components/ResultsGrid";
 import { ShareResults } from "@/components/ShareResults";
@@ -23,9 +25,9 @@ import { TYPOGRAPHY } from "@/lib/typography";
 import { generateShareUrl } from "@/lib/utils";
 import { updateMetaTags, SEO_CONFIGS } from "@/lib/seo";
 
-const getAxisLabel = (value: number, left: string, right: string): string => {
+const getAxisLabel = (value: number, left: string, right: string, neutral: string): string => {
   const abs = Math.abs(value);
-  if (abs < 1.5) return "Neutro";
+  if (abs < 1.5) return neutral;
   if (abs < 3.5) return value < 0 ? left : right;
   return value < 0 ? `${left}` : `${right}`;
 };
@@ -47,16 +49,18 @@ const getQuadrantColor = (economicScore: number, authorityScore: number): string
   return "bg-blue-400"; // Right-Libertarian
 };
 
-const getProfileDescription = (result: StoredResult): string => {
-  const econ = getAxisLabel(result.economicScore, "Esq", "Dir");
-  const auth = getAxisLabel(result.authorityScore, "Lib", "Aut");
-  const soc = getAxisLabel(result.socialScore, "Prog", "Cons");
-  const sov = getAxisLabel(result.sovereigntyScore, "Global", "Nac");
+const getProfileDescription = (result: StoredResult, t: any): string => {
+  const econ = getAxisLabel(result.economicScore, "Esq", "Dir", t('likert.neutral'));
+  const auth = getAxisLabel(result.authorityScore, "Lib", "Aut", t('likert.neutral'));
+  const soc = getAxisLabel(result.socialScore, "Prog", "Cons", t('likert.neutral'));
+  const sov = getAxisLabel(result.sovereigntyScore, "Global", "Nac", t('likert.neutral'));
   return `${econ} • ${auth} • ${soc} • ${sov}`;
 };
 
 export default function Bussola() {
   const navigate = useNavigate();
+  const parties = useTranslatedParties(originalParties);
+  const { t } = useI18n();
   const [history, setHistory] = useState<StoredResult[]>(() => loadHistory());
   const [selected, setSelected] = useState<StoredResult | null>(null);
 
@@ -130,7 +134,7 @@ export default function Bussola() {
   }, [displayResult]);
 
   const handleClear = () => {
-    if (confirm("Apagar todo o histórico de resultados?")) {
+    if (confirm(t('history.clearConfirm'))) {
       clearHistory();
       setHistory([]);
       setSelected(null);
@@ -149,7 +153,7 @@ export default function Bussola() {
           <div className="flex items-center gap-2 px-1">
             <HistoryIcon className="w-4 h-4 text-primary" />
             <h2 className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
-              Histórico de Sessões
+              {t('history.timeline')}
             </h2>
           </div>
 
@@ -160,7 +164,7 @@ export default function Bussola() {
                 className="flex-shrink-0 flex flex-col items-center justify-center w-24 h-20 rounded-2xl border border-dashed border-destructive/30 bg-destructive/5 hover:bg-destructive/10 text-destructive transition-colors"
               >
                 <Trash2 className="w-4 h-4 mb-1" />
-                <span className="text-[10px] font-bold uppercase">Limpar</span>
+                <span className="text-[10px] font-bold uppercase">{t('history.clearAll')}</span>
               </button>
             )}
 
@@ -174,10 +178,10 @@ export default function Bussola() {
                 }`}
               >
                 <span className="text-[10px] font-bold uppercase opacity-80">
-                  Atual
+                  {t('history.sessionInProgress')}
                 </span>
                 <span className={`${TYPOGRAPHY.meta.sm} text-white truncate`}>
-                  Em curso...
+                  {t('history.inProgress')}
                 </span>
               </button>
             )}
@@ -207,7 +211,7 @@ export default function Bussola() {
                     />
                   </div>
                   <span className="text-[10px] font-mono opacity-90 line-clamp-2 text-center">
-                    {getProfileDescription(r)}
+                    {getProfileDescription(r, t)}
                   </span>
                 </button>
               );
@@ -217,9 +221,9 @@ export default function Bussola() {
 
         {hasNoData ? (
           <div className="flex flex-col items-center justify-center py-20 text-center space-y-4">
-            <p className="text-muted-foreground italic">Nada por guardar.</p>
+            <p className="text-muted-foreground italic">{t('history.noHistoryDesc')}</p>
             <Button onClick={() => navigate("/quiz")} className="rounded-full">
-              Começar Quiz
+              {t('history.takeQuiz')}
             </Button>
           </div>
         ) : (
@@ -240,16 +244,13 @@ export default function Bussola() {
             {/* 3. Nota Metodológica */}
             <div className="w-full mx-auto p-6 rounded-2xl bg-secondary/20 border border-border/50">
               <h4 className="font-sans text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
-                Nota Metodológica
+                {t('resultsPage.methodologyTitle')}
               </h4>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                A proximidade é calculada através da distância euclidiana num espaço
-                multidimensional que inclui os 4 eixos (Economia, Autoridade,
-                Sociedade e Soberania).
+                {t('resultsPage.methodologyDesc1')}
               </p>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                O valor reflete a compatibilidade entre a tua posição e o programa
-                oficial dos partidos para 2026.
+                {t('resultsPage.methodologyDesc2')}
               </p>
             </div>
 
@@ -270,7 +271,7 @@ export default function Bussola() {
                     displayResult.socialScore,
                     displayResult.sovereigntyScore,
                   )}
-                  text={`O meu perfil político para 2026! Partido mais próximo: ${rankedParties[0]?.shortName}.`}
+                  text={t('resultsPage.shareText', { party: rankedParties[0]?.shortName || '' })}
                 />
               </CardContent>
             </Card>

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { questions } from "@/data/questions";
+import { questions as originalQuestions } from "@/data/questions";
 import { Answer, saveSession, loadSession, clearSession } from "@/lib/scoring";
 import { testProfiles } from "@/data/testProfiles";
 import QuizProgress from "@/components/QuizProgress";
@@ -10,9 +10,12 @@ import { AppHeader } from "@/components/AppHeader";
 import { AppFooter } from "@/components/AppFooter";
 import { Button } from "@/components/ui/button";
 import { getCompletedCategories, getTotalCategories, getLikertActiveColor } from "@/lib/utils";
-import { LIKERT_SCALE, IMPORTANCE_OPTIONS, EARLY_FINISH_THRESHOLD } from "@/lib/constants";
+import { EARLY_FINISH_THRESHOLD } from "@/lib/constants";
 import { TYPOGRAPHY } from "@/lib/typography";
 import { updateMetaTags, SEO_CONFIGS } from "@/lib/seo";
+import { useI18n } from "@/i18n/i18nContext";
+import { useTranslatedQuestions } from "@/i18n/useContentTranslation";
+import { useTranslatedLikertScale, useTranslatedImportanceOptions } from "@/i18n/useTranslatedConstants";
 
 const IS_DEV = import.meta.env.DEV;
 
@@ -34,6 +37,10 @@ const getInitialState = () => {
 
 export default function Quiz() {
   const navigate = useNavigate();
+  const { t } = useI18n();
+  const questions = useTranslatedQuestions(originalQuestions);
+  const LIKERT_SCALE = useTranslatedLikertScale();
+  const IMPORTANCE_OPTIONS = useTranslatedImportanceOptions();
   const initialState = getInitialState();
   const [current, setCurrent] = useState(initialState.current);
   const [answers, setAnswers] = useState<Record<number, Answer>>(initialState.answers);
@@ -142,9 +149,9 @@ export default function Quiz() {
     const diffSecs = Math.floor(diffMs / 1000);
     const diffMins = Math.floor(diffSecs / 60);
     
-    if (diffSecs < 60) return "há uns segundos";
-    if (diffMins < 60) return `há ${diffMins}m`;
-    return "há pouco";
+    if (diffSecs < 60) return t('quiz.agoSeconds');
+    if (diffMins < 60) return t('quiz.agoMinutes').replace('{{count}}', String(diffMins));
+    return t('quiz.agoRecently');
   };
 
   const next = useCallback(() => {
@@ -239,7 +246,7 @@ export default function Quiz() {
     <div className="w-full max-w-xl mx-auto space-y-4 sm:space-y-6">
       <div className="space-y-1 text-center sm:text-left">
         <span className="text-[10px] font-bold text-primary uppercase tracking-[0.2em] bg-primary/10 px-3 py-1 rounded-full">
-          Patrocinado
+          {t('quiz.sponsored')}
         </span>
         <h2 className="font-sans text-xl sm:text-3xl md:text-4xl text-foreground font-bold leading-tight">
           {title}
@@ -275,12 +282,12 @@ export default function Quiz() {
           {isSaving ? (
             <>
               <div className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" />
-              <span>{lastSavedTime ? `Guardado ${formatLastSavedTime(lastSavedTime)}` : "Por guardar..."}</span>
+              <span>{lastSavedTime ? `${t('quiz.savedAgo')} ${formatLastSavedTime(lastSavedTime)}` : t('quiz.unsaved')}</span>
             </>
           ) : lastSavedTime ? (
             <>
               <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
-              <span>Guardado Agora</span>
+              <span>{t('quiz.saved')}</span>
             </>
           ) : null}
         </div>
@@ -340,15 +347,15 @@ export default function Quiz() {
               >
                 {isStartAd &&
                   renderAd(
-                    "Bem-vindo à Bússola 2026",
-                    "O maior teste de afinidade política em Portugal.",
-                    "Começar Questionário",
+                    t('quiz.startTitle'),
+                    t('quiz.startDesc'),
+                    t('quiz.startButton'),
                   )}
                 {isEndAd &&
                   renderAd(
-                    "Resultados Prontos",
-                    "Concluímos a análise do seu perfil ideológico.",
-                    "Ver os Meus Resultados",
+                    t('quiz.endTitle'),
+                    t('quiz.endDesc'),
+                    t('quiz.endButton'),
                   )}
 
                 {!isStartAd && !isEndAd && (
@@ -463,20 +470,20 @@ export default function Quiz() {
               <Button
                 variant="ghost"
                 onClick={prev}
-                aria-label="Pergunta anterior"
+                aria-label={t('quiz.previousAria')}
                 className="px-4 h-10 text-xs sm:text-sm font-bold text-muted-foreground"
               >
-                Anterior
+                {t('quiz.previous')}
               </Button>
               <div className="flex items-center gap-2">
                 {questionIndex >= EARLY_FINISH_THRESHOLD && (
                   <Button
                     variant="outline"
                     onClick={() => setShowEarlyFinish(true)}
-                    aria-label="Terminar questionário agora"
+                    aria-label={t('quiz.finishNowAria')}
                     className="px-4 h-10 text-xs sm:text-sm font-bold hover:bg-primary/10 hover:text-primary hover:border-primary/30 dark:hover:bg-primary/20 dark:hover:border-primary/50 transition-all duration-200"
                   >
-                    Terminar Agora
+                    {t('quiz.finishNow')}
                   </Button>
                 )}
                 <div className="text-[10px] font-bold text-muted-foreground/40 hidden sm:block uppercase tracking-widest" aria-live="polite">
@@ -486,10 +493,10 @@ export default function Quiz() {
               <Button
                 onClick={next}
                 disabled={answers[q.id] === undefined}
-                aria-label={current === questions.length ? "Ver resultados" : "Próxima pergunta"}
+                aria-label={current === questions.length ? t('quiz.finish') : t('quiz.next')}
                 className="px-6 h-10 text-xs sm:text-sm font-bold rounded-lg shadow-lg"
               >
-                {current === questions.length ? "Finalizar" : "Seguinte"}
+                {current === questions.length ? t('quiz.finish') : t('quiz.next')}
               </Button>
             </div>
           )}

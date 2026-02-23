@@ -8,9 +8,11 @@ import { AppFooter } from "@/components/AppFooter";
 import { TYPOGRAPHY } from "@/lib/typography";
 import { Lock } from "lucide-react";
 import { updateMetaTags, SEO_CONFIGS } from "@/lib/seo";
+import { useI18n } from "@/i18n/i18nContext";
 
 export default function Index() {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const session = useMemo(() => loadSession(), []);
 
   useEffect(() => {
@@ -18,10 +20,10 @@ export default function Index() {
   }, []);
 
   const stats = [
-    { n: "100", label: "Perguntas" },
-    { n: "13", label: "Partidos" },
-    { n: "4", label: "Eixos" },
-    { n: "8", label: "Temas" },
+    { n: "100", label: t('index.questions') },
+    { n: "13", label: t('index.parties') },
+    { n: "4", label: t('index.axes') },
+    { n: "8", label: t('index.themes') },
   ];
 
   return (
@@ -37,13 +39,11 @@ export default function Index() {
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <h1 className={TYPOGRAPHY.heading.h1}>
-              Bússola Política{" "}
-              <span className="text-primary italic">Portugal</span>
+              {t('index.title').split(' ').slice(0, 2).join(' ')}{" "}
+              <span className="text-primary italic">{t('index.title').split(' ').slice(2).join(' ')}</span>
             </h1>
             <p className="text-base sm:text-xl text-muted-foreground max-w-2xl mx-auto font-medium leading-relaxed">
-              Descubra onde se situa no espectro político português de 2026
-              através de uma análise profunda de vários indicadores
-              programáticos, recolhidos dos programas políticos de cada partido.
+              {t('index.subtitle')}
             </p>
           </motion.div>
 
@@ -58,7 +58,7 @@ export default function Index() {
               className="w-full sm:w-auto h-16 px-10 rounded-2xl text-lg font-bold shadow-2xl shadow-primary/25 transition-all hover:scale-105 active:scale-95"
               onClick={() => navigate("/quiz")}
             >
-              {session ? "Continuar Questionário" : "Começar Agora"}
+              {session ? t('index.continueQuiz') : t('index.startNow')}
             </Button>
             {session && (
               <Button
@@ -70,7 +70,7 @@ export default function Index() {
                   navigate("/quiz");
                 }}
               >
-                Novo Início
+                {t('index.newStart')}
               </Button>
             )}
           </motion.div>

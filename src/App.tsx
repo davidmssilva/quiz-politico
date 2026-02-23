@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Quiz from "./pages/Quiz";
 import Results from "./pages/Results";
 import Bussola from "./pages/Bussola";
+import Parties from "./pages/Parties";
 import NotFound from "./pages/NotFound";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/quiz" element={<Quiz />} />
           <Route path="/resultados" element={<Results />} />
           <Route path="/histórico" element={<Bussola />} />
+          <Route path="/partidos" element={<Parties />} />
           <Route path="/sobre" element={<About />} />
           <Route path="/contacto" element={<Contact />} />
           <Route path="/privacidade" element={<Privacy />} />

@@ -1,6 +1,8 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { loadHistory, clearHistory, StoredResult, loadSession } from "@/lib/scoring";
-import { parties } from "@/data/parties";
+import { parties as originalParties } from "@/data/parties";
+import { useTranslatedParties } from "@/i18n/useContentTranslation";
+import { useI18n } from "@/i18n/i18nContext";
 import PoliticalCompass from "@/components/PoliticalCompass";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -11,6 +13,8 @@ import { TYPOGRAPHY } from "@/lib/typography";
 export default function History() {
   const navigate = useNavigate();
   const location = useLocation();
+  const parties = useTranslatedParties(originalParties);
+  const { t } = useI18n();
   const [history, setHistory] = useState<StoredResult[]>(() => loadHistory());
   const [selected, setSelected] = useState<StoredResult | null>(null);
   const [ongoingSession, setOngoingSession] = useState<StoredResult | null>(null);
@@ -61,7 +65,7 @@ export default function History() {
   const displayResult = selected ?? history[history.length - 1];
 
   const handleClear = () => {
-    if (confirm("Tens a certeza que queres apagar todo o teu histórico?")) {
+    if (confirm(t('history.clearConfirm'))) {
       clearHistory();
       setHistory([]);
       setSelected(null);
@@ -90,9 +94,9 @@ export default function History() {
             </svg>
           </div>
           <div className="space-y-2">
-            <h2 className={TYPOGRAPHY.heading.h2}>Sem histórico</h2>
+            <h2 className={TYPOGRAPHY.heading.h2}>{t('history.noHistory')}</h2>
             <p className="text-muted-foreground max-w-xs mx-auto">
-              Ainda não concluíste nenhum questionário para guardar resultados.
+              {t('history.noHistoryDesc')}
             </p>
           </div>
           <Button
@@ -100,7 +104,7 @@ export default function History() {
             size="lg"
             className="rounded-full shadow-md"
           >
-            Fazer o Quiz agora
+            {t('history.takeQuiz')}
           </Button>
         </main>
       </div>
@@ -117,10 +121,10 @@ export default function History() {
           animate={{ opacity: 1, y: 0 }}
         >
           <h1 className={TYPOGRAPHY.heading.h1}>
-            Evolução Ideológica
+            {t('history.title')}
           </h1>
           <p className="text-muted-foreground mt-1 text-lg">
-            Compara as tuas diferentes sessões e vê como as tuas opiniões mudam.
+            {t('history.subtitle')}
           </p>
         </motion.div>
 
@@ -141,14 +145,14 @@ export default function History() {
 
         <div className="space-y-4">
           <div className="flex items-center justify-between border-b pb-3">
-            <h3 className={TYPOGRAPHY.heading.h3}>Linha Temporal</h3>
+            <h3 className={TYPOGRAPHY.heading.h3}>{t('history.timeline')}</h3>
             <Button
               variant="outline"
               size="sm"
               onClick={handleClear}
-              className="text-destructive hover:bg-destructive/5 border-destructive/20 transition-all"
+              className="text-destructive hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30 transition-all"
             >
-              Apagar Tudo
+              {t('history.clearAll')}
             </Button>
           </div>
 
@@ -173,15 +177,15 @@ export default function History() {
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                       </span>
-                      Sessão em Progresso
+                      {t('history.sessionInProgress')}
                     </p>
                     <p className="text-muted-foreground text-xs uppercase tracking-wider">
-                      {Object.keys(ongoingSession.answers).length} respostas
+                      {Object.keys(ongoingSession.answers).length} {t('history.responses')}
                     </p>
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-medium text-white dark:text-foreground">
-                      Em curso
+                      {t('history.inProgress')}
                     </p>
                   </div>
                 </div>
@@ -193,7 +197,7 @@ export default function History() {
                     ></div>
                   </div>
                   <span className="text-[10px] text-muted-foreground font-semibold whitespace-nowrap">
-                    {Math.round((Object.keys(ongoingSession.answers).length / 100) * 100)}% COMPLETO
+                    {Math.round((Object.keys(ongoingSession.answers).length / 100) * 100)}% {t('history.complete')}
                   </span>
                 </div>
               </motion.button>
@@ -265,7 +269,7 @@ export default function History() {
                         <div className="h-full bg-primary/40 w-full"></div>
                       </div>
                       <span className="text-[10px] text-muted-foreground font-semibold whitespace-nowrap">
-                        PRÓXIMO DE: {r.closestParties[0]}
+                        {t('history.closestTo')} {r.closestParties[0]}
                       </span>
                     </div>
                   )}
