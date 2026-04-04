@@ -55,10 +55,13 @@ export default function Quiz() {
   const saveTimer = useRef<NodeJS.Timeout>();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  const totalSteps = questions.length + 2;
-  const isStartAd = current === 0;
-  const isEndAd = current === questions.length + 1;
-  const questionIndex = current - 1;
+  // const totalSteps = questions.length + 2; // AD VERSION
+  const totalSteps = questions.length; // no ads
+  // const isStartAd = current === 0; // AD VERSION
+  // const isEndAd = current === questions.length + 1; // AD VERSION
+  const isStartAd = false;
+  const isEndAd = false;
+  const questionIndex = current; // was current - 1 with ads
   const q = questions[questionIndex];
 
   // SEO
@@ -242,6 +245,7 @@ export default function Quiz() {
     navigate("/resultados", { state: { answers, importanceWeights } });
   }, [answers, importanceWeights, navigate, current]);
 
+  /* AD VERSION - renderAd disabled
   const renderAd = (title: string, desc: string, btn: string) => (
     <div className="w-full max-w-xl mx-auto space-y-4 sm:space-y-6">
       <div className="space-y-1 text-center sm:text-left">
@@ -271,6 +275,7 @@ export default function Quiz() {
       </Button>
     </div>
   );
+  */
 
   return (
     <div className="h-screen max-h-screen bg-background flex flex-col font-sans antialiased overflow-hidden">
@@ -345,6 +350,7 @@ export default function Quiz() {
                 transition={{ duration: 0.2, ease: "easeInOut" }}
                 className="w-full"
               >
+                {/* AD VERSION - start/end ads disabled
                 {isStartAd &&
                   renderAd(
                     t('quiz.startTitle'),
@@ -357,6 +363,7 @@ export default function Quiz() {
                     t('quiz.endDesc'),
                     t('quiz.endButton'),
                   )}
+                */}
 
                 {!isStartAd && !isEndAd && (
                   <div className="flex flex-col h-full" onKeyDown={handleKeyDown}>
@@ -493,10 +500,10 @@ export default function Quiz() {
               <Button
                 onClick={next}
                 disabled={answers[q.id] === undefined}
-                aria-label={current === questions.length ? t('quiz.finish') : t('quiz.next')}
+                aria-label={current === questions.length - 1 ? t('quiz.finish') : t('quiz.next')}
                 className="px-6 h-10 text-xs sm:text-sm font-bold rounded-lg shadow-lg"
               >
-                {current === questions.length ? t('quiz.finish') : t('quiz.next')}
+                {current === questions.length - 1 ? t('quiz.finish') : t('quiz.next')}
               </Button>
             </div>
           )}
