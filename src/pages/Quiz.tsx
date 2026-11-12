@@ -329,7 +329,7 @@ export default function Quiz() {
         className="flex-1 flex flex-col overflow-y-auto px-4 py-2 sm:py-2 md:py-4 touch-pan-y"
       >
         <div className="w-full max-w-2xl mx-auto flex-1 flex flex-col justify-center">
-          {!isStartAd && !isEndAd && (
+          {!isStartAd && !isEndAd && q && (
             <div className="mb-3 sm:mb-4 md:mb-6">
               <QuizProgress
                 current={questionIndex}
@@ -365,7 +365,7 @@ export default function Quiz() {
                   )}
                 */}
 
-                {!isStartAd && !isEndAd && (
+                {!isStartAd && !isEndAd && q && (
                   <div className="flex flex-col h-full" onKeyDown={handleKeyDown}>
                     {/* Question - Fixed height area */}
                     <div className="mb-4 sm:mb-6 min-h-[80px] sm:min-h-[100px] flex items-center">
@@ -499,7 +499,7 @@ export default function Quiz() {
               </div>
               <Button
                 onClick={next}
-                disabled={answers[q.id] === undefined}
+                disabled={!q || answers[q.id] === undefined}
                 aria-label={current === questions.length - 1 ? t('quiz.finish') : t('quiz.next')}
                 className="px-6 h-10 text-xs sm:text-sm font-bold rounded-lg shadow-lg"
               >
